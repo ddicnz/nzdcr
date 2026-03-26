@@ -56,7 +56,7 @@ export default function HomeHeroBanner() {
             <li>24/7 Pick up &amp; Drop off</li>
             <li>One-way hire available</li>
             <li>Cross-island travel supported</li>
-            <li>Roadside assistance included</li>
+            <li>Roadside assistance available</li>
             <li>Full tank in & out</li>
           </ul>
         </aside>

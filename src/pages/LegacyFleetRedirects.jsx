@@ -1,11 +1,11 @@
 import { Navigate, useParams, useSearchParams } from 'react-router-dom'
 import { migrateSearchParamsToOrderby } from '../data/fleetSort'
 
-/** `/product-category/:slug/` → `/category/:slug/` */
-export function RedirectFromProductCategory() {
+/** Old `/category/:slug/` bookmarks → `/product-category/:slug/` */
+export function RedirectCategoryToProductCategory() {
   const { slug } = useParams()
   const [searchParams] = useSearchParams()
   const next = migrateSearchParamsToOrderby(searchParams)
   const qs = next.toString()
-  return <Navigate to={qs ? `/category/${slug}/?${qs}` : `/category/${slug}/`} replace />
+  return <Navigate to={qs ? `/product-category/${slug}/?${qs}` : `/product-category/${slug}/`} replace />
 }

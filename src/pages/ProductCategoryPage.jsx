@@ -26,7 +26,7 @@ export default function ProductCategoryPage() {
     const next = migrateSearchParamsToOrderby(searchParams)
     const qs = next.toString()
     return (
-      <Navigate to={qs ? `/category/${slug}/?${qs}` : `/category/${slug}/`} replace />
+      <Navigate to={qs ? `/product-category/${slug}/?${qs}` : `/product-category/${slug}/`} replace />
     )
   }
 

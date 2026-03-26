@@ -23,7 +23,7 @@ export default function FleetCategoryNav({ activeSlug = null }) {
       {PRODUCT_CATEGORIES.map(({ slug, navLabel }) => (
         <Link
           key={slug}
-          to={q ? `/category/${slug}/${q}` : `/category/${slug}/`}
+          to={q ? `/product-category/${slug}/${q}` : `/product-category/${slug}/`}
           className={`fleet-categories__btn${activeSlug === slug ? ' is-active' : ''}`}
         >
           {navLabel}

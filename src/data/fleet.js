@@ -2,8 +2,13 @@
  * Fleet cards — order aligned with nzdcr.co.nz/cars/ listing.
  * Use `category` for a single bucket, or `categories` when a vehicle appears under more than one
  * (e.g. Intermediate SUV 4WD in SUV, Station Wagon, and Intermediate).
- * @type {Array<{ name: string, was: number, now: number, img: string, avgRating?: number, category?: string, categories?: string[] }>}
+ * @type {Array<{ name: string, was: number, now: number, img: string, detailSlug: string, avgRating?: number, category?: string, categories?: string[] }>}
  */
+export function getFleetByDetailSlug(slug) {
+  if (!slug) return undefined
+  return FLEET.find((c) => c.detailSlug === slug)
+}
+
 export function fleetItemCategories(car) {
   return car.categories ?? [car.category].filter(Boolean)
 }
@@ -20,6 +25,7 @@ export const FLEET = [
     avgRating: 4.85,
     img: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=640&q=80',
     category: 'compact',
+    detailSlug: 'premium-small-hatch',
   },
   {
     name: 'Supersaver S/Wagon',
@@ -28,6 +34,7 @@ export const FLEET = [
     avgRating: 4.55,
     img: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=640&q=80',
     category: 'station-wagon',
+    detailSlug: 'supersaver-swagon',
   },
   {
     name: 'Large sedan',
@@ -36,6 +43,7 @@ export const FLEET = [
     avgRating: 4.6,
     img: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=640&q=80',
     category: 'intermediate',
+    detailSlug: 'large-sedan',
   },
   {
     name: 'Intermediate Hatch',
@@ -44,6 +52,7 @@ export const FLEET = [
     avgRating: 4.72,
     img: 'https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=640&q=80',
     categories: ['intermediate', 'compact'],
+    detailSlug: 'intermediate-hatch',
   },
   {
     name: 'Intermediate Sedan',
@@ -52,6 +61,7 @@ export const FLEET = [
     avgRating: 4.68,
     img: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=640&q=80',
     category: 'intermediate',
+    detailSlug: 'intermediate-sedan',
   },
   {
     name: 'Supersaver people mover',
@@ -60,6 +70,7 @@ export const FLEET = [
     avgRating: 4.45,
     img: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=640&q=80',
     category: 'people-mover',
+    detailSlug: 'supersaver-people-mover',
   },
   {
     name: 'Intermediate SUV 4WD',
@@ -68,6 +79,7 @@ export const FLEET = [
     avgRating: 4.78,
     img: 'https://images.unsplash.com/photo-1511919884226-fd3f146f9f4f?w=640&q=80',
     categories: ['suv', 'station-wagon', 'intermediate'],
+    detailSlug: 'intermediate-suv-4wd',
   },
   {
     name: 'Large People Mover',
@@ -76,6 +88,7 @@ export const FLEET = [
     avgRating: 4.52,
     img: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=640&q=80',
     category: 'people-mover',
+    detailSlug: 'large-people-mover',
   },
   {
     name: '7 Seater SUV',
@@ -84,6 +97,7 @@ export const FLEET = [
     avgRating: 4.62,
     img: 'https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=640&q=80',
     categories: ['suv', 'people-mover'],
+    detailSlug: '7-seater-suv',
   },
   {
     name: '10 seater people mover',
@@ -92,6 +106,7 @@ export const FLEET = [
     avgRating: 4.38,
     img: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=640&q=80',
     category: 'people-mover',
+    detailSlug: '10-seater-people-mover',
   },
   {
     name: '12 Seater Minibus',
@@ -100,5 +115,6 @@ export const FLEET = [
     avgRating: 4.4,
     img: 'https://images.unsplash.com/photo-1464219789934-c2a9a5e8dc15?w=640&q=80',
     category: 'people-mover',
+    detailSlug: '12-seater-minibus',
   },
 ]

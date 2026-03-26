@@ -1,5 +1,5 @@
 /**
- * Category URLs: `/category/<slug>/` with optional `?orderby=` (see fleetSort.js).
+ * Category URLs: `/product-category/<slug>/` with optional `?orderby=` (see fleetSort.js).
  * @type {Array<{ slug: string, fleetCategory: string, navLabel: string, heroHeading: string, breadcrumbLast: string, intro: string }>}
  */
 export const PRODUCT_CATEGORIES = [
@@ -53,4 +53,9 @@ export const PRODUCT_CATEGORIES = [
 export function getProductCategoryBySlug(slug) {
   if (!slug) return undefined
   return PRODUCT_CATEGORIES.find((c) => c.slug === slug)
+}
+
+export function getProductCategoryByFleetCategory(fleetCategory) {
+  if (!fleetCategory) return undefined
+  return PRODUCT_CATEGORIES.find((c) => c.fleetCategory === fleetCategory)
 }
