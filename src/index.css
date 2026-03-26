@@ -231,6 +231,17 @@ img {
   cursor: pointer;
 }
 
+.home-booking__field input.home-booking__date {
+  cursor: pointer;
+  min-height: 38px;
+  color-scheme: light;
+}
+
+.home-booking__field input.home-booking__date::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
 .home-booking__submit {
   margin-top: 8px;
   display: inline-flex;

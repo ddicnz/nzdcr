@@ -35,13 +35,31 @@ export function formatRcmDate(d) {
   return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`
 }
 
+/** YYYY-MM-DD in local calendar (for &lt;input type="date"&gt;) */
+export function dateToIsoLocal(d) {
+  const pad = (n) => String(n).padStart(2, '0')
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+}
+
+/** YYYY-MM-DD → d/m/Y for RCM hidden fields */
+export function isoLocalToRcm(iso) {
+  if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return ''
+  const [y, m, d] = iso.split('-').map((x) => parseInt(x, 10))
+  return formatRcmDate(new Date(y, m - 1, d))
+}
+
 export function defaultPickupDropoffDates() {
   const pickup = new Date()
   pickup.setDate(pickup.getDate() + 1)
   pickup.setHours(0, 0, 0, 0)
   const dropoff = new Date(pickup)
   dropoff.setDate(dropoff.getDate() + 7)
-  return { pickupStr: formatRcmDate(pickup), dropoffStr: formatRcmDate(dropoff) }
+  return {
+    pickupStr: formatRcmDate(pickup),
+    dropoffStr: formatRcmDate(dropoff),
+    pickupIso: dateToIsoLocal(pickup),
+    dropoffIso: dateToIsoLocal(dropoff),
+  }
 }
 
 const TIME_START = 8

@@ -1,10 +1,12 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import {
   RCM_STEP2_ACTION,
   RCM_LOCATIONS,
   RCM_CATEGORIES,
   RCM_DRIVER_AGES,
   defaultPickupDropoffDates,
+  dateToIsoLocal,
+  isoLocalToRcm,
   rcmTimeOptions,
 } from '../data/rcmBooking'
 
@@ -22,8 +24,21 @@ function IconSync() {
 }
 
 export default function HomeHeroBanner() {
-  const { pickupStr, dropoffStr } = useMemo(() => defaultPickupDropoffDates(), [])
+  const defaults = useMemo(() => defaultPickupDropoffDates(), [])
+  const [pickupIso, setPickupIso] = useState(defaults.pickupIso)
+  const [dropoffIso, setDropoffIso] = useState(defaults.dropoffIso)
+  const todayIso = useMemo(() => dateToIsoLocal(new Date()), [])
   const times = useMemo(() => rcmTimeOptions(), [])
+
+  const onPickupDateChange = (iso) => {
+    setPickupIso(iso)
+    if (!iso) return
+    if (!dropoffIso || dropoffIso < iso) {
+      const next = new Date(iso + 'T12:00:00')
+      next.setDate(next.getDate() + 7)
+      setDropoffIso(dateToIsoLocal(next))
+    }
+  }
 
   return (
     <section className="home-hero-banner" aria-label="Hero and booking">
@@ -65,14 +80,15 @@ export default function HomeHeroBanner() {
           <div className="home-booking__row">
             <div className="home-booking__field">
               <label htmlFor="form-Pickup-Date">Pick up Date</label>
+              <input type="hidden" name="form-Pickup-Date" value={isoLocalToRcm(pickupIso)} readOnly />
               <input
                 id="form-Pickup-Date"
-                name="form-Pickup-Date"
-                type="text"
+                type="date"
                 required
-                autoComplete="off"
-                placeholder="dd/mm/yyyy"
-                defaultValue={pickupStr}
+                value={pickupIso}
+                min={todayIso}
+                onChange={(e) => onPickupDateChange(e.target.value)}
+                className="home-booking__date"
               />
             </div>
             <div className="home-booking__field">
@@ -95,14 +111,15 @@ export default function HomeHeroBanner() {
           <div className="home-booking__row">
             <div className="home-booking__field">
               <label htmlFor="form-Dropoff-Date">Drop off Date</label>
+              <input type="hidden" name="form-Dropoff-Date" value={isoLocalToRcm(dropoffIso)} readOnly />
               <input
                 id="form-Dropoff-Date"
-                name="form-Dropoff-Date"
-                type="text"
+                type="date"
                 required
-                autoComplete="off"
-                placeholder="dd/mm/yyyy"
-                defaultValue={dropoffStr}
+                value={dropoffIso}
+                min={pickupIso || todayIso}
+                onChange={(e) => setDropoffIso(e.target.value)}
+                className="home-booking__date"
               />
             </div>
             <div className="home-booking__field">
