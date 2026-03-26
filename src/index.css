@@ -1145,6 +1145,86 @@ img {
   margin-top: 36px;
 }
 
+/* Cars page (/cars/) — horizontal product categories bar */
+.cars-page {
+  padding-top: 8px;
+}
+
+.cars-page > .container {
+  padding-top: 8px;
+}
+
+.fleet-categories {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0 16px;
+  margin: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.fleet-categories__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--header-orange);
+  background: var(--color-surface);
+  border: 2px solid var(--header-orange);
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.fleet-categories__btn:hover {
+  background: rgba(241, 128, 45, 0.12);
+  color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  text-decoration: none;
+}
+
+.fleet-categories__btn.is-active {
+  background: var(--header-orange);
+  color: #fff;
+  border-color: var(--header-orange);
+}
+
+.fleet-categories__btn.is-active:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  color: #fff;
+}
+
+.cars-page__intro {
+  padding: 16px 0 8px;
+  max-width: 920px;
+}
+
+.cars-page__intro > p {
+  margin: 0 0 1rem;
+  color: var(--color-text);
+  line-height: 1.65;
+}
+
+.cars-page__list-title {
+  margin: 1.25rem 0 0;
+  font-size: clamp(1.08rem, 2.4vw, 1.32rem);
+  font-weight: 800;
+  color: #000;
+  line-height: 1.35;
+}
+
+.cars-page__result-count {
+  margin: 12px 0 0;
+  font-size: 14px;
+  color: var(--color-muted);
+}
+
 /* Testimonial */
 .testimonial-strip {
   background: var(--color-surface);

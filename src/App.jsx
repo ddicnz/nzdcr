@@ -8,6 +8,8 @@ import PaymentTermsPage from './pages/PaymentTermsPage'
 import InsuranceCoverPage from './pages/InsuranceCoverPage'
 import FAQPage from './pages/FAQPage'
 import NewZealandHolidaysPage from './pages/NewZealandHolidaysPage'
+import CarsPage from './pages/CarsPage'
+import ProductCategoryPage from './pages/ProductCategoryPage'
 import { roadHero } from './data/pageHeros'
 
 export default function App() {
@@ -15,7 +17,8 @@ export default function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
-        <Route path="cars" element={<GenericPage title="Fleet" hero={roadHero('FLEET', 'Fleet')} />} />
+        <Route path="cars" element={<CarsPage />} />
+        <Route path="product-category/:slug" element={<ProductCategoryPage />} />
         <Route
           path="location"
           element={<GenericPage title="Locations" hero={roadHero('LOCATIONS', 'Locations')} />}

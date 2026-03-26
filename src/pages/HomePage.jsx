@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import HomeHeroBanner from '../components/HomeHeroBanner'
-import { FLEET } from '../data/fleet'
+import FleetGrid from '../components/FleetGrid'
 
 function TeaserStrip() {
   return (
@@ -46,25 +46,10 @@ function Hero() {
   )
 }
 
-function FleetGrid() {
+function HomeFleetSection() {
   return (
     <section className="fleet-section">
-      <div className="container fleet-grid">
-        {FLEET.map((car) => (
-          <article key={car.name} className="fleet-card">
-            <div className="fleet-card__img-wrap">
-              <span className="sale-badge">Sale!</span>
-              <img src={car.img} alt="" loading="lazy" />
-            </div>
-            <h4 className="fleet-card__title">{car.name}</h4>
-            <p className="fleet-card__price">
-              <span className="was">${car.was.toFixed(2)}</span>
-              <span className="now">${car.now.toFixed(2)}</span>
-              <span className="from">FROM / day</span>
-            </p>
-          </article>
-        ))}
-      </div>
+      <FleetGrid withSection={false} />
       <div className="container fleet-cta-row">
         <Link to="/cars/" className="btn btn--outline">SEE ALL OUR CARS</Link>
         <Link to="/hotdeal/" className="btn btn--primary">DISCOUNT OFFERS</Link>
@@ -110,7 +95,7 @@ export default function HomePage() {
       <HomeHeroBanner />
       <TeaserStrip />
       <Hero />
-      <FleetGrid />
+      <HomeFleetSection />
       <TestimonialBlock />
       <BottomCta />
     </>

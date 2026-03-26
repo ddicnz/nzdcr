@@ -5,11 +5,11 @@ export const NAV = [
     label: 'Fleet',
     to: '/cars/',
     children: [
-      { label: 'Compact', to: '/cars/' },
-      { label: 'Intermediate', to: '/cars/' },
-      { label: 'Station Wagon', to: '/cars/' },
-      { label: 'SUV', to: '/cars/' },
-      { label: 'People Mover', to: '/cars/' },
+      { label: 'Compact', to: '/product-category/hatches/' },
+      { label: 'Intermediate', to: '/product-category/intermediate/' },
+      { label: 'Station Wagon', to: '/product-category/station-wagon/' },
+      { label: 'SUV', to: '/product-category/suv/' },
+      { label: 'People Mover', to: '/product-category/people-mover/' },
     ],
   },
   {
