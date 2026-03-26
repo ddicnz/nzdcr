@@ -417,7 +417,146 @@ img {
   text-decoration: underline;
 }
 
+.insurance-page ul:not(.w-pricing-item-features) {
+  margin: 0 0 1rem;
+  padding-left: 1.35rem;
+}
+
+.insurance-page .vc_empty_space {
+  display: none;
+}
+
+.insurance-page .g-cols.wpb_row {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.insurance-page .two-thirds,
+.insurance-page .one-third,
+.insurance-page .full-width {
+  width: 100% !important;
+}
+
+.insurance-page .w-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.insurance-page .w-tabs-section {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fafafa;
+}
+
+.insurance-page .w-tabs-section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  background: #efefef;
+}
+
+.insurance-page .w-tabs-section-icon,
+.insurance-page .w-tabs-section-control {
+  display: none;
+}
+
+.insurance-page .w-tabs-section-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #000;
+}
+
+.insurance-page .w-tabs-section-content {
+  padding: 16px;
+  background: #fff;
+}
+
+.insurance-page .w-pricing.type_1 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: flex-start;
+}
+
+.insurance-page .w-pricing-item {
+  flex: 1 1 200px;
+  max-width: 280px;
+}
+
+.insurance-page .w-pricing-item-h {
+  height: 100%;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px;
+  background: #fff;
+}
+
+.insurance-page .w-pricing-item-title {
+  margin: 0 0 10px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.insurance-page .w-pricing-item-price {
+  font-size: clamp(2.15rem, 4.5vw, 2.85rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: #000;
+  margin-bottom: 12px;
+}
+
+.insurance-page .w-pricing-item-price small {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.insurance-page .w-pricing-item-features {
+  margin: 0;
+  padding-left: 1.1rem;
+  list-style: disc;
+}
+
+.insurance-page .w-pricing-item-feature {
+  margin-bottom: 6px;
+  color: #000;
+}
+
+.insurance-page h2,
+.insurance-page h3,
+.insurance-page h5 {
+  color: #000;
+}
+
 .terms-prose a:hover {
+  color: #000;
+}
+
+.faq-page h2 {
+  margin: 1.5rem 0 0.5rem;
+  font-size: clamp(1.14rem, 2.8vw, 1.35rem);
+  font-weight: 800;
+  color: #000;
+  line-height: 1.35;
+}
+
+.faq-page > h2:first-of-type {
+  margin-top: 1rem;
+}
+
+.faq-page h3 {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 1rem;
+  font-weight: 800;
   color: #000;
 }
 
@@ -668,7 +807,7 @@ img {
   opacity: 0;
   visibility: hidden;
   transform: translateY(4px);
-  transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out, visibility 0.3s ease-out;
   z-index: 60;
 }
 

@@ -3,6 +3,10 @@ import Layout from './components/Layout'
 import HomePage from './pages/HomePage'
 import GenericPage from './pages/GenericPage'
 import TermsOfTradePage from './pages/TermsOfTradePage'
+import PrivacyLegalPoliciesPage from './pages/PrivacyLegalPoliciesPage'
+import PaymentTermsPage from './pages/PaymentTermsPage'
+import InsuranceCoverPage from './pages/InsuranceCoverPage'
+import FAQPage from './pages/FAQPage'
 import { roadHero } from './data/pageHeros'
 
 export default function App() {
@@ -47,7 +51,7 @@ export default function App() {
           path="cars-for-sale"
           element={<GenericPage title="Cars for Sale" hero={roadHero('CARS FOR SALE', 'Cars for Sale')} />}
         />
-        <Route path="faq" element={<GenericPage title="FAQ" hero={roadHero('FAQ', 'FAQ')} />} />
+        <Route path="faq" element={<FAQPage />} />
         <Route path="our-blog" element={<GenericPage title="Our Blog" hero={roadHero('OUR BLOG', 'Our Blog')} />} />
         <Route
           path="customer-feedback"
@@ -86,23 +90,9 @@ export default function App() {
           element={<GenericPage title="Contact Us" hero={roadHero('CONTACT US', 'Contact Us')} />}
         />
         <Route path="hotdeal" element={<GenericPage title="Hot Deals" hero={roadHero('HOT DEALS', 'Hot Deals')} />} />
-        <Route
-          path="insurance"
-          element={<GenericPage title="Insurance Cover" hero={roadHero('INSURANCE COVER', 'Insurance Cover')} />}
-        />
-        <Route
-          path="payment-terms"
-          element={<GenericPage title="Payment Terms" hero={roadHero('PAYMENT TERMS', 'Payment Terms')} />}
-        />
-        <Route
-          path="privacy-legal-policies"
-          element={
-            <GenericPage
-              title="Privacy & Legal Policies"
-              hero={roadHero('PRIVACY & LEGAL POLICIES', 'Privacy & Legal Policies')}
-            />
-          }
-        />
+        <Route path="insurance" element={<InsuranceCoverPage />} />
+        <Route path="payment-terms" element={<PaymentTermsPage />} />
+        <Route path="privacy-legal-policies" element={<PrivacyLegalPoliciesPage />} />
         <Route path="terms-of-trade" element={<TermsOfTradePage />} />
       </Route>
     </Routes>
