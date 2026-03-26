@@ -7,6 +7,7 @@ import PrivacyLegalPoliciesPage from './pages/PrivacyLegalPoliciesPage'
 import PaymentTermsPage from './pages/PaymentTermsPage'
 import InsuranceCoverPage from './pages/InsuranceCoverPage'
 import FAQPage from './pages/FAQPage'
+import NewZealandHolidaysPage from './pages/NewZealandHolidaysPage'
 import { roadHero } from './data/pageHeros'
 
 export default function App() {
@@ -68,12 +69,7 @@ export default function App() {
             <GenericPage title="Visit New Zealand" hero={roadHero('VISIT NEW ZEALAND', 'Visit New Zealand')} />
           }
         />
-        <Route
-          path="new-zealand-holidays"
-          element={
-            <GenericPage title="New Zealand Holidays" hero={roadHero('NZ HOLIDAYS', 'NZ Holidays')} />
-          }
-        />
+        <Route path="new-zealand-holidays" element={<NewZealandHolidaysPage />} />
         <Route
           path="new-zealand-weather"
           element={<GenericPage title="New Zealand Weather" hero={roadHero('NZ WEATHER', 'NZ Weather')} />}
