@@ -1499,68 +1499,25 @@ img {
   color: #000;
 }
 
+/* Same grid and cards as homepage `.fleet-grid` / `.fleet-card` */
 .car-detail__related-list {
   margin: 0;
   padding: 0;
   list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;
 }
 
-.car-detail__related-card {
-  display: block;
-  max-width: 320px;
-  padding: 16px;
-  background: var(--color-surface);
-  border-radius: 8px;
-  box-shadow: var(--shadow);
-  text-decoration: none;
-  color: inherit;
-  position: relative;
-  transition: transform 0.15s, box-shadow 0.15s;
+.car-detail__related-list > li {
+  display: flex;
+  min-width: 0;
 }
 
-.car-detail__related-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  text-decoration: none;
-  color: inherit;
-}
-
-.car-detail__related-name {
-  display: block;
-  font-weight: 700;
-  margin-bottom: 8px;
-  line-height: 1.35;
-}
-
-.car-detail__related-price {
-  display: block;
-  font-size: 15px;
-  margin-bottom: 10px;
-}
-
-.car-detail__related-price .was {
-  text-decoration: line-through;
-  color: var(--color-muted);
-  font-size: 14px;
-  margin-right: 8px;
-}
-
-.car-detail__related-price .now {
-  font-weight: 800;
-  color: var(--color-accent);
-}
-
-.car-detail__related-price .from {
-  font-size: 11px;
-  text-transform: uppercase;
-  color: var(--color-muted);
-}
-
-.car-detail__related-cta {
-  font-size: 13px;
-  font-weight: 800;
-  color: var(--header-orange);
-  text-transform: uppercase;
+.car-detail__related-list .fleet-card {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
 }
 
 .fleet-cta-row {

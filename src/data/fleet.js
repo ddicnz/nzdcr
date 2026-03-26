@@ -34,7 +34,7 @@ export const FLEET = [
     avgRating: 4.55,
     img: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=640&q=80',
     category: 'station-wagon',
-    detailSlug: 'supersaver-swagon',
+    detailSlug: 'super-saver-wagon',
   },
   {
     name: 'Large sedan',

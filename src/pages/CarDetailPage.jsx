@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import CarDetailSpecIcon from '../components/CarDetailSpecIcon'
 import {
@@ -21,11 +21,21 @@ export default function CarDetailPage() {
     return <Navigate to="/cars/" replace />
   }
 
-  const primaryFleetCat = fleetItemCategories(car)[0]
-  const productCat = getProductCategoryByFleetCategory(primaryFleetCat)
+  const productCategories = fleetItemCategories(car)
+    .map((fc) => getProductCategoryByFleetCategory(fc))
+    .filter(Boolean)
+    .sort((a, b) => a.navLabel.localeCompare(b.navLabel))
+  const breadcrumbProductCat = productCategories[0]
   const copy = getCarDetailCopy(car.detailSlug)
   const bullets = copy?.bullets?.length ? copy.bullets : []
   const hasTabs = carDetailHasTabs(copy)
+  const showExtrasTab = Array.isArray(copy?.extras) && copy.extras.length > 0
+
+  useEffect(() => {
+    if (!showExtrasTab && activeTab === 'extras') {
+      setActiveTab('description')
+    }
+  }, [carSlug, showExtrasTab, activeTab])
   const sectionsHtml =
     copy?.sectionsHtml ??
     '<p>Full description for this vehicle is being added.</p>'
@@ -37,10 +47,10 @@ export default function CarDetailPage() {
         <Link to="/">Home</Link>
         <span className="car-detail__bc-sep" aria-hidden> / </span>
         <Link to="/cars/">Cars to hire</Link>
-        {productCat ? (
+        {breadcrumbProductCat ? (
           <>
             <span className="car-detail__bc-sep" aria-hidden> / </span>
-            <Link to={`/product-category/${productCat.slug}/`}>{productCat.navLabel}</Link>
+            <Link to={`/product-category/${breadcrumbProductCat.slug}/`}>{breadcrumbProductCat.navLabel}</Link>
           </>
         ) : null}
         <span className="car-detail__bc-sep" aria-hidden> / </span>
@@ -74,10 +84,15 @@ export default function CarDetailPage() {
           >
             Book now
           </a>
-          {productCat ? (
+          {productCategories.length > 0 ? (
             <p className="car-detail__taxon">
-              Category:{` `}
-              <Link to={`/product-category/${productCat.slug}/`}>{productCat.navLabel}</Link>
+              {productCategories.length > 1 ? 'Categories' : 'Category'}:{` `}
+              {productCategories.map((pc, i) => (
+                <span key={pc.slug}>
+                  {i > 0 ? ', ' : null}
+                  <Link to={`/product-category/${pc.slug}/`}>{pc.navLabel}</Link>
+                </span>
+              ))}
             </p>
           ) : null}
         </div>
@@ -98,17 +113,19 @@ export default function CarDetailPage() {
               >
                 Description
               </button>
-              <button
-                type="button"
-                role="tab"
-                id="tab-extras"
-                aria-selected={activeTab === 'extras'}
-                aria-controls="panel-extras"
-                className={`car-detail__tab${activeTab === 'extras' ? ' is-active' : ''}`}
-                onClick={() => setActiveTab('extras')}
-              >
-                Extras
-              </button>
+              {showExtrasTab ? (
+                <button
+                  type="button"
+                  role="tab"
+                  id="tab-extras"
+                  aria-selected={activeTab === 'extras'}
+                  aria-controls="panel-extras"
+                  className={`car-detail__tab${activeTab === 'extras' ? ' is-active' : ''}`}
+                  onClick={() => setActiveTab('extras')}
+                >
+                  Extras
+                </button>
+              ) : null}
               <button
                 type="button"
                 role="tab"
@@ -142,26 +159,26 @@ export default function CarDetailPage() {
                     ))}
                   </div>
                 ) : null}
-                <p className="car-detail__note">*Seasonal &amp; Term Conditions apply</p>
+                {(copy.descriptionNotes ?? ['*Seasonal & Term Conditions apply']).map((note, i) => (
+                  <p key={i} className="car-detail__note">
+                    {note}
+                  </p>
+                ))}
               </div>
             ) : null}
 
-            {activeTab === 'extras' ? (
+            {showExtrasTab && activeTab === 'extras' ? (
               <div
                 id="panel-extras"
                 role="tabpanel"
                 aria-labelledby="tab-extras"
                 className="car-detail__panel"
               >
-                {copy.extras?.length ? (
-                  <ul className="car-detail__extras-list">
-                    {copy.extras.map((line) => (
-                      <li key={line}>{line}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="car-detail__muted">No extras listed.</p>
-                )}
+                <ul className="car-detail__extras-list">
+                  {copy.extras.map((line) => (
+                    <li key={line}>{line}</li>
+                  ))}
+                </ul>
               </div>
             ) : null}
 
@@ -195,16 +212,28 @@ export default function CarDetailPage() {
               if (!rel) return null
               return (
                 <li key={slug}>
-                  <Link to={`/cars/${rel.detailSlug}/`} className="car-detail__related-card">
-                    <span className="sale-badge sale-badge--sm">Sale!</span>
-                    <span className="car-detail__related-name">{rel.name}</span>
-                    <span className="car-detail__related-price">
-                      <span className="was">${rel.was.toFixed(2)}</span>
-                      <span className="now">${rel.now.toFixed(2)}</span>
-                      <span className="from"> FROM</span>
-                    </span>
-                    <span className="car-detail__related-cta">Book Now</span>
-                  </Link>
+                  <article className="fleet-card">
+                    <Link to={`/cars/${rel.detailSlug}/`} className="fleet-card__link">
+                      <div className="fleet-card__img-wrap">
+                        <span className="sale-badge">Sale!</span>
+                        <img src={rel.img} alt="" loading="lazy" />
+                      </div>
+                      <h4 className="fleet-card__title">{rel.name}</h4>
+                      <p className="fleet-card__price">
+                        <span className="was">${rel.was.toFixed(2)}</span>
+                        <span className="now">${rel.now.toFixed(2)}</span>
+                        <span className="from">FROM / day</span>
+                      </p>
+                    </Link>
+                    <a
+                      href={RCM_BOOKING_LANDING}
+                      className="fleet-card__book"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Book now
+                    </a>
+                  </article>
                 </li>
               )
             })}

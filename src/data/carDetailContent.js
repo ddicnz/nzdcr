@@ -12,7 +12,8 @@
  *   extras?: string[],
  *   reviewCount?: number,
  *   reviewsEmpty?: string,
- *   sectionsHtml?: string
+ *   sectionsHtml?: string,
+ *   descriptionNotes?: string[]
  * }>}
  */
 export const CAR_DETAIL_COPY = {
@@ -45,6 +46,60 @@ export const CAR_DETAIL_COPY = {
     ],
     reviewCount: 0,
     reviewsEmpty: 'There are no reviews yet.',
+  },
+  'super-saver-wagon': {
+    bullets: [
+      'Well Maintained Budget cars',
+      'Toyota Corolla Fielder or similar Medium Sized Wagon',
+    ],
+    relatedSlugs: ['intermediate-suv-4wd'],
+    descriptionIntro:
+      'Which is the best choice for the family trip with tight budget.',
+    specs: [
+      { icon: 'doors', text: '5 Doors' },
+      { icon: 'ac', text: 'Air-conditioning' },
+      { icon: 'seats', text: '5 Seats' },
+      { icon: 'automatic', text: 'Automatic' },
+      { icon: 'luggage', text: '3 Large luggages, 4 Small luggages' },
+      { icon: 'engine', text: '1.5–1.8L' },
+    ],
+    extras: [
+      'Snow Chains from $25/month',
+      'Baby Capsule (birth to 6 months) $25/month',
+      'Baby Seat (6 months to 4 years) $25/month',
+      'Booster Seat (4 to 6 years) $25/month',
+      'Basic GPS unit $8/Day',
+      'GPS unit $10/Day',
+      'Advanced GPS unit $12/Day',
+    ],
+    reviewCount: 0,
+    reviewsEmpty: 'There are no reviews yet.',
+    descriptionNotes: [
+      '*Seasonal & Term Conditions apply',
+      '* Special price applies in seasonal occasional and depends on the length of hire. Please refer to the figures with real booking dates.',
+    ],
+  },
+  'intermediate-hatch': {
+    bullets: ['Median size hatchback', 'Toyota Corolla or similar'],
+    relatedSlugs: [
+      'large-sedan',
+      'intermediate-sedan',
+      'premium-small-hatch',
+      'intermediate-suv-4wd',
+    ],
+    descriptionIntro:
+      'Hatch Cars with most comfortable interior, and the best space for you, for your family, and for your friends.',
+    specs: [
+      { icon: 'doors', text: '5 Doors' },
+      { icon: 'ac', text: 'Air-conditioning' },
+      { icon: 'seats', text: '5 Seats' },
+      { icon: 'automatic', text: 'Automatic' },
+      { icon: 'luggage', text: '1 Large luggage, 1 Small luggage' },
+      { icon: 'engine', text: '1.5–1.8 L' },
+    ],
+    reviewCount: 0,
+    reviewsEmpty: 'There are no reviews yet.',
+    descriptionNotes: ['*Seasonal & Term Conditions Apply'],
   },
 }
 
