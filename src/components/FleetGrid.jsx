@@ -1,4 +1,5 @@
 import { FLEET } from '../data/fleet'
+import { RCM_BOOKING_LANDING } from '../data/rcmBooking'
 
 export default function FleetGrid({ items = FLEET, withSection = true }) {
   const grid = (
@@ -15,6 +16,14 @@ export default function FleetGrid({ items = FLEET, withSection = true }) {
             <span className="now">${car.now.toFixed(2)}</span>
             <span className="from">FROM / day</span>
           </p>
+          <a
+            href={RCM_BOOKING_LANDING}
+            className="fleet-card__book"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Book now
+          </a>
         </article>
       ))}
     </div>

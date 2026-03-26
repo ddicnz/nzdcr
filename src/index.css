@@ -1137,6 +1137,31 @@ img {
   color: var(--color-muted);
 }
 
+.fleet-card__book {
+  display: block;
+  margin: 6px 14px 16px;
+  padding: 10px 14px;
+  text-align: center;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #fff;
+  background: var(--color-accent);
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radius);
+  text-decoration: none;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.fleet-card__book:hover {
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  color: #fff;
+  text-decoration: none;
+}
+
 .fleet-cta-row {
   display: flex;
   flex-wrap: wrap;

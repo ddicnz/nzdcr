@@ -1,4 +1,7 @@
 /** Rental Car Manager — Discount Car Rentals (must match live step1 API / form field names). */
+export const RCM_BOOKING_LANDING =
+  'https://web.rentalcarmanager.com/API3/Discount-Car-Rentals/'
+
 export const RCM_STEP2_ACTION =
   'https://web.rentalcarmanager.com/API3/Discount-Car-Rentals/step2'
 
