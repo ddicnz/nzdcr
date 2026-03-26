@@ -1225,6 +1225,39 @@ img {
   color: var(--color-muted);
 }
 
+.fleet-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  margin: 12px 0 0;
+  padding: 0 0 10px;
+}
+
+.fleet-toolbar__count {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-muted);
+}
+
+.fleet-toolbar__sort {
+  margin: 0;
+}
+
+.fleet-toolbar__select {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  padding: 8px 36px 8px 12px;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  background: var(--color-surface);
+  cursor: pointer;
+  min-width: min(100%, 260px);
+}
+
 /* Testimonial */
 .testimonial-strip {
   background: var(--color-surface);

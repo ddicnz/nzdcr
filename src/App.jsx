@@ -10,6 +10,7 @@ import FAQPage from './pages/FAQPage'
 import NewZealandHolidaysPage from './pages/NewZealandHolidaysPage'
 import CarsPage from './pages/CarsPage'
 import ProductCategoryPage from './pages/ProductCategoryPage'
+import { RedirectFromProductCategory } from './pages/LegacyFleetRedirects'
 import { roadHero } from './data/pageHeros'
 
 export default function App() {
@@ -18,7 +19,8 @@ export default function App() {
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="cars" element={<CarsPage />} />
-        <Route path="product-category/:slug" element={<ProductCategoryPage />} />
+        <Route path="category/:slug" element={<ProductCategoryPage />} />
+        <Route path="product-category/:slug" element={<RedirectFromProductCategory />} />
         <Route
           path="location"
           element={<GenericPage title="Locations" hero={roadHero('LOCATIONS', 'Locations')} />}

@@ -1,10 +1,24 @@
+import { useMemo } from 'react'
+import { Navigate, useSearchParams } from 'react-router-dom'
 import PageHeroBanner from '../components/PageHeroBanner'
 import FleetGrid from '../components/FleetGrid'
 import FleetCategoryNav from '../components/FleetCategoryNav'
+import FleetSortBar from '../components/FleetSortBar'
 import { roadHero } from '../data/pageHeros'
 import { FLEET } from '../data/fleet'
+import { migrateSearchParamsToOrderby, sortFleetItems } from '../data/fleetSort'
 
 export default function CarsPage() {
+  const [searchParams] = useSearchParams()
+  const orderbyParam = searchParams.get('orderby')
+  const sorted = useMemo(() => sortFleetItems(FLEET, orderbyParam), [orderbyParam])
+
+  if (searchParams.get('sort')) {
+    const next = migrateSearchParamsToOrderby(searchParams)
+    const qs = next.toString()
+    return <Navigate to={qs ? `/cars/?${qs}` : '/cars/'} replace />
+  }
+
   return (
     <>
       <PageHeroBanner {...roadHero('CARS TO HIRE', 'Cars to hire')} />
@@ -20,10 +34,10 @@ export default function CarsPage() {
             </p>
             <h2 className="cars-page__list-title">Here&rsquo;s a list of all the rental cars we currently have available.</h2>
             <FleetCategoryNav activeSlug={null} />
-            <p className="cars-page__result-count">Showing all {FLEET.length} results</p>
+            <FleetSortBar resultLine={`Showing all ${FLEET.length} results`} />
           </header>
         </div>
-        <FleetGrid items={FLEET} />
+        <FleetGrid items={sorted} />
       </div>
     </>
   )

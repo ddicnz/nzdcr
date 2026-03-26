@@ -1,5 +1,5 @@
 /**
- * WooCommerce-style product category URLs (e.g. nzdcr.co.nz/product-category/hatches/).
+ * Category URLs: `/category/<slug>/` with optional `?orderby=` (see fleetSort.js).
  * @type {Array<{ slug: string, fleetCategory: string, navLabel: string, heroHeading: string, breadcrumbLast: string, intro: string }>}
  */
 export const PRODUCT_CATEGORIES = [
