@@ -101,6 +101,32 @@ export const CAR_DETAIL_COPY = {
     reviewsEmpty: 'There are no reviews yet.',
     descriptionNotes: ['*Seasonal & Term Conditions Apply'],
   },
+  'intermediate-sedan': {
+    bullets: ['Median size Cars', 'Toyota Corolla 4 door sedan or Similar'],
+    relatedSlugs: ['large-sedan', 'intermediate-hatch', 'intermediate-suv-4wd'],
+    descriptionIntro:
+      'The best for you to enjoy the New Zealand road-trip.',
+    specs: [
+      { icon: 'doors', text: '4 Doors' },
+      { icon: 'ac', text: 'Air-conditioning' },
+      { icon: 'seats', text: '5 Seats' },
+      { icon: 'automatic', text: 'Automatic Transmission' },
+      { icon: 'luggage', text: '2 Large luggages, 2 Small luggages' },
+      { icon: 'engine', text: '1.3–1.8 L' },
+    ],
+    extras: [
+      'Snow Chains from $25/month',
+      'Baby Capsule (birth to 6 months) $25/month',
+      'Baby Seat (6 months to 4 years) $25/month',
+      'Booster Seat (4 to 6 years) $25/month',
+      'Basic GPS unit $8/Day',
+      'GPS unit $10/Day',
+      'Advanced GPS unit $12/Day',
+    ],
+    reviewCount: 0,
+    reviewsEmpty: 'There are no reviews yet.',
+    descriptionNotes: ['*Seasonal & Terms & Conditions Apply'],
+  },
 }
 
 export function getCarDetailCopy(slug) {

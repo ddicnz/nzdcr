@@ -23,7 +23,7 @@ export const FLEET = [
     was: 44.95,
     now: 19.95,
     avgRating: 4.85,
-    img: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=640&q=80',
+    img: '/pic/cars/Small%20Hatch.jpg',
     category: 'compact',
     detailSlug: 'premium-small-hatch',
   },
