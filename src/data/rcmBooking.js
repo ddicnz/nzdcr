@@ -2,7 +2,7 @@
 export const RCM_BOOKING_LANDING =
   'https://web.rentalcarmanager.com/API3/Discount-Car-Rentals/'
 
-/** Customer kiosk / check-in workflow (opened from `/checkin` after optional reference is entered). */
+/** Customer kiosk / check-in workflow (header “Check-in” opens this on RCM). */
 export const RCM_CHECKIN_WORKFLOW_URL =
   'https://web.rentalcarmanager.com/Workflow/workflow/2'
 
@@ -10,7 +10,7 @@ export const RCM_CHECKIN_WORKFLOW_KEY =
   'TnpEaXNjb3VudENhclJlbnRhbHMyMDJ8UkNNU3VwcG9ydHxpeURybzJMNw=='
 
 /**
- * Query keys for `/checkin` → RCM kiosk URL. Adjust if the workflow expects different names.
+ * Optional query keys for {@link buildRcmCheckinUrl} when pre-filling. Adjust if RCM changes.
  */
 export const RCM_CHECKIN_RESERVATION_QUERY_KEY = 'reservationno'
 export const RCM_CHECKIN_LASTNAME_QUERY_KEY = 'lastname'

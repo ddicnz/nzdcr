@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { NAV } from '../navConfig'
 import { LOGO_SRC } from '../constants'
+import { buildRcmCheckinUrl } from '../data/rcmBooking'
 
 function IconPhone() {
   return (
@@ -184,9 +185,14 @@ export default function Header() {
               <NavItem key={item.label} item={item} mobile={menuOpen} onClose={closeMenu} />
             ))}
           </nav>
-          <Link to="/checkin" className="header-checkin">
+          <a
+            href={buildRcmCheckinUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="header-checkin"
+          >
             Check-in
-          </Link>
+          </a>
         </div>
       </div>
     </header>

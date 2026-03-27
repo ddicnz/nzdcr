@@ -69,6 +69,8 @@ img {
 /* Hero + floating card — no bottom gap; meets next section flush */
 .home-hero-banner {
   --hero-panel-inset: clamp(22px, 3.6vmin, 40px);
+  /* 预定框贴右时与视口右缘的距离（略大一点 = 整体往左让出空隙） */
+  --hero-panel-from-right: clamp(28px, 4.8vw, 180px);
   --hero-panel-w: min(400px, calc(100% - 2 * var(--hero-panel-inset)));
   /* 文案左缘 ≈ 页宽 20%（不小于安全边距） */
   --hero-promo-start: max(var(--hero-panel-inset), 20%);
@@ -99,7 +101,7 @@ img {
   filter: brightness(0.82);
 }
 
-/* Orange promo — starts ~20% from left; stops before booking panel */
+/* Orange promo — left side; stops before booking panel */
 .home-hero-promo {
   --hero-promo-orange: #f27121;
   position: absolute;
@@ -111,7 +113,7 @@ img {
   box-sizing: border-box;
   padding: 0;
   max-width: calc(
-    100% - var(--hero-promo-start) - var(--hero-panel-inset) - var(--hero-panel-w) -
+    100% - var(--hero-promo-start) - var(--hero-panel-from-right) - var(--hero-panel-w) -
       var(--hero-promo-panel-gap)
   );
   width: max-content;
@@ -161,7 +163,8 @@ img {
 .home-hero-banner__panel {
   position: absolute;
   top: var(--hero-panel-inset);
-  right: var(--hero-panel-inset);
+  right: var(--hero-panel-from-right);
+  left: auto;
   bottom: var(--hero-panel-inset);
   transform: none;
   width: var(--hero-panel-w);
@@ -324,7 +327,7 @@ img {
     border-radius: 12px;
   }
 
-  /* Stacked hero: same as other routes — Check-in in-flow on the right */
+  /* Stacked hero: Check-in in-flow on the right */
   .header-nav-row--home-booking-align .header-checkin {
     position: relative;
     top: auto;
@@ -567,102 +570,6 @@ img {
   color: #000;
 }
 
-.checkin-page {
-  padding: 28px 0 56px;
-}
-
-.checkin-page__card {
-  max-width: 32rem;
-  margin: 0 auto;
-  padding: 28px 24px 32px;
-  background: var(--color-surface);
-  border-radius: 12px;
-  box-shadow: var(--shadow);
-  border: 2px solid var(--color-accent);
-}
-
-.checkin-page__form-title {
-  margin: 0 0 10px;
-  font-size: 1.08rem;
-  font-weight: 800;
-  color: #000;
-  line-height: 1.3;
-}
-
-.checkin-page__lead {
-  margin: 0 0 20px;
-  font-size: 14px;
-  line-height: 1.55;
-  color: var(--color-muted);
-}
-
-.checkin-page__form {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.checkin-page__field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.checkin-page__field label {
-  font-size: 13px;
-  font-weight: 700;
-  color: #333;
-}
-
-.checkin-page__field input {
-  width: 100%;
-  padding: 11px 12px;
-  font: inherit;
-  font-size: 15px;
-  border: 1px solid #bbb;
-  border-radius: 8px;
-  background: #fff;
-  color: var(--color-text);
-  box-sizing: border-box;
-}
-
-.checkin-page__submit {
-  align-self: center;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 7.5rem;
-  padding: 12px 28px;
-  font-family: inherit;
-  font-weight: 800;
-  font-size: 15px;
-  letter-spacing: 0.02em;
-  color: #fff;
-  background: var(--color-accent);
-  border: none;
-  border-radius: var(--radius);
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(241, 128, 45, 0.35);
-  transition: background 0.15s;
-}
-
-.checkin-page__submit:hover {
-  background: var(--color-accent-hover);
-  color: #fff;
-}
-
-.checkin-page__notice {
-  margin: 18px 0 0;
-  font-size: 14px;
-  line-height: 1.5;
-  color: var(--color-muted);
-}
-
-.checkin-page__notice a {
-  font-weight: 700;
-  color: var(--color-accent);
-}
-
 .faq-page h2 {
   margin: 1.5rem 0 0.5rem;
   font-size: clamp(1.14rem, 2.8vw, 1.35rem);
@@ -894,7 +801,7 @@ img {
 }
 
 /*
- * Home only: Check-in stays in nav; horizontal center matches hero booking card.
+ * Home only: Check-in in nav; aligned with hero booking card (right column).
  */
 .header-nav-row--home-booking-align {
   position: relative;
@@ -903,6 +810,7 @@ img {
 @media (min-width: 1025px) {
   .header-nav-row--home-booking-align {
     --nav-book-panel-inset: clamp(22px, 3.6vmin, 40px);
+    --nav-book-panel-from-right: clamp(28px, 4.8vw, 180px);
     --nav-book-panel-w: min(400px, calc(100vw - 2 * var(--nav-book-panel-inset)));
   }
 
@@ -911,7 +819,7 @@ img {
     position: absolute;
     top: 0;
     bottom: 0;
-    left: calc(100% - var(--nav-book-panel-inset) - var(--nav-book-panel-w) / 2);
+    left: calc(100% - var(--nav-book-panel-from-right) - var(--nav-book-panel-w) / 2);
     height: fit-content;
     margin-top: auto;
     margin-bottom: auto;
