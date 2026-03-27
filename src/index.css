@@ -328,7 +328,11 @@ img {
   .header-nav-row--home-booking-align .header-checkin {
     position: relative;
     top: auto;
+    bottom: auto;
     left: auto;
+    height: auto;
+    margin-top: 0;
+    margin-bottom: 0;
     transform: none;
     margin-left: auto;
     z-index: auto;
@@ -561,6 +565,102 @@ img {
 
 .terms-prose a:hover {
   color: #000;
+}
+
+.checkin-page {
+  padding: 28px 0 56px;
+}
+
+.checkin-page__card {
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: 28px 24px 32px;
+  background: var(--color-surface);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  border: 2px solid var(--color-accent);
+}
+
+.checkin-page__form-title {
+  margin: 0 0 10px;
+  font-size: 1.08rem;
+  font-weight: 800;
+  color: #000;
+  line-height: 1.3;
+}
+
+.checkin-page__lead {
+  margin: 0 0 20px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--color-muted);
+}
+
+.checkin-page__form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.checkin-page__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.checkin-page__field label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #333;
+}
+
+.checkin-page__field input {
+  width: 100%;
+  padding: 11px 12px;
+  font: inherit;
+  font-size: 15px;
+  border: 1px solid #bbb;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--color-text);
+  box-sizing: border-box;
+}
+
+.checkin-page__submit {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 7.5rem;
+  padding: 12px 28px;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  color: #fff;
+  background: var(--color-accent);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(241, 128, 45, 0.35);
+  transition: background 0.15s;
+}
+
+.checkin-page__submit:hover {
+  background: var(--color-accent-hover);
+  color: #fff;
+}
+
+.checkin-page__notice {
+  margin: 18px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-muted);
+}
+
+.checkin-page__notice a {
+  font-weight: 700;
+  color: var(--color-accent);
 }
 
 .faq-page h2 {
@@ -806,17 +906,22 @@ img {
     --nav-book-panel-w: min(400px, calc(100vw - 2 * var(--nav-book-panel-inset)));
   }
 
+  /* True vertical center in the orange strip (flex row height can make top:50% feel low). */
   .header-nav-row--home-booking-align .header-checkin {
     position: absolute;
-    top: 50%;
+    top: 0;
+    bottom: 0;
     left: calc(100% - var(--nav-book-panel-inset) - var(--nav-book-panel-w) / 2);
-    transform: translate(-50%, -50%);
+    height: fit-content;
+    margin-top: auto;
+    margin-bottom: auto;
     margin-left: 0;
+    transform: translateX(-50%);
     z-index: 65;
   }
 
   .header-nav-row--home-booking-align .header-checkin:hover {
-    transform: translate(-50%, calc(-50% - 1px));
+    transform: translateX(-50%) translateY(-1px);
   }
 }
 
@@ -1761,7 +1866,81 @@ img {
   background: #f0f4f3;
 }
 
-/* Footer — dark three-column + black legal bar */
+/* Footer — Why choose strip + dark columns + legal bar */
+.footer-promo {
+  background: #e8ece9;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.footer-promo__inner {
+  padding: 36px 0 40px;
+}
+
+.footer-promo__heading {
+  margin: 0 0 26px;
+  text-align: center;
+  font-size: clamp(1.15rem, 2.4vw, 1.42rem);
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--color-text);
+  letter-spacing: 0.01em;
+}
+
+.footer-promo__grid {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px 24px;
+}
+
+@media (max-width: 900px) {
+  .footer-promo__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.footer-promo__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.footer-promo__check {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.footer-promo__check-icon {
+  display: block;
+}
+
+.footer-promo__text {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--color-text);
+}
+
+@media (max-width: 520px) {
+  .footer-promo__grid {
+    gap: 12px 16px;
+  }
+
+  .footer-promo__text {
+    font-size: 13px;
+  }
+}
+
 .site-footer {
   position: relative;
   flex-shrink: 0;

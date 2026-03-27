@@ -1,5 +1,27 @@
 import { Link } from 'react-router-dom'
 
+const FOOTER_WHY_CHOOSE = [
+  'FREE Airport Shuttle Bus',
+  '24/7 Pick up & Drop off',
+  'One-way hire available',
+  'Cross-island travel supported',
+  'Roadside assistance available',
+  'Wide range of vehicles',
+  'Great customer service',
+  'Unlimited Kms',
+]
+
+function IconPromoCheck() {
+  return (
+    <svg className="footer-promo__check-icon" viewBox="0 0 12 10" width="12" height="10" aria-hidden>
+      <path
+        fill="currentColor"
+        d="M4.2 9.1 0 4.9l1.4-1.4 2.8 2.8L10.6 0 12 1.4z"
+      />
+    </svg>
+  )
+}
+
 function IconEnvelope() {
   return (
     <svg className="footer-social-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden>
@@ -95,6 +117,23 @@ export default function Footer() {
 
   return (
     <footer className="site-footer">
+      <section className="footer-promo" aria-labelledby="footer-why-heading">
+        <div className="container footer-promo__inner">
+          <h2 id="footer-why-heading" className="footer-promo__heading">
+            Why choose NZ Discount Car Rentals?
+          </h2>
+          <ul className="footer-promo__grid">
+            {FOOTER_WHY_CHOOSE.map((line) => (
+              <li key={line} className="footer-promo__item">
+                <span className="footer-promo__check" aria-hidden>
+                  <IconPromoCheck />
+                </span>
+                <span className="footer-promo__text">{line}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
       <div className="site-footer__main">
         <div className="container footer-grid">
           <div className="footer-col">

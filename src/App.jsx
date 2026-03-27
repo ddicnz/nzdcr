@@ -11,6 +11,7 @@ import NewZealandHolidaysPage from './pages/NewZealandHolidaysPage'
 import CarsPage from './pages/CarsPage'
 import CarDetailPage from './pages/CarDetailPage'
 import ProductCategoryPage from './pages/ProductCategoryPage'
+import CheckInPage from './pages/CheckInPage'
 import { RedirectCategoryToProductCategory } from './pages/LegacyFleetRedirects'
 import { roadHero } from './data/pageHeros'
 
@@ -59,6 +60,7 @@ export default function App() {
           path="cars-for-sale"
           element={<GenericPage title="Cars for Sale" hero={roadHero('CARS FOR SALE', 'Cars for Sale')} />}
         />
+        <Route path="checkin" element={<CheckInPage />} />
         <Route path="faq" element={<FAQPage />} />
         <Route path="our-blog" element={<GenericPage title="Our Blog" hero={roadHero('OUR BLOG', 'Our Blog')} />} />
         <Route

@@ -2,6 +2,33 @@
 export const RCM_BOOKING_LANDING =
   'https://web.rentalcarmanager.com/API3/Discount-Car-Rentals/'
 
+/** Customer kiosk / check-in workflow (opened from `/checkin` after optional reference is entered). */
+export const RCM_CHECKIN_WORKFLOW_URL =
+  'https://web.rentalcarmanager.com/Workflow/workflow/2'
+
+export const RCM_CHECKIN_WORKFLOW_KEY =
+  'TnpEaXNjb3VudENhclJlbnRhbHMyMDJ8UkNNU3VwcG9ydHxpeURybzJMNw=='
+
+/**
+ * Query keys for `/checkin` → RCM kiosk URL. Adjust if the workflow expects different names.
+ */
+export const RCM_CHECKIN_RESERVATION_QUERY_KEY = 'reservationno'
+export const RCM_CHECKIN_LASTNAME_QUERY_KEY = 'lastname'
+
+/**
+ * @param {{ reservationNo?: string, lastName?: string }} params
+ */
+export function buildRcmCheckinUrl({ reservationNo = '', lastName = '' } = {}) {
+  const u = new URL(RCM_CHECKIN_WORKFLOW_URL)
+  u.searchParams.set('workflowcode', 'kiosk')
+  u.searchParams.set('key', RCM_CHECKIN_WORKFLOW_KEY)
+  const res = typeof reservationNo === 'string' ? reservationNo.trim() : ''
+  const last = typeof lastName === 'string' ? lastName.trim() : ''
+  if (res) u.searchParams.set(RCM_CHECKIN_RESERVATION_QUERY_KEY, res)
+  if (last) u.searchParams.set(RCM_CHECKIN_LASTNAME_QUERY_KEY, last)
+  return u.toString()
+}
+
 export const RCM_STEP2_ACTION =
   'https://web.rentalcarmanager.com/API3/Discount-Car-Rentals/step2'
 
