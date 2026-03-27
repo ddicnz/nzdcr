@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { NAV } from '../navConfig'
 import { LOGO_SRC } from '../constants'
 import { RCM_BOOKING_LANDING } from '../data/rcmBooking'
@@ -138,6 +138,8 @@ function NavItem({ item, mobile, onClose }) {
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const closeMenu = () => setMenuOpen(false)
+  const { pathname } = useLocation()
+  const homeBookingAlign = pathname === '/'
 
   return (
     <header className="site-header">
@@ -163,7 +165,9 @@ export default function Header() {
           </div>
         </div>
       </div>
-      <div className="header-nav-row">
+      <div
+        className={`header-nav-row${homeBookingAlign ? ' header-nav-row--home-booking-align' : ''}`}
+      >
         <div className="container header-nav-row__inner">
           <button
             type="button"

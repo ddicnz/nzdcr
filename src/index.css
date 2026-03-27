@@ -256,15 +256,16 @@ img {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: #fff;
-  background: #c62828;
+  background: var(--color-accent);
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(198, 40, 40, 0.35);
+  box-shadow: 0 2px 8px rgba(241, 128, 45, 0.35);
 }
 
 .home-booking__submit:hover {
-  background: #a61e24;
+  background: var(--color-accent-hover);
+  color: #fff;
 }
 
 .home-booking__btn-icon {
@@ -321,6 +322,16 @@ img {
     margin: 8px var(--hero-panel-inset) 0;
     padding: 20px 16px 22px;
     border-radius: 12px;
+  }
+
+  /* Stacked hero: same as other routes — Check-in in-flow on the right */
+  .header-nav-row--home-booking-align .header-checkin {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    margin-left: auto;
+    z-index: auto;
   }
 }
 
@@ -780,6 +791,33 @@ img {
 /* Orange navigation row */
 .header-nav-row {
   background: var(--header-orange);
+}
+
+/*
+ * Home only: Check-in stays in nav; horizontal center matches hero booking card.
+ */
+.header-nav-row--home-booking-align {
+  position: relative;
+}
+
+@media (min-width: 1025px) {
+  .header-nav-row--home-booking-align {
+    --nav-book-panel-inset: clamp(22px, 3.6vmin, 40px);
+    --nav-book-panel-w: min(400px, calc(100vw - 2 * var(--nav-book-panel-inset)));
+  }
+
+  .header-nav-row--home-booking-align .header-checkin {
+    position: absolute;
+    top: 50%;
+    left: calc(100% - var(--nav-book-panel-inset) - var(--nav-book-panel-w) / 2);
+    transform: translate(-50%, -50%);
+    margin-left: 0;
+    z-index: 65;
+  }
+
+  .header-nav-row--home-booking-align .header-checkin:hover {
+    transform: translate(-50%, calc(-50% - 1px));
+  }
 }
 
 .header-nav-row__inner {
