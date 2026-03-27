@@ -58,7 +58,16 @@ export default function CarDetailPage() {
       </div>
 
       <div className="container car-detail__hero">
-        <div className="car-detail__media">
+        <div
+          className={[
+            'car-detail__media',
+            car.detailSlug === 'premium-small-hatch' && 'car-detail__media--bright-hatch',
+            car.detailSlug === 'intermediate-hatch' && 'car-detail__media--intermediate-hatch-img',
+            car.detailSlug === 'intermediate-sedan' && 'car-detail__media--intermediate-sedan-img',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+        >
           <span className="sale-badge">Sale!</span>
           <img src={car.img} alt="" />
         </div>
@@ -212,7 +221,16 @@ export default function CarDetailPage() {
               if (!rel) return null
               return (
                 <li key={slug}>
-                  <article className="fleet-card">
+                  <article
+                    className={[
+                      'fleet-card',
+                      rel.detailSlug === 'premium-small-hatch' && 'fleet-card--bright-hatch',
+                      rel.detailSlug === 'intermediate-hatch' && 'fleet-card--intermediate-hatch-img',
+                      rel.detailSlug === 'intermediate-sedan' && 'fleet-card--intermediate-sedan-img',
+                    ]
+                      .filter(Boolean)
+                      .join(' ')}
+                  >
                     <Link to={`/cars/${rel.detailSlug}/`} className="fleet-card__link">
                       <div className="fleet-card__img-wrap">
                         <span className="sale-badge">Sale!</span>

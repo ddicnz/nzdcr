@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
 import HomePage from './pages/HomePage'
 import GenericPage from './pages/GenericPage'
@@ -19,6 +19,18 @@ export default function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
+        <Route
+          path="cars/intermediate-suv-4wd"
+          element={<Navigate to="/cars/suv-4wd2wd/" replace />}
+        />
+        <Route
+          path="cars/supersaver-people-mover"
+          element={<Navigate to="/cars/budget-people-mover/" replace />}
+        />
+        <Route
+          path="cars/large-people-mover"
+          element={<Navigate to="/cars/luxury-people-mover/" replace />}
+        />
         <Route path="cars/:carSlug" element={<CarDetailPage />} />
         <Route path="cars" element={<CarsPage />} />
         <Route path="product-category/:slug" element={<ProductCategoryPage />} />

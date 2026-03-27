@@ -1162,6 +1162,21 @@ img {
   object-fit: cover;
 }
 
+/* Small Hatch (`premium-small-hatch`) — brighten dark photo; adjust `brightness()` in this file */
+.fleet-card--bright-hatch .fleet-card__img-wrap img {
+  filter: brightness(1.22);
+}
+
+/* Intermediate Hatch — vertical crop (`object-fit: cover`). Tweak the second value only:
+   smaller % → framing moves up (more of top of photo); larger % → moves down. */
+.fleet-card--intermediate-hatch-img .fleet-card__img-wrap img {
+  object-position: center 58%;
+}
+
+.fleet-card--intermediate-sedan-img .fleet-card__img-wrap img {
+  object-position: center 58%;
+}
+
 .sale-badge {
   position: absolute;
   top: 10px;
@@ -1302,6 +1317,18 @@ img {
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.car-detail__media--bright-hatch img {
+  filter: brightness(1.22);
+}
+
+.car-detail__media--intermediate-hatch-img img {
+  object-position: center 58%;
+}
+
+.car-detail__media--intermediate-sedan-img img {
+  object-position: center 58%;
 }
 
 .car-detail__title {
