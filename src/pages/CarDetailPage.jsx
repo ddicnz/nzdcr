@@ -64,6 +64,7 @@ export default function CarDetailPage() {
             car.detailSlug === 'premium-small-hatch' && 'car-detail__media--bright-hatch',
             car.detailSlug === 'intermediate-hatch' && 'car-detail__media--intermediate-hatch-img',
             car.detailSlug === 'intermediate-sedan' && 'car-detail__media--intermediate-sedan-img',
+            car.detailSlug === 'large-sedan' && 'car-detail__media--large-sedan-img',
           ]
             .filter(Boolean)
             .join(' ')}
@@ -225,14 +226,22 @@ export default function CarDetailPage() {
                     className={[
                       'fleet-card',
                       rel.detailSlug === 'premium-small-hatch' && 'fleet-card--bright-hatch',
-                      rel.detailSlug === 'intermediate-hatch' && 'fleet-card--intermediate-hatch-img',
                       rel.detailSlug === 'intermediate-sedan' && 'fleet-card--intermediate-sedan-img',
                     ]
                       .filter(Boolean)
                       .join(' ')}
                   >
                     <Link to={`/cars/${rel.detailSlug}/`} className="fleet-card__link">
-                      <div className="fleet-card__img-wrap">
+                      <div
+                        className={[
+                          'fleet-card__img-wrap',
+                          rel.detailSlug === 'intermediate-hatch' &&
+                            'fleet-card__img-wrap--intermediate-hatch',
+                          rel.detailSlug === 'large-sedan' && 'fleet-card__img-wrap--large-sedan',
+                        ]
+                          .filter(Boolean)
+                          .join(' ')}
+                      >
                         <span className="sale-badge">Sale!</span>
                         <img src={rel.img} alt="" loading="lazy" />
                       </div>

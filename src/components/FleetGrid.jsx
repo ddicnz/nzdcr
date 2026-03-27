@@ -11,14 +11,21 @@ export default function FleetGrid({ items = FLEET, withSection = true }) {
           className={[
             'fleet-card',
             car.detailSlug === 'premium-small-hatch' && 'fleet-card--bright-hatch',
-            car.detailSlug === 'intermediate-hatch' && 'fleet-card--intermediate-hatch-img',
             car.detailSlug === 'intermediate-sedan' && 'fleet-card--intermediate-sedan-img',
           ]
             .filter(Boolean)
             .join(' ')}
         >
           <Link to={`/cars/${car.detailSlug}/`} className="fleet-card__link">
-            <div className="fleet-card__img-wrap">
+            <div
+              className={[
+                'fleet-card__img-wrap',
+                car.detailSlug === 'intermediate-hatch' && 'fleet-card__img-wrap--intermediate-hatch',
+                car.detailSlug === 'large-sedan' && 'fleet-card__img-wrap--large-sedan',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+            >
               <span className="sale-badge">Sale!</span>
               <img src={car.img} alt="" loading="lazy" />
             </div>

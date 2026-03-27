@@ -11,6 +11,8 @@ import NewZealandHolidaysPage from './pages/NewZealandHolidaysPage'
 import CarsPage from './pages/CarsPage'
 import CarDetailPage from './pages/CarDetailPage'
 import ProductCategoryPage from './pages/ProductCategoryPage'
+import LocationsPage from './pages/LocationsPage'
+import AucklandAirportPage from './pages/AucklandAirportPage'
 import { RedirectCategoryToProductCategory } from './pages/LegacyFleetRedirects'
 import { roadHero } from './data/pageHeros'
 
@@ -35,16 +37,8 @@ export default function App() {
         <Route path="cars" element={<CarsPage />} />
         <Route path="product-category/:slug" element={<ProductCategoryPage />} />
         <Route path="category/:slug" element={<RedirectCategoryToProductCategory />} />
-        <Route
-          path="location"
-          element={<GenericPage title="Locations" hero={roadHero('LOCATIONS', 'Locations')} />}
-        />
-        <Route
-          path="auckland-airport"
-          element={
-            <GenericPage title="Auckland Airport" hero={roadHero('AUCKLAND AIRPORT', 'Auckland Airport')} />
-          }
-        />
+        <Route path="location" element={<LocationsPage />} />
+        <Route path="auckland-airport" element={<AucklandAirportPage />} />
         <Route
           path="christchurch-airport"
           element={

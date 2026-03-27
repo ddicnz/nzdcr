@@ -41,7 +41,7 @@ export const FLEET = [
     was: 49.95,
     now: 29.95,
     avgRating: 4.6,
-    img: 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=640&q=80',
+    img: '/pic/cars/Large%20Sedan.png',
     category: 'intermediate',
     detailSlug: 'large-sedan',
   },
