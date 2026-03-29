@@ -13,6 +13,8 @@ import CarDetailPage from './pages/CarDetailPage'
 import ProductCategoryPage from './pages/ProductCategoryPage'
 import LocationsPage from './pages/LocationsPage'
 import AucklandAirportPage from './pages/AucklandAirportPage'
+import ChristchurchAirportPage from './pages/ChristchurchAirportPage'
+import QueenstownAirportPage from './pages/QueenstownAirportPage'
 import { RedirectCategoryToProductCategory } from './pages/LegacyFleetRedirects'
 import { roadHero } from './data/pageHeros'
 
@@ -39,28 +41,9 @@ export default function App() {
         <Route path="category/:slug" element={<RedirectCategoryToProductCategory />} />
         <Route path="location" element={<LocationsPage />} />
         <Route path="auckland-airport" element={<AucklandAirportPage />} />
-        <Route
-          path="christchurch-airport"
-          element={
-            <GenericPage
-              title="Christchurch Airport"
-              hero={roadHero('CHRISTCHURCH AIRPORT', 'Christchurch Airport')}
-            />
-          }
-        />
-        <Route
-          path="queenstown-airport"
-          element={
-            <GenericPage
-              title="Queenstown Airport"
-              hero={roadHero('QUEENSTOWN AIRPORT', 'Queenstown Airport')}
-            />
-          }
-        />
-        <Route
-          path="waiheke-island"
-          element={<GenericPage title="Waiheke Island" hero={roadHero('WAIHEKE ISLAND', 'Waiheke Island')} />}
-        />
+        <Route path="christchurch-airport" element={<ChristchurchAirportPage />} />
+        <Route path="queenstown-airport" element={<QueenstownAirportPage />} />
+        <Route path="waiheke-island" element={<Navigate to="/location/" replace />} />
         <Route
           path="cars-for-sale"
           element={<GenericPage title="Cars for Sale" hero={roadHero('CARS FOR SALE', 'Cars for Sale')} />}

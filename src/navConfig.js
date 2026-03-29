@@ -19,7 +19,6 @@ export const NAV = [
       { label: 'Auckland Airport', to: '/auckland-airport/' },
       { label: 'Christchurch Airport', to: '/christchurch-airport/' },
       { label: 'Queenstown Airport', to: '/queenstown-airport/' },
-      { label: 'Waiheke Island', to: '/waiheke-island/' },
     ],
   },
   { label: 'Cars for Sale', to: '/cars-for-sale/' },
