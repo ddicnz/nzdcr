@@ -22,6 +22,10 @@ export default function FleetGrid({ items = FLEET, withSection = true }) {
                 'fleet-card__img-wrap',
                 car.detailSlug === 'intermediate-hatch' && 'fleet-card__img-wrap--intermediate-hatch',
                 car.detailSlug === 'large-sedan' && 'fleet-card__img-wrap--large-sedan',
+                car.detailSlug === 'suv-4wd2wd' && 'fleet-card__img-wrap--suv-4wd2wd',
+                car.detailSlug === 'budget-people-mover' && 'fleet-card__img-wrap--people-mover-zoom',
+                car.detailSlug === 'budget-people-mover' && 'fleet-card__img-wrap--budget-people-mover-shift',
+                car.detailSlug === 'luxury-people-mover' && 'fleet-card__img-wrap--people-mover-zoom',
               ]
                 .filter(Boolean)
                 .join(' ')}

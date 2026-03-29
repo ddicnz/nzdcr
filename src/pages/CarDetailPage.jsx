@@ -65,6 +65,10 @@ export default function CarDetailPage() {
             car.detailSlug === 'intermediate-hatch' && 'car-detail__media--intermediate-hatch-img',
             car.detailSlug === 'intermediate-sedan' && 'car-detail__media--intermediate-sedan-img',
             car.detailSlug === 'large-sedan' && 'car-detail__media--large-sedan-img',
+            car.detailSlug === 'suv-4wd2wd' && 'car-detail__media--suv-4wd2wd-img',
+            (car.detailSlug === 'budget-people-mover' || car.detailSlug === 'luxury-people-mover') &&
+              'car-detail__media--people-mover-zoom-img',
+            car.detailSlug === 'budget-people-mover' && 'car-detail__media--budget-people-mover-shift',
           ]
             .filter(Boolean)
             .join(' ')}
@@ -238,6 +242,10 @@ export default function CarDetailPage() {
                           rel.detailSlug === 'intermediate-hatch' &&
                             'fleet-card__img-wrap--intermediate-hatch',
                           rel.detailSlug === 'large-sedan' && 'fleet-card__img-wrap--large-sedan',
+                          rel.detailSlug === 'suv-4wd2wd' && 'fleet-card__img-wrap--suv-4wd2wd',
+                          rel.detailSlug === 'budget-people-mover' && 'fleet-card__img-wrap--people-mover-zoom',
+                          rel.detailSlug === 'budget-people-mover' && 'fleet-card__img-wrap--budget-people-mover-shift',
+                          rel.detailSlug === 'luxury-people-mover' && 'fleet-card__img-wrap--people-mover-zoom',
                         ]
                           .filter(Boolean)
                           .join(' ')}

@@ -1388,6 +1388,27 @@ img {
   transform-origin: center center;
 }
 
+/* Intermediate SUV 4WD — slight zoom so the vehicle reads a touch larger in frame */
+.fleet-card__img-wrap--suv-4wd2wd img {
+  object-fit: cover;
+  object-position: center center;
+  transform: scale(1.07);
+  transform-origin: center center;
+}
+
+/* Supersaver / Large people mover — slight zoom in listing cards */
+.fleet-card__img-wrap--people-mover-zoom img {
+  object-fit: cover;
+  object-position: center center;
+  transform: scale(1.08);
+  transform-origin: center center;
+}
+
+/* Supersaver people mover only — vertical framing ~10% higher than centre */
+.fleet-card__img-wrap--budget-people-mover-shift img {
+  object-position: center 110%;
+}
+
 .fleet-card--intermediate-sedan-img .fleet-card__img-wrap img {
   object-position: center 58%;
 }
@@ -1556,6 +1577,24 @@ img {
   object-position: center 90%;
   transform: scale(1.08);
   transform-origin: center center;
+}
+
+.car-detail__media--suv-4wd2wd-img img {
+  object-fit: cover;
+  object-position: center center;
+  transform: scale(1.07);
+  transform-origin: center center;
+}
+
+.car-detail__media--people-mover-zoom-img img {
+  object-fit: cover;
+  object-position: center center;
+  transform: scale(1.08);
+  transform-origin: center center;
+}
+
+.car-detail__media--budget-people-mover-shift img {
+  object-position: center 110%;
 }
 
 .car-detail__title {
