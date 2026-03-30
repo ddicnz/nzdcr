@@ -30,37 +30,33 @@ const HEADER_SOCIAL = [
   {
     label: 'Facebook',
     href: 'https://www.facebook.com/nzdcr/?fref=ts#',
-    icon: (
-      <svg viewBox="0 0 24 24" aria-hidden><path fill="currentColor" d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2v-2.3c0-2 1.2-3.1 3-3.1.9 0 1.8.16 1.8.16V11h-1c-1 0-1.3.62-1.3 1.26V15h2.2l-.35 3H13v6.95c4.56-.93 8-4.97 8-9.75z" /></svg>
-    ),
+    imgSrc: '/pic/logos/facebook.svg',
+    imgMod: 'facebook',
   },
   {
-    label: 'Twitter',
+    label: 'X',
     href: 'https://x.com/NZDCR',
-    icon: (
-      <svg viewBox="0 0 24 24" aria-hidden><path fill="currentColor" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" /></svg>
-    ),
+    imgSrc: '/pic/logos/x.png',
+    imgMod: 'x',
   },
   {
     label: 'Pinterest',
     href: 'https://nz.pinterest.com/discountcarrent/',
-    icon: (
-      <svg viewBox="0 0 24 24" aria-hidden><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12c0 4.84 3.44 8.87 8 9.8-.11-.78-.2-2.08.43-2.97.38-.58 2.48-15.82 2.48-15.82s-.63-.13-1.29-.13c-1.69 0-2.92.98-2.92 2.18 0 1.04.65 1.85 1.64 3.08.46.62.53 1.47.38 2.31-.2 1.04-1.09 1.77-2.01 1.77-2.64 0-4.39-3.11-4.39-6.14 0-2.56 1.85-5.14 5.44-5.14 3.12 0 5.22 2.17 5.22 4.99 0 3.28-1.84 5.43-4.08 5.43-.83 0-1.62-.44-1.89-.95l-.52 2.02c-.19.74-.56 1.66-.83 2.22 1.24.38 2.56.59 3.93.59 5.52 0 10-4.48 10-10S17.52 2 12 2z" /></svg>
-    ),
+    imgSrc: '/pic/logos/pin-icon.png',
+    imgMod: 'pin',
   },
   {
     label: 'Yelp',
     href: 'https://www.yelp.co.nz/biz/nz-discount-car-rental-mangere',
-    icon: (
-      <svg viewBox="0 0 24 24" aria-hidden><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" /></svg>
-    ),
+    imgSrc: '/pic/logos/yelp.png',
+    imgMod: 'yelp',
   },
 ]
 
 function HeaderSocialLinks() {
   return (
     <div className="header-social">
-      {HEADER_SOCIAL.map(({ label, href, icon }) => (
+      {HEADER_SOCIAL.map(({ label, href, imgSrc, imgMod }) => (
         <a
           key={label}
           href={href}
@@ -69,7 +65,12 @@ function HeaderSocialLinks() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          {icon}
+          <img
+            src={imgSrc}
+            alt=""
+            className={`header-social__img header-social__img--${imgMod}`}
+            decoding="async"
+          />
         </a>
       ))}
     </div>

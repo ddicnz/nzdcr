@@ -31,7 +31,7 @@ function TeaserStrip() {
           <p>
             If you&apos;re looking for a rental car in Auckland offering great value, high quality
             and total peace-of-mind, you&apos;ve come to the right place. At NZ Discount Car Rentals,
-            we offer the best value on all our rentals starting at just $9.95 a day*.
+            we offer the best value on all our rentals starting at just $19.95 a day*.
           </p>
           <Link to="/about-us/" className="teaser-card__more">
             View More →
