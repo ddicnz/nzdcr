@@ -1751,8 +1751,23 @@ img {
   color: var(--color-muted);
 }
 
-/* Homepage only — headings/copy in black */
-.home-page .hero-main__title,
+/* Homepage — one continuous white plane (no grey bands, no boxed teasers) */
+.home-page {
+  background: var(--color-surface);
+}
+
+.home-page .home-hero-banner {
+  background: var(--color-surface);
+}
+
+.home-page .hero-main {
+  background: transparent;
+}
+
+.home-page .hero-main__title {
+  color: var(--header-orange);
+}
+
 .home-page .hero-main__lead {
   color: #000;
 }
@@ -1761,40 +1776,228 @@ img {
   color: #222;
 }
 
+.home-page .teaser-strip {
+  background: transparent;
+}
+
+.home-page .teaser-card {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  min-height: 0;
+  padding: 20px 12px 28px;
+}
+
 .home-page .teaser-card h3 {
-  color: #000;
+  color: var(--header-orange);
 }
 
 .home-page .teaser-card p {
   color: #222;
 }
 
-.home-page .teaser-card:not(.teaser-card--accent) .teaser-card__more {
-  color: #000;
+.home-page .teaser-card .teaser-card__more {
+  color: var(--header-orange);
+}
+
+.home-page .teaser-card .teaser-card__more:hover {
+  color: var(--color-accent-hover);
+}
+
+.home-page .teaser-card__map-wrap {
+  margin: 4px 0 14px;
+  border-radius: 8px;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.home-page .teaser-card__map {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
 .home-page .teaser-card--accent {
-  background: var(--color-surface);
-  color: #000;
-  box-shadow: var(--shadow);
-}
-
-.home-page .teaser-card--accent h3,
-.home-page .teaser-card--accent p {
-  color: #000;
-}
-
-.home-page .teaser-card--accent .teaser-card__more {
-  color: #000;
-}
-
-.home-page .teaser-card__more:hover {
-  color: #000;
-  opacity: 0.75;
+  background: transparent;
+  box-shadow: none;
 }
 
 .home-page .fleet-section a:not(.fleet-card__book) {
   color: inherit;
+}
+
+.home-social-proof {
+  padding: 8px 16px 48px;
+}
+
+/*
+ * “58% of our business…” — 字号等在 .home-repeat-stat__text；文案在 HomePage.jsx。
+ */
+.home-repeat-stat__wrap {
+  margin: 0 auto 2.25rem;
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  /* 避免句末出现系统横向滚动条（灰竖条） */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.home-repeat-stat__wrap::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.home-repeat-stat__text {
+  margin: 0;
+  display: inline-block;
+  text-align: center;
+  font-size: clamp(1.85rem, 4.6vw, 2.65rem);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--header-orange);
+  white-space: nowrap;
+}
+
+.home-testimonials {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.35rem, 3.5vw, 2.75rem);
+  align-items: stretch;
+}
+
+.home-testimonial {
+  padding: 1rem 1.15rem 1.2rem;
+  border: 2px solid var(--header-orange);
+  border-radius: 10px;
+  background: var(--color-surface);
+  box-sizing: border-box;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+}
+
+.home-testimonial__head {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 0;
+}
+
+.home-testimonial__name-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.home-testimonial__avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--header-orange);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.35rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.home-testimonial__name {
+  margin: 0;
+  font-size: clamp(1.02rem, 1.85vw, 1.12rem);
+  font-weight: 600;
+  color: #000;
+  line-height: 1.25;
+}
+
+.home-testimonial__subtitle {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-muted);
+  line-height: 1.2;
+}
+
+.home-testimonial__rule {
+  height: 0;
+  margin: 12px 0 10px;
+  border: 0;
+  border-top: 1px solid var(--header-orange);
+  opacity: 0.55;
+}
+
+.home-testimonial__stars {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  line-height: 1;
+  letter-spacing: 0.12em;
+  color: #e6a700;
+}
+
+.home-testimonial__stars span {
+  filter: drop-shadow(0 0.5px 0 rgba(0, 0, 0, 0.12));
+}
+
+/*
+ * 客户评价正文 — 再小一点可继续压低 clamp 数值。
+ */
+.home-testimonial__text {
+  margin: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  font-size: clamp(0.76rem, 1.15vw, 0.86rem);
+  line-height: 1.48;
+  color: #333;
+}
+
+.home-testimonial__text p {
+  margin: 0 0 0.55em;
+}
+
+.home-testimonial__text p:last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 900px) {
+  .home-testimonials {
+    grid-template-columns: 1fr;
+  }
+
+  /* 仍单行：字号略收，不足时横向滑动 .home-repeat-stat__wrap */
+  .home-repeat-stat__text {
+    font-size: clamp(1.35rem, 4.2vw, 2rem);
+  }
+}
+
+/* Home — blog strip under fleet */
+.home-blog {
+  padding: 36px 0 56px;
+  background: transparent;
+}
+
+.home-blog__title {
+  margin: 0 0 1.5rem;
+  text-align: center;
+  font-size: clamp(1.25rem, 3.2vw, 1.65rem);
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: var(--header-orange);
+  line-height: 1.25;
 }
 
 /* Fleet */
