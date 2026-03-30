@@ -12,6 +12,7 @@ import NewZealandWeatherPage from './pages/NewZealandWeatherPage'
 import NewZealandActivitiesPage from './pages/NewZealandActivitiesPage'
 import AboutUsPage from './pages/AboutUsPage'
 import ContactUsPage from './pages/ContactUsPage'
+import CustomerFeedbackPage from './pages/CustomerFeedbackPage'
 import OurBlogPage from './pages/OurBlogPage'
 import BlogPostPage from './pages/BlogPostPage'
 import CarsPage from './pages/CarsPage'
@@ -61,15 +62,7 @@ export default function App() {
         />
         <Route path="our-blog/:slug" element={<BlogPostPage />} />
         <Route path="our-blog" element={<OurBlogPage />} />
-        <Route
-          path="customer-feedback"
-          element={
-            <GenericPage
-              title="Customer Feedback"
-              hero={roadHero('CUSTOMER FEEDBACK', 'Customer Feedback')}
-            />
-          }
-        />
+        <Route path="customer-feedback" element={<CustomerFeedbackPage />} />
         <Route
           path="about-nz"
           element={

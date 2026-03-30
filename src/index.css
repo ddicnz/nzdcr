@@ -1288,6 +1288,11 @@ img {
   max-width: 520px;
 }
 
+.customer-feedback-reviews {
+  padding: 32px 0 56px;
+  background: var(--color-surface);
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -1802,19 +1807,6 @@ img {
 
 .home-page .teaser-card .teaser-card__more:hover {
   color: var(--color-accent-hover);
-}
-
-.home-page .teaser-card__map-wrap {
-  margin: 4px 0 14px;
-  border-radius: 8px;
-  overflow: hidden;
-  line-height: 0;
-}
-
-.home-page .teaser-card__map {
-  width: 100%;
-  height: auto;
-  display: block;
 }
 
 .home-page .teaser-card--accent {
