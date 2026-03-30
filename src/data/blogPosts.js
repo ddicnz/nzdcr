@@ -18,7 +18,14 @@ import { ROAD_HERO_IMG } from './pageHeros'
  *   category?: string
  *   coverImage?: string
  *   blogMap?: (
- *     | { variant: 'route', title?: string, segments: Array<{ from: [number, number], to: [number, number] }>, googleDirectionsUrl?: string }
+ *     | {
+ *         variant: 'route'
+ *         title?: string
+ *         origin: string
+ *         destination: string
+ *         segments: Array<{ from: [number, number], to: [number, number] }>
+ *         googleDirectionsUrl?: string
+ *       }
  *     | { variant: 'place', title?: string, center: [number, number], zoom: number, googleMapsUrl?: string }
  *     | { variant: 'branches', title?: string }
  *   )
@@ -50,10 +57,10 @@ const BLOG_POSTS = [
     coverImage: ROAD_HERO_IMG,
     blogMap: {
       variant: 'route',
-      title: 'Indicative driving route: Auckland to Cape Reinga / Te Rerenga Wairua',
-      segments: [
-        { from: [-36.8485, 174.7633], to: [-34.428, 172.6855] },
-      ],
+      title: 'Driving route: Auckland to Cape Reinga / Te Rerenga Wairua',
+      origin: 'Auckland, New Zealand',
+      destination: 'Cape Reinga, New Zealand',
+      segments: [{ from: [-36.8485, 174.7633], to: [-34.428, 172.6855] }],
       googleDirectionsUrl:
         'https://www.google.com/maps/dir/Auckland,+New+Zealand/Cape+Reinga,+New+Zealand',
     },
@@ -70,7 +77,9 @@ const BLOG_POSTS = [
     coverImage: ROAD_HERO_IMG,
     blogMap: {
       variant: 'route',
-      title: 'Indicative driving route: Auckland to Taupo (SH1-style corridor)',
+      title: 'Driving route: Auckland to Taupo',
+      origin: 'Auckland, New Zealand',
+      destination: 'Taupo, New Zealand',
       segments: [{ from: [-36.8485, 174.7633], to: [-38.6857, 176.0702] }],
       googleDirectionsUrl:
         'https://www.google.com/maps/dir/Auckland,+New+Zealand/Taupo,+New+Zealand',
@@ -88,7 +97,9 @@ const BLOG_POSTS = [
     coverImage: ROAD_HERO_IMG,
     blogMap: {
       variant: 'route',
-      title: 'Indicative driving route: Christchurch to Queenstown',
+      title: 'Driving route: Christchurch to Queenstown',
+      origin: 'Christchurch, New Zealand',
+      destination: 'Queenstown, New Zealand',
       segments: [{ from: [-43.5321, 172.6362], to: [-45.0312, 168.6626] }],
       googleDirectionsUrl:
         'https://www.google.com/maps/dir/Christchurch,+New+Zealand/Queenstown,+New+Zealand',
@@ -106,7 +117,9 @@ const BLOG_POSTS = [
     coverImage: ROAD_HERO_IMG,
     blogMap: {
       variant: 'route',
-      title: 'Road legs via SH1: Wellington–Picton and Picton–Christchurch (Cook Strait ferry not shown)',
+      title: 'Driving route: Wellington to Christchurch (ferry included in Google routing)',
+      origin: 'Wellington, New Zealand',
+      destination: 'Christchurch, New Zealand',
       segments: [
         { from: [-41.2866, 174.7756], to: [-41.2906, 174.001] },
         { from: [-41.2906, 174.001], to: [-43.5321, 172.6362] },
@@ -116,9 +129,9 @@ const BLOG_POSTS = [
     },
   },
   {
-    slug: '10-things-to-do-in-auckland-part-1',
-    title: '10 Things to do in Auckland — Part 1',
-    heroHeading: '10 THINGS TO DO IN AUCKLAND · PART 1',
+    slug: '10-things-to-do-in-auckland',
+    title: '10 Things to do in Auckland',
+    heroHeading: '10 THINGS TO DO IN AUCKLAND',
     excerpt:
       'Harbour icons, history, sport, shopping, museums, Hauraki Gulf islands, gardens, art, parks, and family attractions — ideas for your Auckland visit.',
     dateLabel: '30 April 2024',

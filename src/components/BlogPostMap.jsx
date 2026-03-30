@@ -7,6 +7,8 @@ import markerShadow from 'leaflet/dist/images/marker-shadow.png'
 import 'leaflet/dist/leaflet.css'
 import { ALL_BRANCHES_GOOGLE_MAPS_HREF, NZDCR_BRANCHES } from '../data/branchLocations'
 
+const GOOGLE_MAPS_EMBED_KEY = import.meta.env.VITE_GOOGLE_MAPS_EMBED_API_KEY ?? ''
+
 const pinIcon = L.icon({
   iconUrl: markerIcon,
   iconRetinaUrl: markerIcon2x,
@@ -18,7 +20,22 @@ const pinIcon = L.icon({
 })
 
 /**
- * Fetch road geometry from OSRM (driving profile) and draw on the map.
+ * @param {string} origin
+ * @param {string} destination
+ * @returns {string}
+ */
+function googleDirectionsEmbedSrc(origin, destination) {
+  if (!GOOGLE_MAPS_EMBED_KEY) return ''
+  const u = new URL('https://www.google.com/maps/embed/v1/directions')
+  u.searchParams.set('key', GOOGLE_MAPS_EMBED_KEY)
+  u.searchParams.set('origin', origin)
+  u.searchParams.set('destination', destination)
+  u.searchParams.set('region', 'nz')
+  u.searchParams.set('mode', 'driving')
+  return u.toString()
+}
+
+/**
  * @param {{ segments: Array<{ from: [number, number], to: [number, number] }> }} props
  */
 function OsrmRouteLayer({ segments }) {
@@ -72,7 +89,38 @@ export default function BlogPostMap({ blogMap }) {
   if (!blogMap) return null
 
   if (blogMap.variant === 'route') {
-    const { title, segments, googleDirectionsUrl } = blogMap
+    const { title, origin, destination, segments, googleDirectionsUrl } = blogMap
+    const gSrc = googleDirectionsEmbedSrc(origin, destination)
+
+    if (gSrc) {
+      return (
+        <div className="blog-post-map">
+          {title ? <p className="blog-post-map__title">{title}</p> : null}
+          <div className="blog-post-map__iframe-wrap">
+            <iframe
+              className="blog-post-map__iframe"
+              title={title || 'Driving route'}
+              loading="lazy"
+              allowFullScreen
+              referrerPolicy="no-referrer-when-downgrade"
+              src={gSrc}
+            />
+          </div>
+          <p className="blog-post-map__footnote">
+            Interactive route, travel time and distance are provided by Google Maps (may differ from road or bridge
+            closures on the day you travel).
+          </p>
+          {googleDirectionsUrl ? (
+            <p className="blog-post__map-note">
+              <a href={googleDirectionsUrl} target="_blank" rel="noopener noreferrer">
+                Open full directions in Google Maps
+              </a>
+            </p>
+          ) : null}
+        </div>
+      )
+    }
+
     const first = segments[0].from
     const last = segments[segments.length - 1].to
     return (
@@ -96,10 +144,6 @@ export default function BlogPostMap({ blogMap }) {
             <Popup>End</Popup>
           </Marker>
         </MapContainer>
-        <p className="blog-post-map__footnote">
-          Road line follows OSRM driving routing on OpenStreetMap data (indicative only). Check closures and conditions
-          before you travel.
-        </p>
         {googleDirectionsUrl ? (
           <p className="blog-post__map-note">
             <a href={googleDirectionsUrl} target="_blank" rel="noopener noreferrer">

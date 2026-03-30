@@ -772,6 +772,21 @@ img {
   margin: 0 0 0.5rem;
 }
 
+.blog-post-map__iframe-wrap {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  line-height: 0;
+}
+
+.blog-post-map__iframe {
+  width: 100%;
+  height: min(56vw, 440px);
+  min-height: 320px;
+  border: 0;
+  display: block;
+}
+
 .blog-post-map__leaflet {
   width: 100%;
   height: min(52vw, 400px);
