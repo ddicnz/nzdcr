@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { NAV } from '../navConfig'
 import { LOGO_SRC } from '../constants'
 import { buildRcmCheckinUrl } from '../data/rcmBooking'
+import SiteSocialCircles from './SiteSocialCircles'
 
 function IconPhone() {
   return (
@@ -23,57 +24,6 @@ function IconMail() {
         d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5L4 8V6l8 5 8-5v2z"
       />
     </svg>
-  )
-}
-
-const HEADER_SOCIAL = [
-  {
-    label: 'Facebook',
-    href: 'https://www.facebook.com/nzdcr/?fref=ts#',
-    imgSrc: '/pic/logos/facebook.svg',
-    imgMod: 'facebook',
-  },
-  {
-    label: 'X',
-    href: 'https://x.com/NZDCR',
-    imgSrc: '/pic/logos/x.png',
-    imgMod: 'x',
-  },
-  {
-    label: 'Pinterest',
-    href: 'https://nz.pinterest.com/discountcarrent/',
-    imgSrc: '/pic/logos/pin-icon.png',
-    imgMod: 'pin',
-  },
-  {
-    label: 'Yelp',
-    href: 'https://www.yelp.co.nz/biz/nz-discount-car-rental-mangere',
-    imgSrc: '/pic/logos/yelp.png',
-    imgMod: 'yelp',
-  },
-]
-
-function HeaderSocialLinks() {
-  return (
-    <div className="header-social">
-      {HEADER_SOCIAL.map(({ label, href, imgSrc, imgMod }) => (
-        <a
-          key={label}
-          href={href}
-          aria-label={label}
-          className="header-social__link"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            src={imgSrc}
-            alt=""
-            className={`header-social__img header-social__img--${imgMod}`}
-            decoding="async"
-          />
-        </a>
-      ))}
-    </div>
   )
 }
 
@@ -162,7 +112,7 @@ export default function Header() {
               <IconMail />
               <span>booking@nzdcr.co.nz</span>
             </a>
-            <HeaderSocialLinks />
+            <SiteSocialCircles />
           </div>
         </div>
       </div>

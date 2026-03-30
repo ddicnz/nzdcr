@@ -2807,60 +2807,9 @@ img {
   align-items: start;
 }
 
-.footer-social-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.footer-social-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: #2f2f2f;
-  text-decoration: none;
-  transition: background 0.15s ease, transform 0.15s ease;
-}
-
-.footer-social-link:hover {
-  background: #3d3d3d;
-  text-decoration: none;
-}
-
-.footer-social-icon {
-  display: block;
-  flex-shrink: 0;
-}
-
-.footer-social-link--mail {
-  color: #e8e8e8;
-}
-
-.footer-social-link--facebook {
-  color: #1877f2;
-}
-
-.footer-social-link--twitter {
-  color: #1d9bf0;
-}
-
-.footer-social-link--google {
-  background: #c53929;
-}
-
-.footer-social-link--google:hover {
-  background: #a82f21;
-}
-
-.footer-social-gplus {
-  font-size: 12px;
-  font-weight: 800;
-  color: #fff;
-  letter-spacing: -0.03em;
-  line-height: 1;
+/* Stay with us — same black circles as header (SiteSocialCircles + .header-social__*) */
+.footer-stay-social {
+  margin-top: 4px;
 }
 
 .footer-phones {
