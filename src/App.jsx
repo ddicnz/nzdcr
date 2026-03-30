@@ -8,6 +8,12 @@ import PaymentTermsPage from './pages/PaymentTermsPage'
 import InsuranceCoverPage from './pages/InsuranceCoverPage'
 import FAQPage from './pages/FAQPage'
 import NewZealandHolidaysPage from './pages/NewZealandHolidaysPage'
+import NewZealandWeatherPage from './pages/NewZealandWeatherPage'
+import NewZealandActivitiesPage from './pages/NewZealandActivitiesPage'
+import AboutUsPage from './pages/AboutUsPage'
+import ContactUsPage from './pages/ContactUsPage'
+import OurBlogPage from './pages/OurBlogPage'
+import BlogPostPage from './pages/BlogPostPage'
 import CarsPage from './pages/CarsPage'
 import CarDetailPage from './pages/CarDetailPage'
 import ProductCategoryPage from './pages/ProductCategoryPage'
@@ -49,7 +55,8 @@ export default function App() {
           element={<GenericPage title="Cars for Sale" hero={roadHero('CARS FOR SALE', 'Cars for Sale')} />}
         />
         <Route path="faq" element={<FAQPage />} />
-        <Route path="our-blog" element={<GenericPage title="Our Blog" hero={roadHero('OUR BLOG', 'Our Blog')} />} />
+        <Route path="our-blog/:slug" element={<BlogPostPage />} />
+        <Route path="our-blog" element={<OurBlogPage />} />
         <Route
           path="customer-feedback"
           element={
@@ -66,21 +73,10 @@ export default function App() {
           }
         />
         <Route path="new-zealand-holidays" element={<NewZealandHolidaysPage />} />
-        <Route
-          path="new-zealand-weather"
-          element={<GenericPage title="New Zealand Weather" hero={roadHero('NZ WEATHER', 'NZ Weather')} />}
-        />
-        <Route
-          path="new-zealand-activities"
-          element={
-            <GenericPage title="New Zealand Activities" hero={roadHero('NZ ACTIVITIES', 'NZ Activities')} />
-          }
-        />
-        <Route path="about-us" element={<GenericPage title="About Us" hero={roadHero('ABOUT US', 'About Us')} />} />
-        <Route
-          path="contact-us"
-          element={<GenericPage title="Contact Us" hero={roadHero('CONTACT US', 'Contact Us')} />}
-        />
+        <Route path="new-zealand-weather" element={<NewZealandWeatherPage />} />
+        <Route path="new-zealand-activities" element={<NewZealandActivitiesPage />} />
+        <Route path="about-us" element={<AboutUsPage />} />
+        <Route path="contact-us" element={<ContactUsPage />} />
         <Route path="hotdeal" element={<GenericPage title="Hot Deals" hero={roadHero('HOT DEALS', 'Hot Deals')} />} />
         <Route path="insurance" element={<InsuranceCoverPage />} />
         <Route path="payment-terms" element={<PaymentTermsPage />} />

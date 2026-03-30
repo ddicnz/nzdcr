@@ -8,12 +8,16 @@ function TeaserStrip() {
       <div className="container teaser-grid">
         <article className="teaser-card">
           <h3>Locations</h3>
-          <Link to="/location/" className="teaser-card__more">View More →</Link>
+          <Link to="/location/" className="teaser-card__more">
+            View More →
+          </Link>
         </article>
         <article className="teaser-card teaser-card--accent">
           <h3>Hot Deal</h3>
           <p>Get the cheapest car rental prices for your trip</p>
-          <Link to="/hotdeal/" className="teaser-card__more">View More →</Link>
+          <Link to="/hotdeal/" className="teaser-card__more">
+            View More →
+          </Link>
         </article>
         <article className="teaser-card">
           <h3>We Care…</h3>
@@ -22,7 +26,9 @@ function TeaserStrip() {
             and total peace-of-mind, you&apos;ve come to the right place. At NZ Discount Car Rentals,
             we offer the best value on all our rentals starting at just $9.95 a day*.
           </p>
-          <Link to="/about-us/" className="teaser-card__more">View More →</Link>
+          <Link to="/about-us/" className="teaser-card__more">
+            View More →
+          </Link>
         </article>
       </div>
     </section>
@@ -50,54 +56,17 @@ function HomeFleetSection() {
   return (
     <section className="fleet-section">
       <FleetGrid withSection={false} />
-      <div className="container fleet-cta-row">
-        <Link to="/cars/" className="btn btn--outline">SEE ALL OUR CARS</Link>
-        <Link to="/hotdeal/" className="btn btn--primary">DISCOUNT OFFERS</Link>
-      </div>
-    </section>
-  )
-}
-
-function TestimonialBlock() {
-  return (
-    <section className="testimonial-strip">
-      <div className="container">
-        <p className="repeat-stat">
-          <strong>58%</strong> of our business last year was from Repeat Clients.
-        </p>
-        <blockquote className="quote">
-          <p>
-            NZ Discount Car Rentals have, by far, the best service you could ask for. They have even
-            swapped a vehicle I had been using, which did not suit the needs of my family, to one that did.
-          </p>
-          <cite>Ken Leaming — A satisfied and loyal customer</cite>
-        </blockquote>
-      </div>
-    </section>
-  )
-}
-
-function BottomCta() {
-  return (
-    <section className="bottom-cta">
-      <div className="container bottom-cta__inner">
-        <h3>Why wait? Book your ideal car today.</h3>
-        <p>From only $9.95 a day*</p>
-        <Link to="/hotdeal/" className="btn btn--primary btn--lg">Book Now !</Link>
-      </div>
     </section>
   )
 }
 
 export default function HomePage() {
   return (
-    <>
+    <div className="home-page">
       <HomeHeroBanner />
       <TeaserStrip />
       <Hero />
       <HomeFleetSection />
-      <TestimonialBlock />
-      <BottomCta />
-    </>
+    </div>
   )
 }
