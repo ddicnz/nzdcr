@@ -732,6 +732,23 @@ img {
   margin-top: auto;
 }
 
+.blog-page .blog-post__inline-figure {
+  margin: 1rem 0 1.35rem;
+  padding: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.blog-page .blog-post__inline-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center;
+}
+
 .blog-page .blog-post__meta {
   margin: 0 0 0.5rem;
   font-size: 14px;

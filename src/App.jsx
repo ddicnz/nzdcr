@@ -55,6 +55,10 @@ export default function App() {
           element={<GenericPage title="Cars for Sale" hero={roadHero('CARS FOR SALE', 'Cars for Sale')} />}
         />
         <Route path="faq" element={<FAQPage />} />
+        <Route
+          path="our-blog/10-things-to-do-in-auckland-part-1"
+          element={<Navigate to="/our-blog/10-things-to-do-in-auckland/" replace />}
+        />
         <Route path="our-blog/:slug" element={<BlogPostPage />} />
         <Route path="our-blog" element={<OurBlogPage />} />
         <Route

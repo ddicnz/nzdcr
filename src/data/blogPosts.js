@@ -4,7 +4,15 @@ import bodyRoadTripChChQtn from '../content/blog-post-road-trip-christchurch-que
 import bodyRoadTripAklCape from '../content/blog-post-road-trip-auckland-cape-reinga-body.html?raw'
 import bodyRoadTripAklTaupo from '../content/blog-post-road-trip-auckland-taupo-body.html?raw'
 import bodyRoadTripWlgChCh from '../content/blog-post-road-trip-wellington-christchurch-body.html?raw'
-import { ROAD_HERO_IMG } from './pageHeros'
+/** Cover art in `public/pic/blogs/` (URLs from site root). */
+const BLOG_PIC = {
+  nzRoadTrip: '/pic/blogs/nz%20road%20trip.jpg',
+  auckland: '/pic/blogs/auckland.jpg',
+  capeReinga: '/pic/blogs/cape%20reinga.jpg',
+  taupo: '/pic/blogs/taupo.jpg',
+  queenstown: '/pic/blogs/queenstown.jpg',
+  wellington: '/pic/blogs/Wellington.jpg',
+}
 
 /**
  * Blog listing metadata. Add a row here for each post, and register its HTML in `BLOG_BODY_BY_SLUG`.
@@ -43,7 +51,7 @@ const BLOG_POSTS = [
     dateLabel: '16 June 2025',
     dateSort: '2025-06-16',
     category: 'Travel tips',
-    coverImage: ROAD_HERO_IMG,
+    coverImage: BLOG_PIC.nzRoadTrip,
   },
   {
     slug: 'road-trip-auckland-to-cape-reinga',
@@ -54,7 +62,7 @@ const BLOG_POSTS = [
     dateLabel: '24 May 2024',
     dateSort: '2024-05-24',
     category: 'Road trips',
-    coverImage: ROAD_HERO_IMG,
+    coverImage: BLOG_PIC.capeReinga,
     blogMap: {
       variant: 'route',
       title: 'Driving route: Auckland to Cape Reinga / Te Rerenga Wairua',
@@ -74,7 +82,7 @@ const BLOG_POSTS = [
     dateLabel: '30 April 2024',
     dateSort: '2024-04-30',
     category: 'Road trips',
-    coverImage: ROAD_HERO_IMG,
+    coverImage: BLOG_PIC.taupo,
     blogMap: {
       variant: 'route',
       title: 'Driving route: Auckland to Taupo',
@@ -94,7 +102,7 @@ const BLOG_POSTS = [
     dateLabel: '30 April 2024',
     dateSort: '2024-04-30',
     category: 'Road trips',
-    coverImage: ROAD_HERO_IMG,
+    coverImage: BLOG_PIC.queenstown,
     blogMap: {
       variant: 'route',
       title: 'Driving route: Christchurch to Queenstown',
@@ -114,7 +122,7 @@ const BLOG_POSTS = [
     dateLabel: '30 April 2024',
     dateSort: '2024-04-30',
     category: 'Road trips',
-    coverImage: ROAD_HERO_IMG,
+    coverImage: BLOG_PIC.wellington,
     blogMap: {
       variant: 'route',
       title: 'Driving route: Wellington to Christchurch (ferry included in Google routing)',
@@ -137,7 +145,7 @@ const BLOG_POSTS = [
     dateLabel: '30 April 2024',
     dateSort: '2024-04-30',
     category: 'City guide',
-    coverImage: ROAD_HERO_IMG,
+    coverImage: BLOG_PIC.auckland,
   },
 ]
 
@@ -147,7 +155,7 @@ const BLOG_BODY_BY_SLUG = {
   'road-trip-auckland-to-taupo-central-plateau': bodyRoadTripAklTaupo,
   'road-trip-christchurch-to-queenstown': bodyRoadTripChChQtn,
   'road-trip-wellington-to-christchurch': bodyRoadTripWlgChCh,
-  '10-things-to-do-in-auckland-part-1': body10ThingsAuckland,
+  '10-things-to-do-in-auckland': body10ThingsAuckland,
 }
 
 /** Newest first (`dateSort`); same-day posts sort by slug for stable order. */
