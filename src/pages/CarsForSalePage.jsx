@@ -12,6 +12,7 @@ import {
   SALE_BODY_TYPES,
   SALE_MAKE_OPTIONS,
   SALE_VEHICLES,
+  saleModelOptionsForMakes,
   YEAR_MAX_OPTIONS,
   YEAR_MIN_OPTIONS,
 } from '../data/carsForSale'
@@ -30,6 +31,10 @@ function vehicleMatches(f, v) {
     if (!blob.includes(kw)) return false
   }
   if (f.makes.length && !f.makes.includes(v.make)) return false
+  if (f.models.length) {
+    const key = `${v.make}|${v.model}`
+    if (!f.models.includes(key)) return false
+  }
   if (f.bodyTypes.length && !f.bodyTypes.includes(v.bodyType)) return false
   if (f.fuels.length && !f.fuels.includes(v.fuel)) return false
   if (f.locations.length && !f.locations.includes(v.location)) return false
@@ -63,6 +68,7 @@ function vehicleMatches(f, v) {
 const initialFilters = {
   keyword: '',
   makes: [],
+  models: [],
   bodyTypes: [],
   fuels: [],
   locations: [],
@@ -274,6 +280,17 @@ export default function CarsForSalePage() {
   const [filters, setFilters] = useState(initialFilters)
   const [openPicker, setOpenPicker] = useState(null)
 
+  const modelOptions = useMemo(() => saleModelOptionsForMakes(filters.makes), [filters.makes])
+
+  useEffect(() => {
+    setFilters((prev) => {
+      const valid = new Set(saleModelOptionsForMakes(prev.makes).map((o) => o.value))
+      const models = prev.models.filter((k) => valid.has(k))
+      if (models.length === prev.models.length) return prev
+      return { ...prev, models }
+    })
+  }, [filters.makes])
+
   const filtered = useMemo(() => SALE_VEHICLES.filter((v) => vehicleMatches(filters, v)), [filters])
 
   const setField = (key) => (e) => {
@@ -355,6 +372,18 @@ export default function CarsForSalePage() {
               />
 
               <SaleMultiSelect
+                dropdownKey="model"
+                openKey={openPicker}
+                onOpenKeyChange={setOpenPicker}
+                label="Model"
+                placeholder={modelOptions.length ? 'Any model' : 'No models in stock'}
+                options={modelOptions}
+                selected={filters.models}
+                onToggle={(v) => toggleFilterList('models', v)}
+                onClear={() => setFilters((p) => ({ ...p, models: [] }))}
+              />
+
+              <SaleMultiSelect
                 dropdownKey="body"
                 openKey={openPicker}
                 onOpenKeyChange={setOpenPicker}
@@ -376,18 +405,6 @@ export default function CarsForSalePage() {
                 selected={filters.locations}
                 onToggle={(v) => toggleFilterList('locations', v)}
                 onClear={() => setFilters((p) => ({ ...p, locations: [] }))}
-              />
-
-              <SaleMultiSelect
-                dropdownKey="fuel"
-                openKey={openPicker}
-                onOpenKeyChange={setOpenPicker}
-                label="Fuel"
-                placeholder="Any fuel"
-                options={FUEL_OPTIONS}
-                selected={filters.fuels}
-                onToggle={(v) => toggleFilterList('fuels', v)}
-                onClear={() => setFilters((p) => ({ ...p, fuels: [] }))}
               />
             </div>
 
@@ -441,6 +458,20 @@ export default function CarsForSalePage() {
                   onFromChange={(v) => setFilters((p) => ({ ...p, kmMin: v }))}
                   onToChange={(v) => setFilters((p) => ({ ...p, kmMax: v }))}
                   onClear={() => setFilters((p) => ({ ...p, kmMin: '', kmMax: '' }))}
+                />
+              </div>
+
+              <div className="sale-field sale-field--row2-fuel">
+                <SaleMultiSelect
+                  dropdownKey="fuel"
+                  openKey={openPicker}
+                  onOpenKeyChange={setOpenPicker}
+                  label="Fuel"
+                  placeholder="Any fuel"
+                  options={FUEL_OPTIONS}
+                  selected={filters.fuels}
+                  onToggle={(v) => toggleFilterList('fuels', v)}
+                  onClear={() => setFilters((p) => ({ ...p, fuels: [] }))}
                 />
               </div>
             </div>

@@ -197,6 +197,28 @@ export const YEAR_MAX_OPTIONS = [{ value: '', label: 'To' }].concat(
   }),
 )
 
+/**
+ * 下拉多选用：未选品牌时列出库存里所有「品牌|车型」；选了品牌则只列这些品牌下的车型。
+ * @param {string[]} makesFilter
+ * @returns {{ value: string, label: string }[]}
+ */
+export function saleModelOptionsForMakes(makesFilter) {
+  const list = makesFilter.length
+    ? SALE_VEHICLES.filter((v) => makesFilter.includes(v.make))
+    : SALE_VEHICLES
+  const seen = new Set()
+  const out = []
+  for (const v of list) {
+    const value = `${v.make}|${v.model}`
+    if (seen.has(value)) continue
+    seen.add(value)
+    const label = makesFilter.length === 1 ? v.model : `${v.model} (${v.make})`
+    out.push({ value, label })
+  }
+  out.sort((a, b) => a.label.localeCompare(b.label, 'en-NZ'))
+  return out
+}
+
 /** @param {string} slug */
 export function getSaleVehicleBySlug(slug) {
   return SALE_VEHICLES.find((v) => v.slug === slug) ?? null

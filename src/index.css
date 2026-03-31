@@ -2745,11 +2745,29 @@ img {
   }
 }
 
+@media (min-width: 1280px) {
+  .sale-search__block--row1 {
+    grid-template-columns: minmax(220px, 1.08fr) repeat(4, minmax(160px, 1fr));
+  }
+}
+
 .sale-search__row-pills {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 14px 18px;
   margin-bottom: 1rem;
+}
+
+.sale-field--row2-fuel {
+  min-width: 0;
+}
+
+.sale-field--row2-fuel .sale-ms {
+  width: 100%;
+}
+
+.sale-field--row2-fuel .sale-ms__control {
+  width: 100%;
 }
 
 .sale-field--range-block {
