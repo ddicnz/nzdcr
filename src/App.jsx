@@ -13,6 +13,8 @@ import NewZealandActivitiesPage from './pages/NewZealandActivitiesPage'
 import AboutUsPage from './pages/AboutUsPage'
 import ContactUsPage from './pages/ContactUsPage'
 import CustomerFeedbackPage from './pages/CustomerFeedbackPage'
+import CarsForSalePage from './pages/CarsForSalePage'
+import SaleVehicleDetailPage from './pages/SaleVehicleDetailPage'
 import OurBlogPage from './pages/OurBlogPage'
 import BlogPostPage from './pages/BlogPostPage'
 import CarsPage from './pages/CarsPage'
@@ -51,10 +53,8 @@ export default function App() {
         <Route path="christchurch-airport" element={<ChristchurchAirportPage />} />
         <Route path="queenstown-airport" element={<QueenstownAirportPage />} />
         <Route path="waiheke-island" element={<Navigate to="/location/" replace />} />
-        <Route
-          path="cars-for-sale"
-          element={<GenericPage title="Cars for Sale" hero={roadHero('CARS FOR SALE', 'Cars for Sale')} />}
-        />
+        <Route path="cars-for-sale/:saleSlug" element={<SaleVehicleDetailPage />} />
+        <Route path="cars-for-sale" element={<CarsForSalePage />} />
         <Route path="faq" element={<FAQPage />} />
         <Route
           path="our-blog/10-things-to-do-in-auckland-part-1"

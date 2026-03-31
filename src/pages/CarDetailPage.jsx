@@ -79,9 +79,12 @@ export default function CarDetailPage() {
         <div className="car-detail__summary">
           <h1 className="car-detail__title">{car.name}</h1>
           <p className="car-detail__price">
-            <span className="car-detail__was">${car.was.toFixed(2)}</span>
-            <span className="car-detail__now">${car.now.toFixed(2)}</span>
-            <span className="car-detail__from"> FROM</span>
+            <span className="car-detail__from-day">
+              <span className="car-detail__from-prefix">FROM </span>
+              <span className="car-detail__was">${car.was.toFixed(2)}</span>
+              <span className="car-detail__from-amount">${car.now.toFixed(2)}</span>
+              <span className="car-detail__from-suffix">/DAY</span>
+            </span>
           </p>
           {bullets.length > 0 ? (
             <ul className="car-detail__bullets">
@@ -255,9 +258,12 @@ export default function CarDetailPage() {
                       </div>
                       <h4 className="fleet-card__title">{rel.name}</h4>
                       <p className="fleet-card__price">
-                        <span className="was">${rel.was.toFixed(2)}</span>
-                        <span className="now">${rel.now.toFixed(2)}</span>
-                        <span className="from">FROM / day</span>
+                        <span className="fleet-card__from-day">
+                          <span className="fleet-card__from-prefix">FROM </span>
+                          <span className="was">${rel.was.toFixed(2)}</span>
+                          <span className="fleet-card__from-amount">${rel.now.toFixed(2)}</span>
+                          <span className="fleet-card__from-suffix">/DAY</span>
+                        </span>
                       </p>
                     </Link>
                     <a

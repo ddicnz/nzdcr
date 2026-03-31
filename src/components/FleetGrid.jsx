@@ -35,9 +35,12 @@ export default function FleetGrid({ items = FLEET, withSection = true }) {
             </div>
             <h4 className="fleet-card__title">{car.name}</h4>
             <p className="fleet-card__price">
-              <span className="was">${car.was.toFixed(2)}</span>
-              <span className="now">${car.now.toFixed(2)}</span>
-              <span className="from">FROM / day</span>
+              <span className="fleet-card__from-day">
+                <span className="fleet-card__from-prefix">FROM </span>
+                <span className="was">${car.was.toFixed(2)}</span>
+                <span className="fleet-card__from-amount">${car.now.toFixed(2)}</span>
+                <span className="fleet-card__from-suffix">/DAY</span>
+              </span>
             </p>
           </Link>
           <a
