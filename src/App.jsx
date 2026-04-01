@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom'
 import Layout from './components/Layout'
 import HomePage from './pages/HomePage'
 import GenericPage from './pages/GenericPage'
+import VisitNewZealandPage from './pages/VisitNewZealandPage'
 import TermsOfTradePage from './pages/TermsOfTradePage'
 import PrivacyLegalPoliciesPage from './pages/PrivacyLegalPoliciesPage'
 import PaymentTermsPage from './pages/PaymentTermsPage'
@@ -63,12 +64,7 @@ export default function App() {
         <Route path="our-blog/:slug" element={<BlogPostPage />} />
         <Route path="our-blog" element={<OurBlogPage />} />
         <Route path="customer-feedback" element={<CustomerFeedbackPage />} />
-        <Route
-          path="about-nz"
-          element={
-            <GenericPage title="Visit New Zealand" hero={roadHero('VISIT NEW ZEALAND', 'Visit New Zealand')} />
-          }
-        />
+        <Route path="about-nz" element={<VisitNewZealandPage />} />
         <Route path="new-zealand-holidays" element={<NewZealandHolidaysPage />} />
         <Route path="new-zealand-weather" element={<NewZealandWeatherPage />} />
         <Route path="new-zealand-activities" element={<NewZealandActivitiesPage />} />
