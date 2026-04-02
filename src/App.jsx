@@ -3,6 +3,9 @@ import Layout from './components/Layout'
 import HomePage from './pages/HomePage'
 import GenericPage from './pages/GenericPage'
 import VisitNewZealandPage from './pages/VisitNewZealandPage'
+import AdminPage from './pages/AdminPage'
+import AdminInventoryPage from './pages/AdminInventoryPage'
+import AddCarPage from './pages/AddCarPage'
 import TermsOfTradePage from './pages/TermsOfTradePage'
 import PrivacyLegalPoliciesPage from './pages/PrivacyLegalPoliciesPage'
 import PaymentTermsPage from './pages/PaymentTermsPage'
@@ -75,6 +78,9 @@ export default function App() {
         <Route path="payment-terms" element={<PaymentTermsPage />} />
         <Route path="privacy-legal-policies" element={<PrivacyLegalPoliciesPage />} />
         <Route path="terms-of-trade" element={<TermsOfTradePage />} />
+        <Route path="admin/cars" element={<AdminInventoryPage />} />
+        <Route path="admin" element={<AdminPage />} />
+        <Route path="addcar" element={<AddCarPage />} />
       </Route>
     </Routes>
   )
