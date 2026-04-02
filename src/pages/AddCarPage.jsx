@@ -12,7 +12,7 @@ import { SALE_BODY_TYPES } from '../data/carsForSale'
 
 const FUELS = ['Petrol', 'Diesel', 'Hybrid', 'Electric']
 const TRANSMISSIONS = ['Automatic', 'Manual']
-const LOCATIONS = ['Auckland', 'Christchurch', 'Queenstown (Frankton)']
+const LOCATIONS = ['Auckland', 'Christchurch', 'Queenstown']
 const STATUSES = [
   { value: 'published', label: 'Published' },
   { value: 'sold', label: 'Sold' },

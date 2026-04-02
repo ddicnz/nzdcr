@@ -24,7 +24,7 @@ import {
 } from '../data/carsForSale'
 
 const FUEL_VALUES = ['Petrol', 'Diesel', 'Hybrid', 'Electric']
-const DEFAULT_LOCATIONS = ['Auckland', 'Christchurch', 'Queenstown (Frankton)']
+const DEFAULT_LOCATIONS = ['Auckland', 'Christchurch', 'Queenstown']
 const STATUS_OPTIONS = [
   { value: 'published', label: 'Published' },
   { value: 'sold', label: 'Sold' },

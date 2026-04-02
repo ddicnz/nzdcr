@@ -76,6 +76,10 @@ img {
   /* 文案左缘 ≈ 页宽 20%（不小于安全边距） */
   --hero-promo-start: max(var(--hero-panel-inset), 20%);
   --hero-promo-panel-gap: 20px;
+  /* 橙色文案：相对 --hero-promo-start 再往左移的量（越大越靠左，0 = 不额外左移） */
+  --hero-promo-shift-left: 2%;
+  /* 白色预定框：相对贴右边距再往左移的量（越大 = right 越大 = 框越靠左） */
+  --hero-panel-shift-left: 8%;
   position: relative;
   width: 100%;
   background: var(--color-bg);
@@ -105,9 +109,11 @@ img {
 /* Orange promo — left side; stops before booking panel */
 .home-hero-promo {
   --hero-promo-orange: #f27121;
+  /* 主标题 + 下方列表：统一字号（只改这一处即可桌面端细调） */
+  --hero-promo-text-size: clamp(1.55rem, 2.4vw, 2.15rem);
   position: absolute;
   top: 50%;
-  left: var(--hero-promo-start);
+  left: max(0px, calc(var(--hero-promo-start) - var(--hero-promo-shift-left)));
   right: auto;
   transform: translateY(-50%);
   z-index: 1;
@@ -127,7 +133,7 @@ img {
 
 .home-hero-promo__title {
   margin: 0 0 18px;
-  font-size: clamp(2.9rem, 2.65vw, 2.1rem);
+  font-size: var(--hero-promo-text-size);
   font-weight: 800;
   line-height: 1.2;
   color: var(--hero-promo-orange);
@@ -143,7 +149,7 @@ img {
   margin: 0;
   padding: 0;
   list-style: none;
-  font-size: clamp(1.95rem, 1.5vw, 1.12rem);
+  font-size: var(--hero-promo-text-size);
   font-weight: 700;
   line-height: 1.55;
   color: var(--hero-promo-orange);
@@ -164,7 +170,7 @@ img {
 .home-hero-banner__panel {
   position: absolute;
   top: var(--hero-panel-inset);
-  right: var(--hero-panel-from-right);
+  right: calc(var(--hero-panel-from-right) + var(--hero-panel-shift-left));
   left: auto;
   bottom: var(--hero-panel-inset);
   transform: none;
@@ -248,15 +254,14 @@ img {
 
 .home-booking__submit {
   margin-top: 8px;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
   width: 100%;
   padding: 14px 20px;
   font-family: inherit;
   font-weight: 800;
-  font-size: 15px;
+  font-size: 18px;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: #fff;
@@ -264,16 +269,13 @@ img {
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  text-align: center;
   box-shadow: 0 2px 8px rgba(241, 128, 45, 0.35);
 }
 
 .home-booking__submit:hover {
   background: var(--color-accent-hover);
   color: #fff;
-}
-
-.home-booking__btn-icon {
-  flex-shrink: 0;
 }
 
 /* Stack promo + form below image so they never overlap mid-viewport */
@@ -295,19 +297,19 @@ img {
   .home-hero-promo {
     top: auto;
     bottom: var(--hero-panel-inset);
-    left: var(--hero-promo-start);
+    left: max(0px, calc(var(--hero-promo-start) - var(--hero-promo-shift-left)));
     right: auto;
     transform: none;
     max-width: calc(100% - var(--hero-promo-start) - var(--hero-panel-inset));
+    /* 小屏统一字号（与桌面分开细调） */
+    --hero-promo-text-size: clamp(0.95rem, 3.5vw, 1.2rem);
   }
 
   .home-hero-promo__title {
-    font-size: clamp(1.45rem, 4vw, 1.55rem);
     margin-bottom: 14px;
   }
 
   .home-hero-promo__list {
-    font-size: clamp(0.85rem, 3.2vw, 1.02rem);
     line-height: 1.5;
   }
 
@@ -323,7 +325,8 @@ img {
     width: calc(100% - 2 * var(--hero-panel-inset));
     max-width: 440px;
     max-height: none;
-    margin: 8px var(--hero-panel-inset) 0;
+    margin: 8px calc(var(--hero-panel-inset) + var(--hero-panel-shift-left)) 0
+      max(0px, calc(var(--hero-panel-inset) - var(--hero-panel-shift-left)));
     padding: 20px 16px 22px;
     border-radius: 12px;
   }

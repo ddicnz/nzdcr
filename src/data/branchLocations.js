@@ -16,7 +16,7 @@ export const NZDCR_BRANCHES = [
   },
   {
     key: 'zqn',
-    title: 'Queenstown (Frankton)',
+    title: 'Queenstown',
     address: '121 Glenda Drive, Frankton 9300, New Zealand',
     position: [-45.0158, 168.7305],
     googleUrl: 'https://www.google.com/maps?q=121+Glenda+Drive,+Frankton,+9300,+New+Zealand',

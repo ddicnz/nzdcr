@@ -12,16 +12,8 @@ import {
 
 const HERO_IMG = '/pic/homepage/lisha-riabinina-97-wrSgS50s-unsplash.jpg'
 
-function IconSync() {
-  return (
-    <svg className="home-booking__btn-icon" width="20" height="20" viewBox="0 0 24 24" aria-hidden>
-      <path
-        fill="currentColor"
-        d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"
-      />
-    </svg>
-  )
-}
+/** Auckland Airport — 须与 RCM_LOCATIONS 中 id 一致 */
+const DEFAULT_LOCATION_ID_AUCKLAND_AIRPORT = '3'
 
 export default function HomeHeroBanner() {
   const defaults = useMemo(() => defaultPickupDropoffDates(), [])
@@ -33,11 +25,9 @@ export default function HomeHeroBanner() {
   const onPickupDateChange = (iso) => {
     setPickupIso(iso)
     if (!iso) return
-    if (!dropoffIso || dropoffIso < iso) {
-      const next = new Date(iso + 'T12:00:00')
-      next.setDate(next.getDate() + 7)
-      setDropoffIso(dateToIsoLocal(next))
-    }
+    const next = new Date(iso + 'T12:00:00')
+    next.setDate(next.getDate() + 5)
+    setDropoffIso(dateToIsoLocal(next))
   }
 
   return (
@@ -71,7 +61,7 @@ export default function HomeHeroBanner() {
         >
           <div className="home-booking__field">
             <label htmlFor="form-Pickup-Location">Pick up Location</label>
-            <select id="form-Pickup-Location" name="form-Pickup-Location" required defaultValue="4">
+            <select id="form-Pickup-Location" name="form-Pickup-Location" required defaultValue={DEFAULT_LOCATION_ID_AUCKLAND_AIRPORT}>
               {RCM_LOCATIONS.map((loc) => (
                 <option key={loc.id} value={loc.id}>{loc.label}</option>
               ))}
@@ -102,7 +92,7 @@ export default function HomeHeroBanner() {
           </div>
           <div className="home-booking__field">
             <label htmlFor="form-Dropoff-Location">Drop off Location</label>
-            <select id="form-Dropoff-Location" name="form-Dropoff-Location" required defaultValue="3">
+            <select id="form-Dropoff-Location" name="form-Dropoff-Location" required defaultValue={DEFAULT_LOCATION_ID_AUCKLAND_AIRPORT}>
               {RCM_LOCATIONS.map((loc) => (
                 <option key={loc.id} value={loc.id}>{loc.label}</option>
               ))}
@@ -160,8 +150,7 @@ export default function HomeHeroBanner() {
             />
           </div>
           <button type="submit" className="home-booking__submit">
-            <IconSync />
-            Book now!
+            Book now
           </button>
         </form>
       </div>

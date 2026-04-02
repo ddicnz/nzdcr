@@ -78,12 +78,13 @@ export function isoLocalToRcm(iso) {
   return formatRcmDate(new Date(y, m - 1, d))
 }
 
+/** 首页预定默认：取车 = 今天起第 7 天，还车 = 取车后再 5 天 */
 export function defaultPickupDropoffDates() {
   const pickup = new Date()
-  pickup.setDate(pickup.getDate() + 1)
+  pickup.setDate(pickup.getDate() + 7)
   pickup.setHours(0, 0, 0, 0)
   const dropoff = new Date(pickup)
-  dropoff.setDate(dropoff.getDate() + 7)
+  dropoff.setDate(dropoff.getDate() + 5)
   return {
     pickupStr: formatRcmDate(pickup),
     dropoffStr: formatRcmDate(dropoff),
