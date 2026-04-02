@@ -5,15 +5,22 @@ export const ADDCAR_API =
   'https://n8eemiewzi.execute-api.ap-southeast-2.amazonaws.com/default/addcar'
 export const GET_ADMIN_CARS_API =
   'https://utgpizuum2.execute-api.ap-southeast-2.amazonaws.com/default/getadmincars'
+export const GET_CAR_DETAIL_API =
+  'https://kol9ykxns2.execute-api.ap-southeast-2.amazonaws.com/default/getcardetail'
 
-export const MAX_IMAGE_BYTES = 5 * 1024 * 1024
+const ADMIN_CAR_DETAIL_CACHE_PREFIX = 'adminCarDetail:'
+
+export const MAX_IMAGE_BYTES = 3 * 1024 * 1024
 export const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
 
-/** Presigned URL 请求体：与 get_upload_url Lambda 约定，用于区分封面 / 图库键名（如 cover-1、gallery-1） */
-export const UPLOAD_IMAGE_KIND = {
-  cover: 'cover',
-  gallery: 'gallery',
-}
+/**
+ * get_upload_url Lambda：只读统一 imageIndex 命名 S3 键
+ * - 1 → cover.{ext}
+ * - 2、3 → 2.{ext}、3.{ext}
+ * - 4+ → 图库 4.{ext}、5.{ext}…
+ */
+export const ADMIN_COVER_IMAGE_COUNT = 3
+export const ADMIN_GALLERY_IMAGE_INDEX_START = ADMIN_COVER_IMAGE_COUNT + 1
 
 /** Dynamo 库存列表：按所选品牌生成 Model 多选（value = make|model） */
 export function adminModelOptionsFromItems(items, makesFilter) {
@@ -31,6 +38,44 @@ export function adminModelOptionsFromItems(items, makesFilter) {
   }
   out.sort((a, b) => a.label.localeCompare(b.label, 'en-NZ'))
   return out
+}
+
+/** 读上次 getcardetail 成功写入的 session 缓存（无则 null） */
+export function readAdminCarDetailCache(carId) {
+  if (!carId) return null
+  try {
+    const raw = sessionStorage.getItem(ADMIN_CAR_DETAIL_CACHE_PREFIX + carId)
+    if (!raw) return null
+    return JSON.parse(raw)
+  } catch {
+    return null
+  }
+}
+
+/**
+ * GET getcardetail（?carId=）；成功后将 item 写入 sessionStorage 供下次直开详情。
+ * @returns {Promise<object>}
+ */
+export async function fetchAdminCarDetail(carId) {
+  const id = String(carId || '').trim()
+  if (!id) throw new Error('carId 为空')
+
+  const url = `${GET_CAR_DETAIL_API}?carId=${encodeURIComponent(id)}`
+  const res = await fetch(url)
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) {
+    throw new Error(data.message || data.error || `getcardetail 失败：${res.status}`)
+  }
+  const item = data.item ?? data
+  if (!item || typeof item !== 'object') {
+    throw new Error('getcardetail 响应缺少 item')
+  }
+  try {
+    sessionStorage.setItem(ADMIN_CAR_DETAIL_CACHE_PREFIX + id, JSON.stringify(item))
+  } catch {
+    /* ignore quota */
+  }
+  return item
 }
 
 export function generateCarId(make, model, year) {

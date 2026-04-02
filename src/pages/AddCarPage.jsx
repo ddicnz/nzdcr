@@ -2,10 +2,10 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   ADDCAR_API,
+  ADMIN_GALLERY_IMAGE_INDEX_START,
   ALLOWED_IMAGE_TYPES,
   GET_UPLOAD_URL_API,
   MAX_IMAGE_BYTES,
-  UPLOAD_IMAGE_KIND,
   generateCarId,
 } from '../data/adminCarApi'
 import { SALE_BODY_TYPES } from '../data/carsForSale'
@@ -45,7 +45,7 @@ function validatePickedFiles(fileList) {
       return { error: `不支持的类型：${file.name}（请用 JPEG / PNG / WebP / GIF）` }
     }
     if (file.size > MAX_IMAGE_BYTES) {
-      return { error: `文件过大：${file.name}（单张最大 5 MB）` }
+      return { error: `文件过大：${file.name}（单张最大 3 MB）` }
     }
     out.push(file)
   }
@@ -153,7 +153,7 @@ export default function AddCarPage() {
     const coverUrls = []
     const galleryUrls = []
 
-    const uploadViaPresign = async (file, imageKind, imageIndex) => {
+    const uploadViaPresign = async (file, imageIndex) => {
       const res = await fetch(GET_UPLOAD_URL_API, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -164,7 +164,6 @@ export default function AddCarPage() {
           year: yearNum,
           fileName: file.name,
           contentType: file.type,
-          imageKind,
           imageIndex,
         }),
       })
@@ -190,11 +189,11 @@ export default function AddCarPage() {
 
     try {
       for (let i = 0; i < coverFiles.length; i++) {
-        const url = await uploadViaPresign(coverFiles[i], UPLOAD_IMAGE_KIND.cover, i + 1)
+        const url = await uploadViaPresign(coverFiles[i], i + 1)
         coverUrls.push(url)
       }
       for (let i = 0; i < galleryFiles.length; i++) {
-        const url = await uploadViaPresign(galleryFiles[i], UPLOAD_IMAGE_KIND.gallery, i + 1)
+        const url = await uploadViaPresign(galleryFiles[i], ADMIN_GALLERY_IMAGE_INDEX_START + i)
         galleryUrls.push(url)
       }
 
@@ -218,6 +217,7 @@ export default function AddCarPage() {
         status: form.status,
         coverImages: coverUrls,
         galleryImages: galleryUrls,
+        images: [...coverUrls, ...galleryUrls],
       }
 
       const addRes = await fetch(ADDCAR_API, {
@@ -460,13 +460,13 @@ export default function AddCarPage() {
           <div className="addcar-form__section">
             <h2 className="addcar-form__heading">图片</h2>
             <p className="addcar-page__hint">
-              流程不变：前端请求 <code>get_upload_url</code> 拿预签名 URL → PUT 上传到 S3 → 提交 addcar 时在 body 里带公开 URL 数组。单张最大{' '}
-              <strong>5 MB</strong>；JPEG / PNG / WebP / GIF。
+              单张最大{' '}
+              <strong>3 MB</strong>；JPEG / PNG / WebP / GIF。
             </p>
             <div className="addcar-form__upload-block">
               <h3 className="addcar-form__subheading">封面图（必须 3 张）</h3>
               <p className="addcar-page__hint addcar-form__upload-hint">
-                将按顺序对应 <code>cover-1 … cover-3</code>（<code>imageKind: cover</code>，<code>imageIndex</code> 为 1–3）。
+                上传时 <code>imageIndex</code> 为 1、2、3 → Lambda 生成 <code>cover.*</code>、<code>2.*</code>、<code>3.*</code>
               </p>
               <label className="addcar-form__file-btn">
                 <span className="fleet-categories__btn addcar-form__file-trigger">选择封面图</span>
@@ -493,7 +493,8 @@ export default function AddCarPage() {
             <div className="addcar-form__upload-block">
               <h3 className="addcar-form__subheading">其他图片（图库，可选多张）</h3>
               <p className="addcar-page__hint addcar-form__upload-hint">
-                <code>imageKind: gallery</code>，<code>imageIndex</code> 从 1 递增。可不上传。
+                与 get_upload_url 约定：全局 <code>imageIndex</code> 从 <strong>{ADMIN_GALLERY_IMAGE_INDEX_START}</strong> 起（1–3 已用于封面 →{' '}
+                <code>cover.png</code>、<code>2.*</code>、<code>3.*</code>）。可不选图库。
               </p>
               <label className="addcar-form__file-btn">
                 <span className="fleet-categories__btn addcar-form__file-trigger">选择图库图片</span>
@@ -503,7 +504,7 @@ export default function AddCarPage() {
                 <ul className="addcar-form__file-list">
                   {galleryFiles.map((f, i) => (
                     <li key={`gallery-${f.name}-${i}`}>
-                      <span className="addcar-form__file-badge">图库 {i + 1}</span>
+                      <span className="addcar-form__file-badge">#{ADMIN_GALLERY_IMAGE_INDEX_START + i}</span>
                       <span>{f.name}</span>
                       <span className="addcar-form__file-meta">{(f.size / 1024).toFixed(0)} KB</span>
                       <button type="button" className="addcar-form__remove" onClick={() => removeGalleryFile(i)}>

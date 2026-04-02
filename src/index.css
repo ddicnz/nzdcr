@@ -3166,61 +3166,6 @@ ul.sale-results.admin-inventory-page__results {
   );
 }
 
-.admin-inv-media__carousel {
-  width: 100%;
-  height: 100%;
-  min-height: 140px;
-  background: #e8e8e8;
-}
-
-.admin-inv-media__carousel img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.admin-inv-media__nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 3;
-  width: 38px;
-  height: 38px;
-  padding: 0;
-  border: none;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.48);
-  color: #fff;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background 0.15s;
-}
-
-.admin-inv-media__nav:hover:not(:disabled) {
-  background: rgba(0, 0, 0, 0.65);
-}
-
-.admin-inv-media__nav:focus-visible {
-  outline: 2px solid var(--header-orange);
-  outline-offset: 2px;
-}
-
-.admin-inv-media__nav:disabled {
-  opacity: 0.28;
-  cursor: not-allowed;
-}
-
-.admin-inv-media__nav--prev {
-  left: 10px;
-}
-
-.admin-inv-media__nav--next {
-  right: 10px;
-}
-
 .admin-inv-media__open {
   position: absolute;
   bottom: 10px;
@@ -3336,6 +3281,179 @@ ul.sale-results.admin-inventory-page__results {
   font-size: 0.6rem;
   line-height: 1.3;
   color: #9ca3af;
+}
+
+.admin-inventory-listing--clickable {
+  cursor: pointer;
+}
+
+.admin-inventory-listing--clickable:focus-visible {
+  outline: 2px solid var(--header-orange);
+  outline-offset: 2px;
+}
+
+/* Admin — 单车详情 getcardetail */
+.admin-car-detail-page__crumb-current {
+  color: var(--color-muted);
+  font-weight: 600;
+}
+
+.admin-car-detail-page__gallery {
+  position: relative;
+  margin-bottom: 1.25rem;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #e8e8e8;
+  aspect-ratio: 16 / 9;
+  max-height: min(520px, 72vh);
+}
+
+.admin-car-detail-page__slide {
+  height: 100%;
+  min-height: 220px;
+}
+
+.admin-car-detail-page__slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.admin-car-detail-page__noimg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  aspect-ratio: unset;
+}
+
+.admin-car-detail-page__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.48);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.admin-car-detail-page__nav:hover {
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.admin-car-detail-page__nav:focus-visible {
+  outline: 2px solid var(--header-orange);
+  outline-offset: 2px;
+}
+
+.admin-car-detail-page__nav--prev {
+  left: 12px;
+}
+
+.admin-car-detail-page__nav--next {
+  right: 12px;
+}
+
+.admin-car-detail-page__count {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  margin: 0;
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 999px;
+}
+
+.admin-car-detail-page__title {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.25rem, 2.5vw, 1.65rem);
+  font-weight: 800;
+  color: #000;
+  line-height: 1.25;
+}
+
+.admin-car-detail-page__price {
+  margin: 0 0 1.25rem;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.admin-car-detail-page__price strong {
+  font-weight: 800;
+  color: var(--header-orange);
+}
+
+.admin-car-detail-page__specs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px 24px;
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.1rem;
+  background: var(--color-surface);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+
+.admin-car-detail-page__specs div {
+  min-width: 0;
+}
+
+.admin-car-detail-page__specs dt {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+}
+
+.admin-car-detail-page__specs dd {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--color-text);
+  word-break: break-word;
+}
+
+.admin-car-detail-page__subh {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #000;
+}
+
+.admin-car-detail-page__desc {
+  margin-bottom: 1.5rem;
+  padding: 1rem 1.1rem;
+  background: var(--color-surface);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+}
+
+.admin-car-detail-page__desc p {
+  margin: 0;
+  line-height: 1.6;
+  color: #333;
+}
+
+.admin-car-detail-page__meta-muted {
+  font-size: 13px;
+  color: var(--color-muted);
 }
 
 .sale-search__row-pills {

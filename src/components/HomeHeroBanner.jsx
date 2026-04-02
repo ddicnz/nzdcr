@@ -10,7 +10,7 @@ import {
   rcmTimeOptions,
 } from '../data/rcmBooking'
 
-const HERO_IMG = '/pic/homepage/lisha-riabinina-97-wrSgS50s-unsplash.jpg'
+const HERO_IMG = '/pic/homepage/homepage.JPG'
 
 /** Auckland Airport — 须与 RCM_LOCATIONS 中 id 一致 */
 const DEFAULT_LOCATION_ID_AUCKLAND_AIRPORT = '3'

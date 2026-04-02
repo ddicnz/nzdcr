@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import AdminInventoryCarMedia from '../components/AdminInventoryCarMedia'
 import {
   IconAdminEngine,
@@ -166,6 +166,7 @@ const BODY_OPTIONS = SALE_BODY_TYPES.map((bt) => ({ value: bt, label: bt }))
 const FUEL_OPTIONS = FUEL_VALUES.map((x) => ({ value: x, label: x }))
 
 export default function AdminInventoryPage() {
+  const navigate = useNavigate()
   const [inventoryItems, setInventoryItems] = useState([])
   const [loadedAt, setLoadedAt] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -248,7 +249,8 @@ export default function AdminInventoryPage() {
 
         <p className="sale-page__intro">
           数据来自 DynamoDB（<code>getadmincars</code>），加载后缓存在本页内存中；可筛选 <strong>published</strong> 与{' '}
-          <strong>sold</strong>。头图为三张 <code>coverImages</code> 拼图，可右箭头进入 <code>images</code> 轮播；角上链接可新开标签。
+          <strong>sold</strong>。头图为 <code>coverImages</code> 三联拼图；<strong>点击整条卡片</strong>进入详情（
+          <code>getcardetail</code>）；角上「打开原图」仅新开首张封面，不进入详情。
         </p>
 
         <div className="admin-inventory-page__toolbar">
@@ -426,7 +428,21 @@ export default function AdminInventoryPage() {
 
         <ul className="sale-results admin-inventory-page__results">
           {filtered.map((v) => (
-            <li key={v.carId} className="admin-inventory-listing">
+            <li
+              key={v.carId}
+              className="admin-inventory-listing admin-inventory-listing--clickable"
+              role="button"
+              tabIndex={0}
+              onClick={() =>
+                navigate(`/admin/cars/${encodeURIComponent(v.carId)}`, { state: { fromList: v } })
+              }
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault()
+                  navigate(`/admin/cars/${encodeURIComponent(v.carId)}`, { state: { fromList: v } })
+                }
+              }}
+            >
               <div className="admin-inventory-listing__media">
                 <AdminInventoryCarMedia key={v.carId} vehicle={v} />
               </div>
