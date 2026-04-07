@@ -37,6 +37,8 @@ const initialForm = {
   status: 'published',
 }
 
+const MAX_IMAGE_MB = Math.round(MAX_IMAGE_BYTES / (1024 * 1024))
+
 function validatePickedFiles(fileList) {
   const list = Array.from(fileList || [])
   const out = []
@@ -45,7 +47,10 @@ function validatePickedFiles(fileList) {
       return { error: `不支持的类型：${file.name}（请用 JPEG / PNG / WebP / GIF）` }
     }
     if (file.size > MAX_IMAGE_BYTES) {
-      return { error: `文件过大：${file.name}（单张最大 3 MB）` }
+      return {
+        error: `文件过大：${file.name}（单张最大 ${MAX_IMAGE_MB} MB）`,
+        oversize: true,
+      }
     }
     out.push(file)
   }
@@ -76,8 +81,11 @@ export default function AddCarPage() {
   const onCoverFilesSelected = (e) => {
     setError(null)
     setMessage(null)
-    const { files: valid, error } = validatePickedFiles(e.target.files)
+    const { files: valid, error, oversize } = validatePickedFiles(e.target.files)
     if (error) {
+      if (oversize) {
+        window.alert(`图片大小不能超过 ${MAX_IMAGE_MB} MB，请重新选择。`)
+      }
       setError(error)
       e.target.value = ''
       return
@@ -96,8 +104,11 @@ export default function AddCarPage() {
   const onGalleryFilesSelected = (e) => {
     setError(null)
     setMessage(null)
-    const { files: valid, error } = validatePickedFiles(e.target.files)
+    const { files: valid, error, oversize } = validatePickedFiles(e.target.files)
     if (error) {
+      if (oversize) {
+        window.alert(`图片大小不能超过 ${MAX_IMAGE_MB} MB，请重新选择。`)
+      }
       setError(error)
       e.target.value = ''
       return
@@ -461,7 +472,7 @@ export default function AddCarPage() {
             <h2 className="addcar-form__heading">图片</h2>
             <p className="addcar-page__hint">
               单张最大{' '}
-              <strong>3 MB</strong>；JPEG / PNG / WebP / GIF。
+              <strong>{MAX_IMAGE_MB} MB</strong>；JPEG / PNG / WebP / GIF。
             </p>
             <div className="addcar-form__upload-block">
               <h3 className="addcar-form__subheading">封面图（必须 3 张）</h3>
