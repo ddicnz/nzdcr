@@ -2893,9 +2893,28 @@ img {
   margin-top: 8px;
 }
 
+/* 与库存卡片底部按钮：同宽、同高 */
+.addcar-form__actions--paired {
+  align-items: stretch;
+  gap: 8px 10px;
+}
+
+.addcar-form__actions--paired > .fleet-categories__btn,
+.addcar-form__actions--paired > a.fleet-categories__btn {
+  flex: 1 1 0;
+  min-width: 0;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
 .addcar-form__actions .fleet-categories__btn:disabled {
   opacity: 0.65;
   cursor: not-allowed;
+}
+
+.addcar-form__actions .admin-form-cancel-link.fleet-categories__btn {
+  text-decoration: none;
 }
 
 .sale-quick {
@@ -3283,6 +3302,74 @@ ul.sale-results.admin-inventory-page__results {
   color: #9ca3af;
 }
 
+.admin-inventory-listing__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 8px 10px;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Update / Delete 同宽（各占一行可用空间的一半） */
+.admin-inventory-listing__actions > .fleet-categories__btn {
+  flex: 1 1 0;
+  min-width: 0;
+  justify-content: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.admin-inventory-listing__action-btn {
+  text-decoration: none;
+}
+
+/* 与 Delete 同尺寸，实心橙色 */
+.admin-inventory-listing__btn-update.fleet-categories__btn {
+  color: #fff;
+  background: var(--header-orange);
+  border-color: var(--header-orange);
+}
+
+.admin-inventory-listing__btn-update.fleet-categories__btn:hover:not(:disabled) {
+  color: #fff;
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  text-decoration: none;
+}
+
+.admin-inventory-listing__btn-update.fleet-categories__btn:focus-visible {
+  outline: 2px solid var(--header-orange);
+  outline-offset: 2px;
+}
+
+/* 与 Update 同尺寸（继承 .fleet-categories__btn），红色填充 */
+.admin-inventory-listing__btn-delete.fleet-categories__btn {
+  color: #fff;
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
+.admin-inventory-listing__btn-delete.fleet-categories__btn:hover:not(:disabled) {
+  color: #fff;
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+.admin-inventory-listing__btn-delete.fleet-categories__btn:focus-visible {
+  outline: 2px solid #dc2626;
+  outline-offset: 2px;
+}
+
+.admin-inventory-listing__btn-delete.fleet-categories__btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  color: #fff;
+  background: #dc2626;
+  border-color: #dc2626;
+}
+
 .admin-inventory-listing--clickable {
   cursor: pointer;
 }
@@ -3377,6 +3464,42 @@ ul.sale-results.admin-inventory-page__results {
   color: #fff;
   background: rgba(0, 0, 0, 0.55);
   border-radius: 999px;
+}
+
+.admin-car-detail-page__title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1rem;
+  margin: 0 0 0.5rem;
+}
+
+.admin-car-detail-page__title-row .admin-car-detail-page__title {
+  margin: 0;
+  flex: 1 1 200px;
+}
+
+.admin-car-detail-page__update-link {
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.admin-car-detail-page__update-link.fleet-categories__btn {
+  color: #fff;
+  background: var(--header-orange);
+  border-color: var(--header-orange);
+}
+
+.admin-car-detail-page__update-link.fleet-categories__btn:hover {
+  color: #fff;
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  text-decoration: none;
+}
+
+.admin-car-detail-page__update-link.fleet-categories__btn:focus-visible {
+  outline: 2px solid var(--header-orange);
+  outline-offset: 2px;
 }
 
 .admin-car-detail-page__title {

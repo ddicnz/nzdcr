@@ -162,7 +162,16 @@ export default function AdminCarDetailPage() {
               )}
             </div>
 
-            <h1 className="admin-car-detail-page__title">{item.title || `${item.year} ${item.make} ${item.model}`}</h1>
+            <div className="admin-car-detail-page__title-row">
+              <h1 className="admin-car-detail-page__title">{item.title || `${item.year} ${item.make} ${item.model}`}</h1>
+              <Link
+                to={`/admin/cars/${encodeURIComponent(item.carId)}/edit`}
+                state={{ fromDetail: item }}
+                className="fleet-categories__btn admin-car-detail-page__update-link"
+              >
+                Update
+              </Link>
+            </div>
             <p className="admin-car-detail-page__price">
               Asking price <strong>{formatSalePrice(itemPrice(item))}</strong>
             </p>

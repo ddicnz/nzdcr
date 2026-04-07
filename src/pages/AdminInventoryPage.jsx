@@ -10,7 +10,12 @@ import {
 } from '../components/AdminListingSpecIcons'
 import SaleMultiSelect from '../components/SaleMultiSelect'
 import SaleRangePill from '../components/SaleRangePill'
-import { adminModelOptionsFromItems, GET_ADMIN_CARS_API } from '../data/adminCarApi'
+import {
+  adminModelOptionsFromItems,
+  clearAdminCarDetailCache,
+  DELETE_CAR_API,
+  GET_ADMIN_CARS_API,
+} from '../data/adminCarApi'
 import { formatSaleOdometer, formatSalePrice } from '../data/carsForSale'
 import {
   KM_MAX_OPTIONS,
@@ -173,6 +178,7 @@ export default function AdminInventoryPage() {
   const [fetchError, setFetchError] = useState(null)
   const [filters, setFilters] = useState(initialFilters)
   const [openPicker, setOpenPicker] = useState(null)
+  const [deletingCarId, setDeletingCarId] = useState(null)
 
   const loadInventory = useCallback(async () => {
     setLoading(true)
@@ -236,6 +242,38 @@ export default function AdminInventoryPage() {
   const handleReset = () => {
     setOpenPicker(null)
     setFilters(initialFilters)
+  }
+
+  const handleDeleteCard = async (v) => {
+    const id = String(v.carId ?? '').trim()
+    if (!id) return
+    const label = listingHeadline(v)
+    if (!window.confirm(`确认删除「${label}」？此操作不可恢复。`)) return
+
+    const apiUrl = String(DELETE_CAR_API || '').trim()
+    if (!apiUrl) {
+      window.alert('尚未配置删除接口：请在 src/data/adminCarApi.js 中设置 DELETE_CAR_API')
+      return
+    }
+
+    setDeletingCarId(id)
+    try {
+      const res = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ carId: id }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        throw new Error(data.message || data.error || `删除失败：${res.status}`)
+      }
+      clearAdminCarDetailCache(id)
+      setInventoryItems((prev) => prev.filter((x) => String(x.carId) !== id))
+    } catch (e) {
+      window.alert(e instanceof Error ? e.message : '删除失败')
+    } finally {
+      setDeletingCarId(null)
+    }
   }
 
   return (
@@ -427,19 +465,21 @@ export default function AdminInventoryPage() {
         </section>
 
         <ul className="sale-results admin-inventory-page__results">
-          {filtered.map((v) => (
+          {filtered.map((v) => {
+            const cardCarId = String(v.carId ?? '').trim()
+            return (
             <li
-              key={v.carId}
+              key={cardCarId || v.carId}
               className="admin-inventory-listing admin-inventory-listing--clickable"
               role="button"
               tabIndex={0}
               onClick={() =>
-                navigate(`/admin/cars/${encodeURIComponent(v.carId)}`, { state: { fromList: v } })
+                navigate(`/admin/cars/${encodeURIComponent(cardCarId)}`, { state: { fromList: v } })
               }
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault()
-                  navigate(`/admin/cars/${encodeURIComponent(v.carId)}`, { state: { fromList: v } })
+                  navigate(`/admin/cars/${encodeURIComponent(cardCarId)}`, { state: { fromList: v } })
                 }
               }}
             >
@@ -482,9 +522,31 @@ export default function AdminInventoryPage() {
                   Asking price {formatSalePrice(itemPrice(v))}
                 </p>
                 <p className="admin-inventory-listing__disclaimer">Excludes on road costs</p>
+                <div
+                  className="admin-inventory-listing__actions"
+                  onClick={(e) => e.stopPropagation()}
+                  onKeyDown={(e) => e.stopPropagation()}
+                >
+                  <Link
+                    to={`/admin/cars/${encodeURIComponent(cardCarId)}/edit`}
+                    state={{ fromDetail: v }}
+                    className="fleet-categories__btn admin-inventory-listing__action-btn admin-inventory-listing__btn-update"
+                  >
+                    Update
+                  </Link>
+                  <button
+                    type="button"
+                    className="fleet-categories__btn admin-inventory-listing__btn-delete"
+                    disabled={deletingCarId === cardCarId}
+                    onClick={() => handleDeleteCard(v)}
+                  >
+                    {deletingCarId === cardCarId ? '删除中…' : 'Delete'}
+                  </button>
+                </div>
               </div>
             </li>
-          ))}
+            )
+          })}
         </ul>
 
         {!loading && filtered.length === 0 && inventoryItems.length === 0 ? (

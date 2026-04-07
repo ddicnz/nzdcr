@@ -8,6 +8,12 @@ export const GET_ADMIN_CARS_API =
 export const GET_CAR_DETAIL_API =
   'https://kol9ykxns2.execute-api.ap-southeast-2.amazonaws.com/default/getcardetail'
 
+/** 车辆更新接口 URL；接入 Lambda 后在此填写（未配置时编辑页会提示） */
+export const UPDATE_CAR_API = ''
+
+/** 车辆删除接口 URL；未配置时点删除会提示（请求体默认 JSON `{ carId }`，方法 POST） */
+export const DELETE_CAR_API = ''
+
 const ADMIN_CAR_DETAIL_CACHE_PREFIX = 'adminCarDetail:'
 
 export const MAX_IMAGE_BYTES = 3 * 1024 * 1024
@@ -49,6 +55,15 @@ export function readAdminCarDetailCache(carId) {
     return JSON.parse(raw)
   } catch {
     return null
+  }
+}
+
+export function clearAdminCarDetailCache(carId) {
+  if (!carId) return
+  try {
+    sessionStorage.removeItem(ADMIN_CAR_DETAIL_CACHE_PREFIX + carId)
+  } catch {
+    /* ignore */
   }
 }
 
