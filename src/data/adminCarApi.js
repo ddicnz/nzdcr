@@ -8,8 +8,9 @@ export const GET_ADMIN_CARS_API =
 export const GET_CAR_DETAIL_API =
   'https://kol9ykxns2.execute-api.ap-southeast-2.amazonaws.com/default/getcardetail'
 
-/** 车辆更新接口 URL；接入 Lambda 后在此填写（未配置时编辑页会提示） */
-export const UPDATE_CAR_API = ''
+/** updateInfo Lambda — 仅传改动的字段即可，其余服务端与 Dynamo 现有项合并 */
+export const UPDATE_CAR_API =
+  'https://qpzh1n6dya.execute-api.ap-southeast-2.amazonaws.com/default/updateInfo'
 
 /** 车辆删除接口 URL；未配置时点删除会提示（请求体默认 JSON `{ carId }`，方法 POST） */
 export const DELETE_CAR_API = ''

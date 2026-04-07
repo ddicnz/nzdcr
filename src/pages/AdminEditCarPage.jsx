@@ -16,6 +16,48 @@ const STATUSES = [
   { value: 'sold', label: 'Sold' },
 ]
 
+function cleanUrlList(arr) {
+  if (!Array.isArray(arr)) return []
+  return arr.map((x) => String(x).trim()).filter(Boolean)
+}
+
+function valuesEqual(a, b) {
+  if (a === b) return true
+  if (Array.isArray(a) && Array.isArray(b)) {
+    if (a.length !== b.length) return false
+    return a.every((v, i) => v === b[i])
+  }
+  return false
+}
+
+/** 与当前表单同一套归一化，用于和提交值对比（只传 diff 给 updateInfo） */
+function baselinePayloadFromItem(item) {
+  const f = itemToForm(item)
+  if (!f) return null
+  const odometerNum = Math.round(Number(String(f.odometer).replace(/km$/i, '').replace(/,/g, '')))
+  const engineCcNum = Math.round(Number(String(f.engineCc).replace(/cc$/i, '').replace(/,/g, '')))
+  return {
+    title: f.title.trim(),
+    make: f.make.trim(),
+    model: f.model.trim(),
+    modelDetail: f.modelDetail.trim(),
+    year: Number(f.year),
+    price: Math.round(Number(f.price)),
+    location: f.location,
+    odometer: odometerNum,
+    fuel: f.fuel,
+    transmission: f.transmission,
+    engineCc: engineCcNum,
+    bodyType: f.bodyType,
+    description: f.description.trim(),
+    exteriorColor: f.exteriorColor.trim(),
+    plateNumber: f.plateNumber.trim(),
+    status: f.status,
+    coverImages: cleanUrlList(item.coverImages),
+    galleryImages: cleanUrlList(item.galleryImages),
+  }
+}
+
 function itemToForm(item) {
   if (!item) return null
   const odo = item.odometer
@@ -71,8 +113,8 @@ export default function AdminEditCarPage() {
   const [form, setForm] = useState(null)
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
-  const [message, setMessage] = useState(null)
-  const [error, setError] = useState(null)
+  const [loadError, setLoadError] = useState(null)
+  const [updateDialog, setUpdateDialog] = useState(null)
 
   const applyItem = useCallback((item) => {
     setSourceItem(item)
@@ -84,7 +126,7 @@ export default function AdminEditCarPage() {
     if (!id) {
       setSourceItem(null)
       setForm(null)
-      setError('缺少 carId')
+      setLoadError('缺少 carId')
       setLoading(false)
       return
     }
@@ -97,7 +139,7 @@ export default function AdminEditCarPage() {
       if (cached) applyItem(cached)
     }
 
-    setError(null)
+    setLoadError(null)
     setLoading(true)
     let cancelled = false
     ;(async () => {
@@ -106,7 +148,7 @@ export default function AdminEditCarPage() {
         if (!cancelled) applyItem(next)
       } catch (e) {
         if (!cancelled) {
-          setError(e instanceof Error ? e.message : '加载失败')
+          setLoadError(e instanceof Error ? e.message : '加载失败')
         }
       } finally {
         if (!cancelled) setLoading(false)
@@ -121,9 +163,18 @@ export default function AdminEditCarPage() {
   const setField = (key) => (e) => {
     if (!form) return
     setForm((p) => ({ ...p, [key]: e.target.value }))
-    setError(null)
-    setMessage(null)
+    setLoadError(null)
+    setUpdateDialog(null)
   }
+
+  useEffect(() => {
+    if (!updateDialog) return
+    const onKey = (ev) => {
+      if (ev.key === 'Escape') setUpdateDialog(null)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [updateDialog])
 
   const validate = () => {
     if (!form) return '表单未就绪'
@@ -145,44 +196,57 @@ export default function AdminEditCarPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!form || !sourceItem?.carId) {
-      setError('数据未加载完成')
+      setUpdateDialog({
+        ok: false,
+        title: 'Update failed',
+        detail: '数据未加载完成，请刷新页面后重试。',
+      })
       return
     }
     const apiUrl = String(UPDATE_CAR_API || '').trim()
     if (!apiUrl) {
-      setError('尚未配置更新接口：请在 src/data/adminCarApi.js 中设置 UPDATE_CAR_API')
+      setUpdateDialog({
+        ok: false,
+        title: 'Update failed',
+        detail: '尚未配置更新接口（UPDATE_CAR_API）。',
+      })
       return
     }
 
     const err = validate()
     if (err) {
-      setError(err)
+      setUpdateDialog({
+        ok: false,
+        title: 'Cannot save',
+        detail: err,
+      })
       return
     }
 
     setSubmitting(true)
-    setError(null)
-    setMessage(null)
+    setUpdateDialog(null)
 
     const carId = String(sourceItem.carId).trim()
+    const baseline = baselinePayloadFromItem(sourceItem)
+    if (!baseline) {
+      setUpdateDialog({
+        ok: false,
+        title: 'Update failed',
+        detail: '无法构建保存基准，请返回详情重新进入编辑页。',
+      })
+      setSubmitting(false)
+      return
+    }
+
     const yearNum = Number(form.year)
-    const makeTrim = form.make.trim()
-    const modelTrim = form.model.trim()
     const odometerNum = Math.round(Number(String(form.odometer).replace(/km$/i, '').replace(/,/g, '')))
     const engineCcNum = Math.round(Number(String(form.engineCc).replace(/cc$/i, '').replace(/,/g, '')))
 
-    const coverImages = Array.isArray(sourceItem.coverImages) ? [...sourceItem.coverImages] : []
-    const galleryImages = Array.isArray(sourceItem.galleryImages) ? [...sourceItem.galleryImages] : []
-    const images =
-      Array.isArray(sourceItem.images) && sourceItem.images.length
-        ? [...sourceItem.images]
-        : [...coverImages, ...galleryImages]
-
-    const payload = {
-      carId,
+    const proposed = {
       title: form.title.trim(),
-      make: makeTrim,
-      model: modelTrim,
+      make: form.make.trim(),
+      model: form.model.trim(),
+      modelDetail: form.modelDetail.trim(),
       year: yearNum,
       price: Math.round(Number(form.price)),
       location: form.location,
@@ -194,14 +258,38 @@ export default function AdminEditCarPage() {
       description: form.description.trim(),
       exteriorColor: form.exteriorColor.trim(),
       plateNumber: form.plateNumber.trim(),
-      modelDetail: form.modelDetail.trim(),
       status: form.status,
-      coverImages,
-      galleryImages,
-      images,
+      coverImages: baseline.coverImages,
+      galleryImages: baseline.galleryImages,
     }
-    if (sourceItem.slug) payload.slug = sourceItem.slug
-    if (sourceItem.thumbnail) payload.thumbnail = sourceItem.thumbnail
+
+    const PATCH_KEYS = [
+      'title',
+      'make',
+      'model',
+      'modelDetail',
+      'year',
+      'price',
+      'location',
+      'odometer',
+      'fuel',
+      'transmission',
+      'engineCc',
+      'bodyType',
+      'description',
+      'exteriorColor',
+      'plateNumber',
+      'status',
+      'coverImages',
+      'galleryImages',
+    ]
+
+    const payload = { carId }
+    for (const k of PATCH_KEYS) {
+      if (!valuesEqual(proposed[k], baseline[k])) {
+        payload[k] = proposed[k]
+      }
+    }
 
     try {
       const res = await fetch(apiUrl, {
@@ -214,9 +302,23 @@ export default function AdminEditCarPage() {
         throw new Error(data.message || data.error || `更新失败：${res.status}`)
       }
       clearAdminCarDetailCache(carId)
-      setMessage('已保存。若详情仍显示旧数据，请刷新页面。')
+      if (data.item && typeof data.item === 'object') {
+        applyItem(data.item)
+      }
+      setUpdateDialog({
+        ok: true,
+        title: 'Updated successfully',
+        detail:
+          Object.keys(payload).length <= 1
+            ? '未检测到字段改动；服务端仍可能已刷新 updatedAt。'
+            : '车辆信息已保存。',
+      })
     } catch (ex) {
-      setError(ex instanceof Error ? ex.message : '更新失败')
+      setUpdateDialog({
+        ok: false,
+        title: 'Update failed',
+        detail: ex instanceof Error ? ex.message : '更新失败',
+      })
     } finally {
       setSubmitting(false)
     }
@@ -240,17 +342,13 @@ export default function AdminEditCarPage() {
 
         <h1 className="addcar-page__title">Edit vehicle</h1>
         <p className="addcar-page__hint">
-          <strong>carId</strong>（只读）：<code>{carIdLabel}</code>。本页暂不修改图片，提交时会沿用当前系统中的封面与图库 URL。
+          <strong>carId</strong>（只读）：<code>{carIdLabel}</code>。保存时只提交<strong>有改动的字段</strong>到{' '}
+          <code>updateInfo</code>，其余由 Lambda 与 Dynamo 现有数据合并；本页暂不修改图片。
         </p>
 
-        {error ? (
+        {loadError ? (
           <p className="addcar-page__alert addcar-page__alert--error" role="alert">
-            {error}
-          </p>
-        ) : null}
-        {message ? (
-          <p className="addcar-page__alert addcar-page__alert--ok" role="status">
-            {message}
+            {loadError}
           </p>
         ) : null}
 
@@ -457,6 +555,37 @@ export default function AdminEditCarPage() {
           </form>
         ) : !loading ? (
           <p className="sale-empty">无法加载车辆数据</p>
+        ) : null}
+
+        {updateDialog ? (
+          <div className="admin-update-dialog" role="presentation">
+            <div
+              className="admin-update-dialog__backdrop"
+              aria-hidden
+              onClick={() => setUpdateDialog(null)}
+            />
+            <div
+              className="admin-update-dialog__panel"
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="admin-update-dialog-title"
+            >
+              <h2
+                id="admin-update-dialog-title"
+                className={`admin-update-dialog__title ${updateDialog.ok ? 'admin-update-dialog__title--ok' : 'admin-update-dialog__title--err'}`}
+              >
+                {updateDialog.title}
+              </h2>
+              <p className="admin-update-dialog__detail">{updateDialog.detail}</p>
+              <button
+                type="button"
+                className="fleet-categories__btn admin-update-dialog__ok"
+                onClick={() => setUpdateDialog(null)}
+              >
+                OK
+              </button>
+            </div>
+          </div>
         ) : null}
       </div>
     </div>

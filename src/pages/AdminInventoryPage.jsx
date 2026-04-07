@@ -521,7 +521,7 @@ export default function AdminInventoryPage() {
                 <p className="admin-inventory-listing__asking-line">
                   Asking price {formatSalePrice(itemPrice(v))}
                 </p>
-                <p className="admin-inventory-listing__disclaimer">Excludes on road costs</p>
+                <p className="admin-inventory-listing__disclaimer">Includes on road costs</p>
                 <div
                   className="admin-inventory-listing__actions"
                   onClick={(e) => e.stopPropagation()}

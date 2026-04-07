@@ -2917,6 +2917,64 @@ img {
   text-decoration: none;
 }
 
+/* Admin 编辑车 — Update 结果对话框 */
+.admin-update-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.admin-update-dialog__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  cursor: pointer;
+}
+
+.admin-update-dialog__panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 400px;
+  padding: 1.35rem 1.5rem 1.25rem;
+  background: var(--color-surface);
+  border-radius: 12px;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+}
+
+.admin-update-dialog__title {
+  margin: 0 0 0.65rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.25;
+  color: #000;
+}
+
+.admin-update-dialog__title--ok {
+  color: #15803d;
+}
+
+.admin-update-dialog__title--err {
+  color: #b91c1c;
+}
+
+.admin-update-dialog__detail {
+  margin: 0 0 1.15rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--color-text);
+}
+
+.admin-update-dialog__ok {
+  width: 100%;
+  justify-content: center;
+}
+
 .sale-quick {
   margin-bottom: 1.5rem;
   padding: 1.25rem 1.25rem 1.1rem;
@@ -3265,11 +3323,12 @@ ul.sale-results.admin-inventory-page__results {
   list-style: none;
 }
 
+/* Admin 库存卡片：地点 / 里程 / 燃油 / 变速箱 / 排量 一行 — 细调字号改下方 font-size，图标改 .admin-inventory-listing__spec svg */
 .admin-inventory-listing__spec {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 0.6875rem;
+  font-size: 0.9125rem;
   line-height: 1.25;
   color: #666;
   max-width: 100%;
@@ -3282,8 +3341,8 @@ ul.sale-results.admin-inventory-page__results {
 
 .admin-inventory-listing__spec svg {
   flex-shrink: 0;
-  width: 13px;
-  height: 13px;
+  width: 15px;
+  height: 15px;
   color: #888;
 }
 
