@@ -3243,32 +3243,6 @@ ul.sale-results.admin-inventory-page__results {
   );
 }
 
-.admin-inv-media__open {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  z-index: 2;
-  padding: 5px 10px;
-  font-size: 11px;
-  font-weight: 700;
-  color: #fff;
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 6px;
-  text-decoration: none;
-  line-height: 1.2;
-}
-
-.admin-inv-media__open:hover {
-  background: rgba(0, 0, 0, 0.68);
-  color: #fff;
-  text-decoration: none;
-}
-
-.admin-inv-media__open:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 2px;
-}
-
 .admin-inventory-listing__noimg {
   width: 100%;
   height: 100%;

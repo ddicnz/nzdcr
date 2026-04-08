@@ -19,7 +19,6 @@ function mosaicSlotsFor(v) {
  */
 export default function AdminInventoryCarMedia({ vehicle }) {
   const mosaicSlots = useMemo(() => mosaicSlotsFor(vehicle), [vehicle])
-  const openHref = mosaicSlots[0] || mosaicSlots[1] || mosaicSlots[2] || ''
 
   if (!mosaicSlots.some(Boolean)) {
     return <div className="admin-inventory-card__noimg admin-inventory-listing__noimg">No image</div>
@@ -42,19 +41,6 @@ export default function AdminInventoryCarMedia({ vehicle }) {
           {mosaicSlots[2] ? <img src={mosaicSlots[2]} alt="" loading="lazy" decoding="async" /> : <span className="admin-inv-media__ph" />}
         </div>
       </div>
-
-      {openHref ? (
-        <a
-          className="admin-inv-media__open"
-          href={openHref}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="在新标签打开封面大图"
-          onClick={(e) => e.stopPropagation()}
-        >
-          打开原图
-        </a>
-      ) : null}
     </div>
   )
 }

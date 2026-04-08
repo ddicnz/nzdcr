@@ -288,7 +288,7 @@ export default function AdminInventoryPage() {
         <p className="sale-page__intro">
           数据来自 DynamoDB（<code>getadmincars</code>），加载后缓存在本页内存中；可筛选 <strong>published</strong> 与{' '}
           <strong>sold</strong>。头图为 <code>coverImages</code> 三联拼图；<strong>点击整条卡片</strong>进入详情（
-          <code>getcardetail</code>）；角上「打开原图」仅新开首张封面，不进入详情。
+          <code>getcardetail</code>）。
         </p>
 
         <div className="admin-inventory-page__toolbar">
