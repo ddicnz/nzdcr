@@ -1,9 +1,27 @@
-import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import PageHeroBanner from '../components/PageHeroBanner'
+import SaleListingCardMedia from '../components/SaleListingCardMedia'
+import BranchContactModal from '../components/BranchContactModal'
+import {
+  IconAdminEngine,
+  IconAdminFuel,
+  IconAdminOdometer,
+  IconAdminPin,
+  IconAdminTransmission,
+} from '../components/AdminListingSpecIcons'
 import SaleMultiSelect from '../components/SaleMultiSelect'
 import SaleRangePill from '../components/SaleRangePill'
 import { roadHero } from '../data/pageHeros'
+import { NZDCR_BRANCHES } from '../data/branchLocations'
+import {
+  fetchPublishedSaleInventory,
+  formatSaleAdminLocation,
+  formatSaleEngineCc,
+  formatSaleListedLine,
+  saleListingHeadline,
+  saleModelOptionsFromInventory,
+} from '../data/dynamoSaleCars'
 import {
   formatSaleOdometer,
   formatSalePrice,
@@ -13,14 +31,14 @@ import {
   PRICE_OPTIONS,
   SALE_BODY_TYPES,
   SALE_MAKE_OPTIONS,
-  SALE_VEHICLES,
-  saleModelOptionsForMakes,
   YEAR_MAX_OPTIONS,
   YEAR_MIN_OPTIONS,
 } from '../data/carsForSale'
-import { NZDCR_BRANCHES } from '../data/branchLocations'
 
-const FUEL_VALUES = ['Petrol', 'Diesel', 'Hybrid']
+const FUEL_VALUES = ['Petrol', 'Diesel', 'Hybrid', 'Electric']
+const PAGE_SIZE = 10
+
+const LOCATION_OPTIONS = NZDCR_BRANCHES.map((b) => ({ value: b.key, label: b.title }))
 
 function toggleInList(list, value) {
   return list.includes(value) ? list.filter((x) => x !== value) : [...list, value]
@@ -29,7 +47,8 @@ function toggleInList(list, value) {
 function vehicleMatches(f, v) {
   const kw = f.keyword.trim().toLowerCase()
   if (kw) {
-    const blob = `${v.title} ${v.make} ${v.model}`.toLowerCase()
+    const blob = `${v.title ?? ''} ${v.make ?? ''} ${v.model ?? ''} ${v.slug ?? ''} ${v.description ?? ''}`
+      .toLowerCase()
     if (!blob.includes(kw)) return false
   }
   if (f.makes.length && !f.makes.includes(v.make)) return false
@@ -39,30 +58,34 @@ function vehicleMatches(f, v) {
   }
   if (f.bodyTypes.length && !f.bodyTypes.includes(v.bodyType)) return false
   if (f.fuels.length && !f.fuels.includes(v.fuel)) return false
-  if (f.locations.length && !f.locations.includes(v.location)) return false
+  if (f.locations.length && !f.locations.includes(v.locationKey)) return false
+  const price = v.price
+  const year = v.year
+  const km = v.km
+
   if (f.priceMin) {
     const min = Number(f.priceMin)
-    if (Number.isFinite(min) && v.price < min) return false
+    if (Number.isFinite(min) && price < min) return false
   }
   if (f.priceMax) {
     const max = Number(f.priceMax)
-    if (Number.isFinite(max) && v.price > max) return false
+    if (Number.isFinite(max) && price > max) return false
   }
   if (f.yearMin) {
     const y = Number(f.yearMin)
-    if (Number.isFinite(y) && v.year < y) return false
+    if (Number.isFinite(y) && year < y) return false
   }
   if (f.yearMax) {
     const y = Number(f.yearMax)
-    if (Number.isFinite(y) && v.year > y) return false
+    if (Number.isFinite(y) && year > y) return false
   }
   if (f.kmMin) {
     const min = Number(f.kmMin)
-    if (Number.isFinite(min) && v.km < min) return false
+    if (Number.isFinite(min) && km < min) return false
   }
   if (f.kmMax) {
     const max = Number(f.kmMax)
-    if (Number.isFinite(max) && v.km > max) return false
+    if (Number.isFinite(max) && km > max) return false
   }
   return true
 }
@@ -83,28 +106,67 @@ const initialFilters = {
 }
 
 const MAKE_CHECKBOXES = SALE_MAKE_OPTIONS.filter((o) => o.value)
-
 const BODY_OPTIONS = SALE_BODY_TYPES.map((bt) => ({ value: bt, label: bt }))
 const FUEL_OPTIONS = FUEL_VALUES.map((f) => ({ value: f, label: f }))
-const LOCATION_OPTIONS = NZDCR_BRANCHES.map((b) => ({ value: b.key, label: b.title }))
-const LOCATION_LABEL = Object.fromEntries(NZDCR_BRANCHES.map((b) => [b.key, b.title]))
 
 export default function CarsForSalePage() {
+  const navigate = useNavigate()
+  const [inventoryItems, setInventoryItems] = useState([])
+  const [inventoryLoading, setInventoryLoading] = useState(true)
+  const [inventoryError, setInventoryError] = useState(null)
   const [filters, setFilters] = useState(initialFilters)
   const [openPicker, setOpenPicker] = useState(null)
+  const [page, setPage] = useState(1)
+  const [contactBranchKey, setContactBranchKey] = useState(null)
 
-  const modelOptions = useMemo(() => saleModelOptionsForMakes(filters.makes), [filters.makes])
+  const loadInventory = useCallback(async () => {
+    setInventoryLoading(true)
+    setInventoryError(null)
+    try {
+      const items = await fetchPublishedSaleInventory()
+      setInventoryItems(items)
+    } catch (e) {
+      setInventoryError(e instanceof Error ? e.message : '加载失败')
+      setInventoryItems([])
+    } finally {
+      setInventoryLoading(false)
+    }
+  }, [])
+
+  useEffect(() => {
+    loadInventory()
+  }, [loadInventory])
+
+  const modelOptions = useMemo(
+    () => saleModelOptionsFromInventory(inventoryItems, filters.makes),
+    [inventoryItems, filters.makes],
+  )
 
   useEffect(() => {
     setFilters((prev) => {
-      const valid = new Set(saleModelOptionsForMakes(prev.makes).map((o) => o.value))
+      const valid = new Set(saleModelOptionsFromInventory(inventoryItems, prev.makes).map((o) => o.value))
       const models = prev.models.filter((k) => valid.has(k))
       if (models.length === prev.models.length) return prev
       return { ...prev, models }
     })
-  }, [filters.makes])
+  }, [inventoryItems, filters.makes])
 
-  const filtered = useMemo(() => SALE_VEHICLES.filter((v) => vehicleMatches(filters, v)), [filters])
+  const filtered = useMemo(
+    () => inventoryItems.filter((v) => vehicleMatches(filters, v)),
+    [inventoryItems, filters],
+  )
+
+  const filterKey = useMemo(() => JSON.stringify(filters), [filters])
+  useEffect(() => {
+    setPage(1)
+  }, [filterKey])
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+  const safePage = Math.min(page, totalPages)
+  const pageSlice = useMemo(
+    () => filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE),
+    [filtered, safePage],
+  )
 
   const setField = (key) => (e) => {
     setFilters((prev) => ({ ...prev, [key]: e.target.value }))
@@ -123,13 +185,18 @@ export default function CarsForSalePage() {
     setFilters(initialFilters)
   }
 
+  const scrollToTop = () => {
+    document.getElementById('cars-for-sale-top')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   return (
     <>
       <PageHeroBanner {...roadHero('CARS FOR SALE', 'Cars for Sale')} />
-      <div className="sale-page">
+      <div className="sale-page" id="cars-for-sale-top">
         <div className="container">
           <p className="sale-page__intro">
-            Quality used vehicles at competitive prices — search by body type, budget, and more.
+            Quality used vehicles from our branches — search by body type, budget, and location. Listings are loaded
+            from our live inventory (published only).
             <strong> Enquire</strong> on any listing — we&apos;re happy to help with finance and trade-ins.
           </p>
 
@@ -189,7 +256,7 @@ export default function CarsForSalePage() {
                 openKey={openPicker}
                 onOpenKeyChange={setOpenPicker}
                 label="Model"
-                placeholder={modelOptions.length ? 'Any model' : 'No models in stock'}
+                placeholder={modelOptions.length ? 'Any model' : inventoryLoading ? 'Loading…' : 'No models in stock'}
                 options={modelOptions}
                 selected={filters.models}
                 onToggle={(v) => toggleFilterList('models', v)}
@@ -294,52 +361,102 @@ export default function CarsForSalePage() {
                 Reset all
               </button>
               <p className="sale-search__hint" role="status">
-                Showing <strong>{filtered.length}</strong> of {SALE_VEHICLES.length} vehicles — filters apply
-                instantly.
+                Showing <strong>{filtered.length}</strong> of {inventoryItems.length} vehicles — filters apply instantly.
+                {inventoryLoading ? ' Loading inventory…' : null}
               </p>
             </div>
           </section>
 
-          <ul className="sale-results">
-            {filtered.map((v) => (
-              <li key={v.slug} className="sale-card">
-                <Link className="sale-card__link" to={`/cars-for-sale/${v.slug}/`}>
-                  <div className="sale-card__media">
-                    <img
-                      src={v.image}
-                      alt=""
-                      loading="lazy"
-                      decoding="async"
-                      width={640}
-                      height={400}
-                    />
+          {inventoryError ? (
+            <p className="addcar-page__alert addcar-page__alert--error" role="alert">
+              {inventoryError}{' '}
+              <button type="button" className="sale-empty__reset" onClick={loadInventory}>
+                Retry
+              </button>
+            </p>
+          ) : null}
+
+          <ul className="sale-results admin-inventory-page__results">
+            {pageSlice.map((v) => {
+              const slug = String(v.slug || '').trim()
+              const mailSubject = encodeURIComponent(`Cars for sale: ${v.title || slug}`)
+              const mailHref = `mailto:booking@nzdcr.co.nz?subject=${mailSubject}`
+              return (
+                <li
+                  key={slug}
+                  className="admin-inventory-listing admin-inventory-listing--clickable"
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => navigate(`/cars-for-sale/${encodeURIComponent(slug)}/`)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      navigate(`/cars-for-sale/${encodeURIComponent(slug)}/`)
+                    }
+                  }}
+                >
+                  <div className="admin-inventory-listing__media">
+                    <SaleListingCardMedia vehicle={v} />
                   </div>
-                  <div className="sale-card__body">
-                    <h3 className="sale-card__title">{v.title}</h3>
-                    <p className="sale-card__price">{formatSalePrice(v.price)}*</p>
-                    <p className="sale-card__meta">
-                      {LOCATION_LABEL[v.location] ?? v.location} · {formatSaleOdometer(v.km)},{' '}
-                      {v.transmission}, {v.engineCc}cc, {v.fuel}
+                  <div className="admin-inventory-listing__body">
+                    <p className="admin-inventory-listing__listed">{formatSaleListedLine(v)}</p>
+                    <h3 className="admin-inventory-listing__title">{saleListingHeadline(v)}</h3>
+                    {String(v.description ?? '').trim() ? (
+                      <p className="admin-inventory-listing__desc">{String(v.description).trim()}</p>
+                    ) : null}
+                    <ul className="admin-inventory-listing__specs">
+                      <li className="admin-inventory-listing__spec">
+                        <IconAdminPin />
+                        <span>{formatSaleAdminLocation(v)}</span>
+                      </li>
+                      <li className="admin-inventory-listing__spec">
+                        <IconAdminOdometer />
+                        <span>{formatSaleOdometer(v.km)}</span>
+                      </li>
+                      <li className="admin-inventory-listing__spec">
+                        <IconAdminFuel />
+                        <span>{v.fuel ? String(v.fuel) : '—'}</span>
+                      </li>
+                      <li className="admin-inventory-listing__spec">
+                        <IconAdminTransmission />
+                        <span>{v.transmission ? String(v.transmission) : '—'}</span>
+                      </li>
+                      <li className="admin-inventory-listing__spec">
+                        <IconAdminEngine />
+                        <span>{formatSaleEngineCc(v)}</span>
+                      </li>
+                    </ul>
+                    <p className="admin-inventory-listing__asking-line">
+                      Asking price {formatSalePrice(v.price)}
                     </p>
-                    <span className="sale-card__view">View details</span>
+                    <p className="admin-inventory-listing__disclaimer">Includes on road costs</p>
+                    <p className="sale-card__view sale-card__view--in-grid">View details</p>
+                    <div
+                      className="admin-inventory-listing__actions"
+                      onClick={(e) => e.stopPropagation()}
+                      onKeyDown={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        type="button"
+                        className="fleet-categories__btn admin-inventory-listing__action-btn admin-inventory-listing__btn-update"
+                        onClick={() => setContactBranchKey(v.locationKey)}
+                      >
+                        Contact details
+                      </button>
+                      <a
+                        href={mailHref}
+                        className="fleet-categories__btn admin-inventory-listing__action-btn admin-form-cancel-link"
+                      >
+                        Email us
+                      </a>
+                    </div>
                   </div>
-                </Link>
-                <div className="sale-card__actions">
-                  <a href="tel:080017951795" className="sale-btn sale-btn--primary">
-                    Call to enquire
-                  </a>
-                  <a
-                    href="mailto:booking@nzdcr.co.nz?subject=Cars%20for%20sale%20enquiry"
-                    className="sale-btn sale-btn--ghost"
-                  >
-                    Email us
-                  </a>
-                </div>
-              </li>
-            ))}
+                </li>
+              )
+            })}
           </ul>
 
-          {filtered.length === 0 ? (
+          {!inventoryLoading && filtered.length === 0 && !inventoryError ? (
             <p className="sale-empty">
               No vehicles match those filters. Try widening your search or{' '}
               <button type="button" className="sale-empty__reset" onClick={handleReset}>
@@ -347,6 +464,59 @@ export default function CarsForSalePage() {
               </button>
               .
             </p>
+          ) : null}
+
+          {!inventoryLoading && inventoryItems.length === 0 && !inventoryError ? (
+            <p className="sale-empty">No published vehicles in stock right now. Please check back later.</p>
+          ) : null}
+
+          {totalPages > 1 && filtered.length > 0 ? (
+            <nav className="sale-pagination" aria-label="Page navigation">
+              <button
+                type="button"
+                className="sale-pagination__btn"
+                disabled={safePage <= 1}
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+              >
+                Previous
+              </button>
+              {totalPages <= 12 ? (
+                Array.from({ length: totalPages }, (_, i) => i + 1).map((num) => (
+                  <button
+                    key={num}
+                    type="button"
+                    className={`sale-pagination__btn ${num === safePage ? 'sale-pagination__btn--active' : ''}`}
+                    onClick={() => setPage(num)}
+                  >
+                    {num}
+                  </button>
+                ))
+              ) : (
+                <span className="sale-pagination__ellipsis" style={{ padding: '0 0.5rem', fontWeight: 700 }}>
+                  Page {safePage} of {totalPages}
+                </span>
+              )}
+              <button
+                type="button"
+                className="sale-pagination__btn"
+                disabled={safePage >= totalPages}
+                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              >
+                Next
+              </button>
+            </nav>
+          ) : null}
+
+          {filtered.length > 0 ? (
+            <div className="sale-back-to-top-wrap">
+              <button type="button" className="sale-back-to-top" onClick={scrollToTop}>
+                Back to top
+              </button>
+            </div>
+          ) : null}
+
+          {contactBranchKey ? (
+            <BranchContactModal branchKey={contactBranchKey} onClose={() => setContactBranchKey(null)} />
           ) : null}
         </div>
       </div>
