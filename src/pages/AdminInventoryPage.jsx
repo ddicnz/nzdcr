@@ -390,9 +390,6 @@ export default function AdminInventoryPage() {
                   {formatListedLine(v)}
                 </p>
                 <h3 className="admin-inventory-listing__title">{listingHeadline(v)}</h3>
-                {String(v.description ?? '').trim() ? (
-                  <p className="admin-inventory-listing__desc">{String(v.description).trim()}</p>
-                ) : null}
                 <ul className="admin-inventory-listing__specs">
                   <li className="admin-inventory-listing__spec">
                     <IconAdminPin />

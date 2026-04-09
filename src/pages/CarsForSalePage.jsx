@@ -49,7 +49,7 @@ function toggleInList(list, value) {
 function vehicleMatches(f, v) {
   const kw = f.keyword.trim().toLowerCase()
   if (kw) {
-    const blob = `${v.title ?? ''} ${v.make ?? ''} ${v.model ?? ''} ${v.slug ?? ''} ${v.description ?? ''}`
+    const blob = `${v.title ?? ''} ${v.make ?? ''} ${v.model ?? ''} ${v.slug ?? ''}`
       .toLowerCase()
     if (!blob.includes(kw)) return false
   }
@@ -408,9 +408,6 @@ export default function CarsForSalePage() {
                   <div className="admin-inventory-listing__body">
                     <p className="admin-inventory-listing__listed">{formatSaleListedLine(v)}</p>
                     <h3 className="admin-inventory-listing__title">{saleListingHeadline(v)}</h3>
-                    {String(v.description ?? '').trim() ? (
-                      <p className="admin-inventory-listing__desc">{String(v.description).trim()}</p>
-                    ) : null}
                     <ul className="admin-inventory-listing__specs">
                       <li className="admin-inventory-listing__spec">
                         <IconAdminPin />

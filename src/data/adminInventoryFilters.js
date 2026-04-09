@@ -50,7 +50,7 @@ export function itemYear(v) {
 export function adminInventoryMatches(f, v) {
   const kw = f.keyword.trim().toLowerCase()
   if (kw) {
-    const blob = `${v.title ?? ''} ${v.make ?? ''} ${v.model ?? ''} ${v.carId ?? ''} ${v.description ?? ''}`
+    const blob = `${v.title ?? ''} ${v.make ?? ''} ${v.model ?? ''} ${v.carId ?? ''}`
       .toLowerCase()
     if (!blob.includes(kw)) return false
   }

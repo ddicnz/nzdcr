@@ -5,6 +5,8 @@ export const ADDCAR_API =
   'https://n8eemiewzi.execute-api.ap-southeast-2.amazonaws.com/default/addcar'
 export const GET_ADMIN_CARS_API =
   'https://utgpizuum2.execute-api.ap-southeast-2.amazonaws.com/default/getadmincars'
+export const GET_SALE_CARS_API =
+  'https://jputy90i20.execute-api.ap-southeast-2.amazonaws.com/default/getcars'
 export const GET_CAR_DETAIL_API =
   'https://kol9ykxns2.execute-api.ap-southeast-2.amazonaws.com/default/getcardetail'
 

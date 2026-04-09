@@ -1,4 +1,4 @@
-import { GET_ADMIN_CARS_API, fetchAdminCarDetail } from './adminCarApi'
+import { GET_SALE_CARS_API, fetchAdminCarDetail } from './adminCarApi'
 
 const LOCATION_TO_BRANCH = {
   auckland: 'akl',
@@ -149,12 +149,25 @@ export function saleModelOptionsFromInventory(items, makesFilter) {
 }
 
 export async function fetchPublishedSaleInventory() {
-  const res = await fetch(GET_ADMIN_CARS_API)
-  const data = await res.json().catch(() => ({}))
-  if (!res.ok) {
-    throw new Error(data.message || data.error || `加载在售车辆失败（${res.status}）`)
-  }
-  const items = Array.isArray(data.items) ? data.items : []
+  const items = []
+  let lastKey = null
+
+  // Keep fetching pages so existing client-side filters/sorts still work with the new paginated API.
+  do {
+    const query = new URLSearchParams({ limit: '50' })
+    if (lastKey) query.set('lastKey', JSON.stringify(lastKey))
+    const url = `${GET_SALE_CARS_API}?${query.toString()}`
+
+    const res = await fetch(url)
+    const data = await res.json().catch(() => ({}))
+    if (!res.ok) {
+      throw new Error(data.message || data.error || `Failed to fetch sale inventory (${res.status})`)
+    }
+    const pageItems = Array.isArray(data.items) ? data.items : []
+    items.push(...pageItems)
+    lastKey = data.lastKey && typeof data.lastKey === 'object' ? data.lastKey : null
+  } while (lastKey)
+
   const out = []
   for (const raw of items) {
     const v = enrichDynamoCarForSale(raw)
