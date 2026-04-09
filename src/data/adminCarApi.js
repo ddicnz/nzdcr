@@ -12,8 +12,9 @@ export const GET_CAR_DETAIL_API =
 export const UPDATE_CAR_API =
   'https://qpzh1n6dya.execute-api.ap-southeast-2.amazonaws.com/default/updateInfo'
 
-/** 车辆删除接口 URL；未配置时点删除会提示（请求体默认 JSON `{ carId }`，方法 POST） */
-export const DELETE_CAR_API = ''
+/** 车辆删除 Lambda — POST JSON `{ "carId": "..." }` */
+export const DELETE_CAR_API =
+  'https://7spqzazh0d.execute-api.ap-southeast-2.amazonaws.com/default/deletecar'
 
 const ADMIN_CAR_DETAIL_CACHE_PREFIX = 'adminCarDetail:'
 
@@ -65,6 +66,30 @@ export function clearAdminCarDetailCache(carId) {
     sessionStorage.removeItem(ADMIN_CAR_DETAIL_CACHE_PREFIX + carId)
   } catch {
     /* ignore */
+  }
+}
+
+/**
+ * POST deletecar — body `{ carId }`。未配置 DELETE_CAR_API 时抛错。
+ * @param {string} carId
+ */
+export async function deleteAdminCar(carId) {
+  const id = String(carId || '').trim()
+  if (!id) throw new Error('carId 为空')
+
+  const apiUrl = String(DELETE_CAR_API || '').trim()
+  if (!apiUrl) {
+    throw new Error('尚未配置删除接口：请在 src/data/adminCarApi.js 中设置 DELETE_CAR_API')
+  }
+
+  const res = await fetch(apiUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ carId: id }),
+  })
+  const data = await res.json().catch(() => ({}))
+  if (!res.ok) {
+    throw new Error(data.message || data.error || `删除失败：${res.status}`)
   }
 }
 

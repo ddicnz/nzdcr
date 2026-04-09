@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import DeleteConfirmModal from '../components/DeleteConfirmModal'
 import InventorySortBar from '../components/InventorySortBar'
 import SaleMultiSelect from '../components/SaleMultiSelect'
 import SaleRangePill from '../components/SaleRangePill'
 import {
   adminModelOptionsFromItems,
   clearAdminCarDetailCache,
-  DELETE_CAR_API,
+  deleteAdminCar,
   GET_ADMIN_CARS_API,
 } from '../data/adminCarApi'
 import {
@@ -51,6 +52,7 @@ export default function AdminQuickLookPage() {
   const [filters, setFilters] = useState(initialFilters)
   const [openPicker, setOpenPicker] = useState(null)
   const [deletingCarId, setDeletingCarId] = useState(null)
+  const [deletePending, setDeletePending] = useState(null)
   const [sortBy, setSortBy] = useState('default')
 
   const load = useCallback(async () => {
@@ -116,31 +118,18 @@ export default function AdminQuickLookPage() {
     setFilters(initialFilters)
   }
 
-  const handleDeleteCard = async (v) => {
+  const handleDeleteConfirm = async () => {
+    const v = deletePending
+    if (!v) return
     const id = String(v.carId ?? '').trim()
     if (!id) return
-    const label = listingHeadline(v)
-    if (!window.confirm(`确认删除「${label}」？此操作不可恢复。`)) return
-
-    const apiUrl = String(DELETE_CAR_API || '').trim()
-    if (!apiUrl) {
-      window.alert('尚未配置删除接口：请在 src/data/adminCarApi.js 中设置 DELETE_CAR_API')
-      return
-    }
 
     setDeletingCarId(id)
     try {
-      const res = await fetch(apiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ carId: id }),
-      })
-      const data = await res.json().catch(() => ({}))
-      if (!res.ok) {
-        throw new Error(data.message || data.error || `删除失败：${res.status}`)
-      }
+      await deleteAdminCar(id)
       clearAdminCarDetailCache(id)
       setItems((prev) => prev.filter((x) => String(x.carId) !== id))
+      setDeletePending(null)
     } catch (e) {
       window.alert(e instanceof Error ? e.message : '删除失败')
     } finally {
@@ -369,7 +358,7 @@ export default function AdminQuickLookPage() {
                         type="button"
                         className="fleet-categories__btn admin-inventory-listing__btn-delete"
                         disabled={deletingCarId === cardCarId}
-                        onClick={() => handleDeleteCard(v)}
+                        onClick={() => setDeletePending(v)}
                       >
                         {deletingCarId === cardCarId ? '删除中…' : 'Delete'}
                       </button>
@@ -393,6 +382,18 @@ export default function AdminQuickLookPage() {
             。
           </p>
         ) : null}
+
+        <DeleteConfirmModal
+          open={!!deletePending}
+          vehicleLabel={deletePending ? listingHeadline(deletePending) : ''}
+          onCancel={() => setDeletePending(null)}
+          onConfirm={handleDeleteConfirm}
+          isDeleting={
+            !!deletePending &&
+            !!deletingCarId &&
+            deletingCarId === String(deletePending.carId ?? '').trim()
+          }
+        />
       </div>
     </div>
   )

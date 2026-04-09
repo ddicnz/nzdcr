@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import SuccessCenterModal from '../components/SuccessCenterModal'
 import {
   ADDCAR_API,
   ADMIN_GALLERY_IMAGE_INDEX_START,
@@ -62,7 +63,7 @@ export default function AddCarPage() {
   const [coverFiles, setCoverFiles] = useState([])
   const [galleryFiles, setGalleryFiles] = useState([])
   const [submitting, setSubmitting] = useState(false)
-  const [message, setMessage] = useState(null)
+  const [successCarId, setSuccessCarId] = useState(null)
   const [error, setError] = useState(null)
 
   const previewCarIdPrefix = useMemo(() => {
@@ -75,12 +76,12 @@ export default function AddCarPage() {
   const setField = (key) => (e) => {
     setForm((p) => ({ ...p, [key]: e.target.value }))
     setError(null)
-    setMessage(null)
+    setSuccessCarId(null)
   }
 
   const onCoverFilesSelected = (e) => {
     setError(null)
-    setMessage(null)
+    setSuccessCarId(null)
     const { files: valid, error, oversize } = validatePickedFiles(e.target.files)
     if (error) {
       if (oversize) {
@@ -103,7 +104,7 @@ export default function AddCarPage() {
 
   const onGalleryFilesSelected = (e) => {
     setError(null)
-    setMessage(null)
+    setSuccessCarId(null)
     const { files: valid, error, oversize } = validatePickedFiles(e.target.files)
     if (error) {
       if (oversize) {
@@ -153,7 +154,7 @@ export default function AddCarPage() {
     }
     setSubmitting(true)
     setError(null)
-    setMessage(null)
+    setSuccessCarId(null)
 
     const carId = generateCarId(form.make, form.model, form.year)
     const yearNum = Number(form.year)
@@ -241,7 +242,7 @@ export default function AddCarPage() {
         throw new Error(addData.message || addData.error || `addcar 失败：${addRes.status}`)
       }
 
-      setMessage(`已提交。carId：${carId}`)
+      setSuccessCarId(carId)
       setForm(initialForm)
       setCoverFiles([])
       setGalleryFiles([])
@@ -277,12 +278,6 @@ export default function AddCarPage() {
             {error}
           </p>
         ) : null}
-        {message ? (
-          <p className="addcar-page__alert addcar-page__alert--ok" role="status">
-            {message}
-          </p>
-        ) : null}
-
         <form className="addcar-form" onSubmit={handleSubmit} noValidate>
           <div className="addcar-form__section">
             <h2 className="addcar-form__heading">基本信息</h2>
@@ -537,6 +532,22 @@ export default function AddCarPage() {
             </Link>
           </div>
         </form>
+
+        <SuccessCenterModal
+          open={!!successCarId}
+          title="提交成功"
+          onClose={() => setSuccessCarId(null)}
+          buttonLabel="确定"
+        >
+          <p className="addcar-success-modal__lead">车辆已成功提交并写入库存。</p>
+          <p className="addcar-success-modal__carid">
+            <span className="addcar-page__hint-inline">carId：</span>
+            <code>{successCarId}</code>
+          </p>
+          <p className="addcar-page__hint addcar-success-modal__foot">
+            可在 <Link to="/admin/cars/">Admin → View all cars</Link> 中查看或继续添加车辆。
+          </p>
+        </SuccessCenterModal>
       </div>
     </div>
   )
