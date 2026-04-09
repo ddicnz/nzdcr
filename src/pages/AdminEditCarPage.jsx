@@ -342,8 +342,7 @@ export default function AdminEditCarPage() {
 
         <h1 className="addcar-page__title">Edit vehicle</h1>
         <p className="addcar-page__hint">
-          <strong>carId</strong> (read-only): <code>{carIdLabel}</code>. On save, only <strong>changed fields</strong> are sent
-          in <code>updateInfo</code>; Lambda merges the rest with existing data in Dynamo. This page does not edit images yet.
+          <strong>carId</strong> (read-only): <code>{carIdLabel}</code>. This page does not edit images yet.
         </p>
 
         {loadError ? (

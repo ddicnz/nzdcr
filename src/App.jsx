@@ -9,6 +9,7 @@ import AdminEditCarPage from './pages/AdminEditCarPage'
 import AdminInventoryPage from './pages/AdminInventoryPage'
 import AdminQuickLookPage from './pages/AdminQuickLookPage'
 import AddCarPage from './pages/AddCarPage'
+import AdminLoginPage from './pages/AdminLoginPage'
 import TermsOfTradePage from './pages/TermsOfTradePage'
 import PrivacyLegalPoliciesPage from './pages/PrivacyLegalPoliciesPage'
 import PaymentTermsPage from './pages/PaymentTermsPage'
@@ -31,6 +32,7 @@ import LocationsPage from './pages/LocationsPage'
 import AucklandAirportPage from './pages/AucklandAirportPage'
 import ChristchurchAirportPage from './pages/ChristchurchAirportPage'
 import QueenstownAirportPage from './pages/QueenstownAirportPage'
+import RequireAdmin from './components/RequireAdmin'
 import { RedirectCategoryToProductCategory } from './pages/LegacyFleetRedirects'
 import { roadHero } from './data/pageHeros'
 
@@ -81,12 +83,55 @@ export default function App() {
         <Route path="payment-terms" element={<PaymentTermsPage />} />
         <Route path="privacy-legal-policies" element={<PrivacyLegalPoliciesPage />} />
         <Route path="terms-of-trade" element={<TermsOfTradePage />} />
-        <Route path="admin/cars/quick-look" element={<AdminQuickLookPage />} />
-        <Route path="admin/cars/:carId/edit" element={<AdminEditCarPage />} />
-        <Route path="admin/cars/:carId" element={<AdminCarDetailPage />} />
-        <Route path="admin/cars" element={<AdminInventoryPage />} />
-        <Route path="admin" element={<AdminPage />} />
-        <Route path="addcar" element={<AddCarPage />} />
+        <Route path="admin-login" element={<AdminLoginPage />} />
+        <Route
+          path="admin/cars/quick-look"
+          element={
+            <RequireAdmin>
+              <AdminQuickLookPage />
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="admin/cars/:carId/edit"
+          element={
+            <RequireAdmin>
+              <AdminEditCarPage />
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="admin/cars/:carId"
+          element={
+            <RequireAdmin>
+              <AdminCarDetailPage />
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="admin/cars"
+          element={
+            <RequireAdmin>
+              <AdminInventoryPage />
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="admin"
+          element={
+            <RequireAdmin>
+              <AdminPage />
+            </RequireAdmin>
+          }
+        />
+        <Route
+          path="addcar"
+          element={
+            <RequireAdmin>
+              <AddCarPage />
+            </RequireAdmin>
+          }
+        />
       </Route>
     </Routes>
   )

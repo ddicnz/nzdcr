@@ -2677,6 +2677,14 @@ img {
   align-items: center;
 }
 
+.admin-login-page__form {
+  max-width: 460px;
+  padding: 14px 16px 18px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  background: var(--color-surface);
+}
+
 .addcar-page {
   padding: 20px 0 56px;
   background: var(--color-bg);
