@@ -62,8 +62,10 @@ export default function AddCarPage() {
   const [form, setForm] = useState(initialForm)
   const [coverFiles, setCoverFiles] = useState([])
   const [galleryFiles, setGalleryFiles] = useState([])
+  const [dragTarget, setDragTarget] = useState(null)
   const [submitting, setSubmitting] = useState(false)
   const [successCarId, setSuccessCarId] = useState(null)
+  const [uploadWarning, setUploadWarning] = useState(null)
   const [error, setError] = useState(null)
 
   const previewCarIdPrefix = useMemo(() => {
@@ -79,16 +81,20 @@ export default function AddCarPage() {
     setSuccessCarId(null)
   }
 
-  const onCoverFilesSelected = (e) => {
+  const addCoverFiles = (incoming) => {
     setError(null)
     setSuccessCarId(null)
-    const { files: valid, error, oversize } = validatePickedFiles(e.target.files)
+    setUploadWarning(null)
+    const { files: valid, error, oversize } = validatePickedFiles(incoming)
     if (error) {
       if (oversize) {
-        window.alert(`Each image must be at most ${MAX_IMAGE_MB} MB. Please choose again.`)
+        setUploadWarning({
+          title: 'File too large',
+          detail: `Each image must be at most ${MAX_IMAGE_MB} MB. Please choose again.`,
+        })
+        return
       }
       setError(error)
-      e.target.value = ''
       return
     }
     setCoverFiles((prev) => {
@@ -99,23 +105,54 @@ export default function AddCarPage() {
       }
       return next
     })
+  }
+
+  const onCoverFilesSelected = (e) => {
+    addCoverFiles(e.target.files)
     e.target.value = ''
   }
 
-  const onGalleryFilesSelected = (e) => {
+  const addGalleryFiles = (incoming) => {
     setError(null)
     setSuccessCarId(null)
-    const { files: valid, error, oversize } = validatePickedFiles(e.target.files)
+    setUploadWarning(null)
+    const { files: valid, error, oversize } = validatePickedFiles(incoming)
     if (error) {
       if (oversize) {
-        window.alert(`Each image must be at most ${MAX_IMAGE_MB} MB. Please choose again.`)
+        setUploadWarning({
+          title: 'File too large',
+          detail: `Each image must be at most ${MAX_IMAGE_MB} MB. Please choose again.`,
+        })
+        return
       }
       setError(error)
-      e.target.value = ''
       return
     }
     setGalleryFiles((prev) => [...prev, ...valid])
+  }
+
+  const onGalleryFilesSelected = (e) => {
+    addGalleryFiles(e.target.files)
     e.target.value = ''
+  }
+
+  const onUploadDragOver = (target) => (e) => {
+    e.preventDefault()
+    if (dragTarget !== target) setDragTarget(target)
+  }
+
+  const onUploadDragLeave = (target) => (e) => {
+    e.preventDefault()
+    if (dragTarget === target) setDragTarget(null)
+  }
+
+  const onUploadDrop = (target) => (e) => {
+    e.preventDefault()
+    setDragTarget(null)
+    const files = e.dataTransfer?.files
+    if (!files?.length) return
+    if (target === 'cover') addCoverFiles(files)
+    else addGalleryFiles(files)
   }
 
   const removeCoverFile = (index) => {
@@ -469,7 +506,12 @@ export default function AddCarPage() {
             <p className="addcar-page__hint">
               Max <strong>{MAX_IMAGE_MB} MB</strong> per file. JPEG, PNG, WebP, or GIF.
             </p>
-            <div className="addcar-form__upload-block">
+            <div
+              className={`addcar-form__upload-block ${dragTarget === 'cover' ? 'is-drag-over' : ''}`}
+              onDragOver={onUploadDragOver('cover')}
+              onDragLeave={onUploadDragLeave('cover')}
+              onDrop={onUploadDrop('cover')}
+            >
               <h3 className="addcar-form__subheading">Cover images (3 required)</h3>
               <p className="addcar-page__hint addcar-form__upload-hint">
         
@@ -478,6 +520,10 @@ export default function AddCarPage() {
                 <span className="fleet-categories__btn addcar-form__file-trigger">Choose cover images</span>
                 <input type="file" accept={ALLOWED_IMAGE_TYPES.join(',')} multiple onChange={onCoverFilesSelected} hidden />
               </label>
+              <div className="addcar-form__dropzone" aria-hidden>
+                <span className="addcar-form__dropzone-title">Drop files here</span>
+                <span className="addcar-form__dropzone-subtitle">or click "Choose cover images"</span>
+              </div>
               <p className="addcar-form__count">
                 Selected <strong>{coverFiles.length}</strong> / 3
               </p>
@@ -496,7 +542,12 @@ export default function AddCarPage() {
                 </ul>
               ) : null}
             </div>
-            <div className="addcar-form__upload-block">
+            <div
+              className={`addcar-form__upload-block ${dragTarget === 'gallery' ? 'is-drag-over' : ''}`}
+              onDragOver={onUploadDragOver('gallery')}
+              onDragLeave={onUploadDragLeave('gallery')}
+              onDrop={onUploadDrop('gallery')}
+            >
               <h3 className="addcar-form__subheading">Gallery images (optional)</h3>
               <p className="addcar-page__hint addcar-form__upload-hint">
                 
@@ -505,6 +556,10 @@ export default function AddCarPage() {
                 <span className="fleet-categories__btn addcar-form__file-trigger">Choose gallery images</span>
                 <input type="file" accept={ALLOWED_IMAGE_TYPES.join(',')} multiple onChange={onGalleryFilesSelected} hidden />
               </label>
+              <div className="addcar-form__dropzone" aria-hidden>
+                <span className="addcar-form__dropzone-title">Drop files here</span>
+                <span className="addcar-form__dropzone-subtitle">or click "Choose gallery images"</span>
+              </div>
               {galleryFiles.length > 0 ? (
                 <ul className="addcar-form__file-list">
                   {galleryFiles.map((f, i) => (
@@ -546,6 +601,15 @@ export default function AddCarPage() {
           <p className="addcar-page__hint addcar-success-modal__foot">
             View it under <Link to="/admin/cars/">Admin → View all cars</Link>, or add another vehicle.
           </p>
+        </SuccessCenterModal>
+
+        <SuccessCenterModal
+          open={!!uploadWarning}
+          title={uploadWarning?.title || 'Upload warning'}
+          onClose={() => setUploadWarning(null)}
+          buttonLabel="OK"
+        >
+          <p className="addcar-success-modal__lead">{uploadWarning?.detail}</p>
         </SuccessCenterModal>
       </div>
     </div>
