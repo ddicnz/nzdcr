@@ -12,6 +12,25 @@ import { NZDCR_BRANCHES } from '../data/branchLocations'
 
 const LOCATION_TITLE = Object.fromEntries(NZDCR_BRANCHES.map((b) => [b.key, b.title]))
 
+/** Blur-up while decoding; sharpens on load. */
+function SaleDetailHeroImg({ src, alt, className = '' }) {
+  return (
+    <img
+      key={src}
+      src={src}
+      alt={alt}
+      className={`sale-vehicle-detail-page__hero-img is-pending ${className}`.trim()}
+      onLoad={(e) => {
+        e.currentTarget.classList.remove('is-pending')
+        e.currentTarget.classList.add('is-ready')
+      }}
+      loading="eager"
+      fetchPriority="high"
+      decoding="async"
+    />
+  )
+}
+
 function ChevronLeft() {
   return (
     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -34,6 +53,7 @@ export default function SaleVehicleDetailPage() {
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(null)
   const [slideIdx, setSlideIdx] = useState(0)
+  const [slideTransition, setSlideTransition] = useState(null)
   const [galleryOpen, setGalleryOpen] = useState(false)
   const [contactBranchKey, setContactBranchKey] = useState(null)
 
@@ -64,24 +84,52 @@ export default function SaleVehicleDetailPage() {
 
   useEffect(() => {
     setSlideIdx(0)
+    setSlideTransition(null)
   }, [vehicle?.slug])
+
+  useEffect(() => {
+    if (!images.length) return
+    const preload = (src) => {
+      if (!src) return
+      const img = new Image()
+      img.src = src
+    }
+    const prevIdx = slideIdx <= 0 ? images.length - 1 : slideIdx - 1
+    const nextIdx = slideIdx >= images.length - 1 ? 0 : slideIdx + 1
+    preload(images[prevIdx])
+    preload(images[nextIdx])
+  }, [images, slideIdx])
+
+  useEffect(() => {
+    if (!slideTransition) return
+    const t = window.setTimeout(() => setSlideTransition(null), 200)
+    return () => window.clearTimeout(t)
+  }, [slideTransition])
 
   const goPrev = useCallback(
     (e) => {
       e?.stopPropagation()
       if (images.length <= 1) return
-      setSlideIdx((i) => (i <= 0 ? images.length - 1 : i - 1))
+      setSlideIdx((i) => {
+        const next = i <= 0 ? images.length - 1 : i - 1
+        setSlideTransition({ from: images[i] || '', to: images[next] || '', dir: 'prev' })
+        return next
+      })
     },
-    [images.length],
+    [images],
   )
 
   const goNext = useCallback(
     (e) => {
       e?.stopPropagation()
       if (images.length <= 1) return
-      setSlideIdx((i) => (i >= images.length - 1 ? 0 : i + 1))
+      setSlideIdx((i) => {
+        const next = i >= images.length - 1 ? 0 : i + 1
+        setSlideTransition({ from: images[i] || '', to: images[next] || '', dir: 'next' })
+        return next
+      })
     },
-    [images.length],
+    [images],
   )
 
   const openGallery = useCallback(() => {
@@ -156,7 +204,14 @@ export default function SaleVehicleDetailPage() {
                 }
                 aria-label={images.length ? 'View all photos full screen' : undefined}
               >
-                <img src={activeSrc} alt={v.title} />
+                {slideTransition ? (
+                  <div className={`sale-vehicle-detail-page__anim sale-vehicle-detail-page__anim--${slideTransition.dir}`}>
+                    <SaleDetailHeroImg className="sale-vehicle-detail-page__anim-from" src={slideTransition.from} alt={v.title} />
+                    <SaleDetailHeroImg className="sale-vehicle-detail-page__anim-to" src={slideTransition.to} alt={v.title} />
+                  </div>
+                ) : (
+                  <SaleDetailHeroImg src={activeSrc} alt={v.title} />
+                )}
               </div>
               {images.length > 1 ? (
                 <>

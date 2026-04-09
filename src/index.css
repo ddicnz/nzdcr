@@ -4038,6 +4038,8 @@ ul.sale-results.admin-inventory-page__results {
 }
 
 .admin-car-detail-page__slide {
+  position: relative;
+  overflow: hidden;
   height: 100%;
   min-height: 220px;
 }
@@ -4047,6 +4049,92 @@ ul.sale-results.admin-inventory-page__results {
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+.sale-vehicle-detail-page__hero-img {
+  transition: filter 0.38s ease;
+}
+
+.sale-vehicle-detail-page__hero-img.is-pending {
+  filter: blur(14px);
+}
+
+.sale-vehicle-detail-page__hero-img.is-ready {
+  filter: blur(0);
+}
+
+.sale-vehicle-detail-page__anim {
+  position: absolute;
+  inset: 0;
+}
+
+.sale-vehicle-detail-page__anim img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  will-change: transform, opacity;
+}
+
+.sale-vehicle-detail-page__anim--next .sale-vehicle-detail-page__anim-from {
+  animation: saleSlideOutLeft 0.18s ease-out;
+}
+
+.sale-vehicle-detail-page__anim--next .sale-vehicle-detail-page__anim-to {
+  animation: saleSlideInRight 0.18s ease-out;
+}
+
+.sale-vehicle-detail-page__anim--prev .sale-vehicle-detail-page__anim-from {
+  animation: saleSlideOutRight 0.18s ease-out;
+}
+
+.sale-vehicle-detail-page__anim--prev .sale-vehicle-detail-page__anim-to {
+  animation: saleSlideInLeft 0.18s ease-out;
+}
+
+@keyframes saleSlideInRight {
+  from {
+    transform: translateX(18%);
+    opacity: 0.75;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes saleSlideOutLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-18%);
+    opacity: 0.75;
+  }
+}
+
+@keyframes saleSlideInLeft {
+  from {
+    transform: translateX(-18%);
+    opacity: 0.75;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes saleSlideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(18%);
+    opacity: 0.75;
+  }
 }
 
 .admin-car-detail-page__noimg {
