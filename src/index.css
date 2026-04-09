@@ -3308,6 +3308,145 @@ img {
   color: var(--color-muted);
 }
 
+/* Admin 全列表 — 筛选下方：结果数 + 排序（参考列表站） */
+.admin-inventory-sort-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  margin: 0 0 1rem;
+  padding: 12px 14px;
+  background: #ececec;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.admin-inventory-sort-bar__count {
+  margin: 0;
+  font-size: 15px;
+  color: var(--color-text);
+}
+
+.admin-inventory-sort-bar__count strong {
+  font-weight: 800;
+}
+
+.admin-inventory-sort-bar__sort {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-muted);
+}
+
+.admin-inventory-sort-bar__sort-label {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.admin-inventory-sort-bar__select {
+  min-width: 220px;
+  max-width: 100%;
+  padding: 8px 32px 8px 12px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  background-color: #fff;
+  border: 1px solid #c5c5c5;
+  border-radius: 6px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23f1802d' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+
+.admin-inventory-sort-bar__select:hover {
+  border-color: #999;
+}
+
+.admin-inventory-sort-bar__select:focus-visible {
+  outline: 2px solid var(--header-orange);
+  outline-offset: 2px;
+}
+
+.admin-quick-look__list {
+  list-style: none;
+  margin: 0 0 2rem;
+  padding: 0;
+  background: var(--color-surface);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.admin-quick-look__item {
+  margin: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.admin-quick-look__item:last-child {
+  border-bottom: none;
+}
+
+.admin-quick-look__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+  padding: 10px 12px;
+  min-width: 0;
+}
+
+.admin-quick-look__link {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 16px;
+  flex: 1 1 200px;
+  min-width: 0;
+  padding: 4px 4px;
+  color: var(--color-text);
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.12s;
+  border-radius: 6px;
+}
+
+.admin-quick-look__link:hover {
+  background: rgba(241, 128, 45, 0.08);
+  text-decoration: none;
+}
+
+.admin-quick-look__actions.admin-inventory-listing__actions {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+  flex: 0 0 auto;
+}
+
+.admin-quick-look__actions > .fleet-categories__btn {
+  flex: 0 1 auto;
+  min-width: 88px;
+}
+
+.admin-quick-look__headline {
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.admin-quick-look__price {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--header-orange);
+  white-space: nowrap;
+}
+
 .admin-inventory-card {
   position: relative;
 }
@@ -4195,6 +4334,25 @@ ul.sale-results.admin-inventory-page__results {
   margin-top: 1.15rem;
   padding-top: 1rem;
   border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* 筛选区 Reset all — 实心橙（Admin / Quick look / Cars for sale） */
+.sale-search__actions > .fleet-categories__btn {
+  color: #fff;
+  background: var(--header-orange);
+  border-color: var(--header-orange);
+}
+
+.sale-search__actions > .fleet-categories__btn:hover:not(:disabled) {
+  color: #fff;
+  background: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+  text-decoration: none;
+}
+
+.sale-search__actions > .fleet-categories__btn:focus-visible {
+  outline: 2px solid var(--header-orange);
+  outline-offset: 2px;
 }
 
 .sale-search__hint {

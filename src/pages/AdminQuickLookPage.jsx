@@ -1,14 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import AdminInventoryCarMedia from '../components/AdminInventoryCarMedia'
+import { Link } from 'react-router-dom'
 import InventorySortBar from '../components/InventorySortBar'
-import {
-  IconAdminEngine,
-  IconAdminFuel,
-  IconAdminOdometer,
-  IconAdminPin,
-  IconAdminTransmission,
-} from '../components/AdminListingSpecIcons'
 import SaleMultiSelect from '../components/SaleMultiSelect'
 import SaleRangePill from '../components/SaleRangePill'
 import {
@@ -23,7 +15,6 @@ import {
   DEFAULT_LOCATIONS,
   FUEL_OPTIONS,
   initialAdminInventoryFilters,
-  itemKm,
   itemPrice,
   itemYear,
   KM_MAX_OPTIONS,
@@ -37,34 +28,9 @@ import {
   YEAR_MAX_OPTIONS,
   YEAR_MIN_OPTIONS,
 } from '../data/adminInventoryFilters'
-import { formatSaleOdometer, formatSalePrice } from '../data/carsForSale'
+import { formatSalePrice } from '../data/carsForSale'
 
-function formatAdminLocation(v) {
-  const loc = String(v.location ?? '').trim()
-  const reg = String(v.region ?? '').trim()
-  if (loc && reg && loc.toLowerCase() !== reg.toLowerCase()) return `${loc}, ${reg}`
-  return loc || reg || '—'
-}
-
-function formatAdminEngineCc(v) {
-  const cc = v.engineCc
-  if (typeof cc === 'number' && Number.isFinite(cc) && cc > 0) {
-    return `${Math.round(cc).toLocaleString('en-NZ')} cc`
-  }
-  const s = String(v.engine ?? '').trim()
-  return s || '—'
-}
-
-function formatListedLine(v) {
-  if (v.status === 'sold') return 'Sold'
-  const created = v.createdAt
-  if (!created) return 'Published'
-  const d = new Date(created)
-  if (Number.isNaN(d.getTime())) return 'Published'
-  const now = new Date()
-  if (d.toDateString() === now.toDateString()) return 'Listed today'
-  return `Listed ${d.toLocaleDateString('en-NZ', { day: 'numeric', month: 'short', year: 'numeric' })}`
-}
+const initialFilters = initialAdminInventoryFilters
 
 function listingHeadline(v) {
   const y = itemYear(v)
@@ -77,69 +43,63 @@ function listingHeadline(v) {
   return parts.length ? parts.join(' ') : String(v.title ?? '').trim() || '—'
 }
 
-const initialFilters = initialAdminInventoryFilters
-
-export default function AdminInventoryPage() {
-  const navigate = useNavigate()
-  const [inventoryItems, setInventoryItems] = useState([])
-  const [loadedAt, setLoadedAt] = useState(null)
+export default function AdminQuickLookPage() {
+  const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
-  const [fetchError, setFetchError] = useState(null)
+  const [error, setError] = useState(null)
+  const [loadedAt, setLoadedAt] = useState(null)
   const [filters, setFilters] = useState(initialFilters)
   const [openPicker, setOpenPicker] = useState(null)
   const [deletingCarId, setDeletingCarId] = useState(null)
   const [sortBy, setSortBy] = useState('default')
 
-  const loadInventory = useCallback(async () => {
+  const load = useCallback(async () => {
     setLoading(true)
-    setFetchError(null)
+    setError(null)
     try {
       const res = await fetch(GET_ADMIN_CARS_API)
       const data = await res.json().catch(() => ({}))
       if (!res.ok) {
         throw new Error(data.message || data.error || `加载失败（${res.status}）`)
       }
-      const items = Array.isArray(data.items) ? data.items : []
-      setInventoryItems(items)
+      const list = Array.isArray(data.items) ? data.items : []
+      setItems(list)
       setLoadedAt(new Date())
     } catch (e) {
-      setFetchError(e instanceof Error ? e.message : '加载失败')
-      setInventoryItems([])
+      setError(e instanceof Error ? e.message : '加载失败')
+      setItems([])
     } finally {
       setLoading(false)
     }
   }, [])
 
   useEffect(() => {
-    loadInventory()
-  }, [loadInventory])
+    load()
+  }, [load])
 
   const locationOptions = useMemo(() => {
     const set = new Set(DEFAULT_LOCATIONS)
-    for (const it of inventoryItems) {
+    for (const it of items) {
       if (it.location) set.add(it.location)
     }
     return [...set].sort().map((loc) => ({ value: loc, label: loc }))
-  }, [inventoryItems])
+  }, [items])
 
   const modelOptions = useMemo(
-    () => adminModelOptionsFromItems(inventoryItems, filters.makes),
-    [inventoryItems, filters.makes],
+    () => adminModelOptionsFromItems(items, filters.makes),
+    [items, filters.makes],
   )
 
   useEffect(() => {
     setFilters((prev) => {
-      const valid = new Set(adminModelOptionsFromItems(inventoryItems, prev.makes).map((o) => o.value))
+      const valid = new Set(adminModelOptionsFromItems(items, prev.makes).map((o) => o.value))
       const models = prev.models.filter((k) => valid.has(k))
       if (models.length === prev.models.length) return prev
       return { ...prev, models }
     })
-  }, [inventoryItems, filters.makes])
+  }, [items, filters.makes])
 
-  const filtered = useMemo(
-    () => inventoryItems.filter((v) => adminInventoryMatches(filters, v)),
-    [inventoryItems, filters],
-  )
+  const filtered = useMemo(() => items.filter((v) => adminInventoryMatches(filters, v)), [items, filters])
 
   const sortedFiltered = useMemo(() => sortInventoryList(filtered, sortBy), [filtered, sortBy])
 
@@ -180,7 +140,7 @@ export default function AdminInventoryPage() {
         throw new Error(data.message || data.error || `删除失败：${res.status}`)
       }
       clearAdminCarDetailCache(id)
-      setInventoryItems((prev) => prev.filter((x) => String(x.carId) !== id))
+      setItems((prev) => prev.filter((x) => String(x.carId) !== id))
     } catch (e) {
       window.alert(e instanceof Error ? e.message : '删除失败')
     } finally {
@@ -189,35 +149,34 @@ export default function AdminInventoryPage() {
   }
 
   return (
-    <div className="sale-page admin-inventory-page">
+    <div className="sale-page admin-quick-look-page">
       <div className="container">
         <nav className="addcar-page__breadcrumb" aria-label="Breadcrumb">
           <Link to="/admin/">Admin</Link>
           <span aria-hidden> / </span>
-          <span>All cars</span>
+          <Link to="/admin/cars/">All cars</Link>
+          <span aria-hidden> / </span>
+          <span className="admin-car-detail-page__crumb-current">Quick look</span>
         </nav>
 
         <p className="sale-page__intro">
-          数据来自 DynamoDB（<code>getadmincars</code>），加载后缓存在本页内存中；可筛选 <strong>published</strong> 与{' '}
-          <strong>sold</strong>。头图为 <code>coverImages</code> 三联拼图；<strong>点击整条卡片</strong>进入详情（
-          <code>getcardetail</code>）。
+          Text-only list — same inventory and filters as <strong>View all cars</strong>. Click a row for vehicle detail.
         </p>
 
         <div className="admin-inventory-page__toolbar">
-          <button type="button" className="fleet-categories__btn" onClick={loadInventory} disabled={loading}>
+          <button type="button" className="fleet-categories__btn" onClick={load} disabled={loading}>
             {loading ? '加载中…' : '刷新列表'}
           </button>
           {loadedAt ? (
             <span className="admin-inventory-page__loaded">
-              已缓存 <strong>{inventoryItems.length}</strong> 条 · 上次加载{' '}
-              {loadedAt.toLocaleString('en-NZ')}
+              <strong>{items.length}</strong> 条 · 上次加载 {loadedAt.toLocaleString('en-NZ')}
             </span>
           ) : null}
         </div>
 
-        {fetchError ? (
+        {error ? (
           <p className="addcar-page__alert addcar-page__alert--error" role="alert">
-            {fetchError}
+            {error}
           </p>
         ) : null}
 
@@ -238,7 +197,7 @@ export default function AdminInventoryPage() {
             </label>
 
             <SaleMultiSelect
-              dropdownKey="adm-make"
+              dropdownKey="ql-make"
               openKey={openPicker}
               onOpenKeyChange={setOpenPicker}
               label="Make"
@@ -250,7 +209,7 @@ export default function AdminInventoryPage() {
             />
 
             <SaleMultiSelect
-              dropdownKey="adm-model"
+              dropdownKey="ql-model"
               openKey={openPicker}
               onOpenKeyChange={setOpenPicker}
               label="Model"
@@ -262,7 +221,7 @@ export default function AdminInventoryPage() {
             />
 
             <SaleMultiSelect
-              dropdownKey="adm-body"
+              dropdownKey="ql-body"
               openKey={openPicker}
               onOpenKeyChange={setOpenPicker}
               label="Body style"
@@ -274,7 +233,7 @@ export default function AdminInventoryPage() {
             />
 
             <SaleMultiSelect
-              dropdownKey="adm-loc"
+              dropdownKey="ql-loc"
               openKey={openPicker}
               onOpenKeyChange={setOpenPicker}
               label="Location"
@@ -286,7 +245,7 @@ export default function AdminInventoryPage() {
             />
 
             <SaleMultiSelect
-              dropdownKey="adm-status"
+              dropdownKey="ql-status"
               openKey={openPicker}
               onOpenKeyChange={setOpenPicker}
               label="Status"
@@ -302,7 +261,7 @@ export default function AdminInventoryPage() {
             <div className="sale-field sale-field--range-block">
               <span className="sale-field__label">Year</span>
               <SaleRangePill
-                dropdownKey="adm-year"
+                dropdownKey="ql-year"
                 openKey={openPicker}
                 onOpenKeyChange={setOpenPicker}
                 title="Year"
@@ -319,7 +278,7 @@ export default function AdminInventoryPage() {
             <div className="sale-field sale-field--range-block">
               <span className="sale-field__label">Price</span>
               <SaleRangePill
-                dropdownKey="adm-price"
+                dropdownKey="ql-price"
                 openKey={openPicker}
                 onOpenKeyChange={setOpenPicker}
                 title="Price"
@@ -336,7 +295,7 @@ export default function AdminInventoryPage() {
             <div className="sale-field sale-field--range-block">
               <span className="sale-field__label">Odometer</span>
               <SaleRangePill
-                dropdownKey="adm-km"
+                dropdownKey="ql-km"
                 openKey={openPicker}
                 onOpenKeyChange={setOpenPicker}
                 title="Odometer"
@@ -353,7 +312,7 @@ export default function AdminInventoryPage() {
 
             <div className="sale-field sale-field--row2-fuel">
               <SaleMultiSelect
-                dropdownKey="adm-fuel"
+                dropdownKey="ql-fuel"
                 openKey={openPicker}
                 onOpenKeyChange={setOpenPicker}
                 label="Fuel"
@@ -371,103 +330,61 @@ export default function AdminInventoryPage() {
               Reset all
             </button>
             <p className="sale-search__hint" role="status">
-              Filters apply instantly. Total in cache: <strong>{inventoryItems.length}</strong>.
+              Filters apply instantly. Total in cache: <strong>{items.length}</strong>.
             </p>
           </div>
         </section>
 
         <InventorySortBar count={filtered.length} sortBy={sortBy} onSortChange={setSortBy} />
 
-        <ul className="sale-results admin-inventory-page__results">
-          {sortedFiltered.map((v) => {
-            const cardCarId = String(v.carId ?? '').trim()
-            return (
-            <li
-              key={cardCarId || v.carId}
-              className="admin-inventory-listing admin-inventory-listing--clickable"
-              role="button"
-              tabIndex={0}
-              onClick={() =>
-                navigate(`/admin/cars/${encodeURIComponent(cardCarId)}`, { state: { fromList: v } })
-              }
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault()
-                  navigate(`/admin/cars/${encodeURIComponent(cardCarId)}`, { state: { fromList: v } })
-                }
-              }}
-            >
-              <div className="admin-inventory-listing__media">
-                <AdminInventoryCarMedia key={v.carId} vehicle={v} />
-              </div>
-              <div className="admin-inventory-listing__body">
-                <p
-                  className={`admin-inventory-listing__listed ${v.status === 'sold' ? 'admin-inventory-listing__listed--sold' : ''}`}
-                >
-                  {formatListedLine(v)}
-                </p>
-                <h3 className="admin-inventory-listing__title">{listingHeadline(v)}</h3>
-                {String(v.description ?? '').trim() ? (
-                  <p className="admin-inventory-listing__desc">{String(v.description).trim()}</p>
-                ) : null}
-                <ul className="admin-inventory-listing__specs">
-                  <li className="admin-inventory-listing__spec">
-                    <IconAdminPin />
-                    <span>{formatAdminLocation(v)}</span>
-                  </li>
-                  <li className="admin-inventory-listing__spec">
-                    <IconAdminOdometer />
-                    <span>{formatSaleOdometer(itemKm(v))}</span>
-                  </li>
-                  <li className="admin-inventory-listing__spec">
-                    <IconAdminFuel />
-                    <span>{v.fuel ? String(v.fuel) : '—'}</span>
-                  </li>
-                  <li className="admin-inventory-listing__spec">
-                    <IconAdminTransmission />
-                    <span>{v.transmission ? String(v.transmission) : '—'}</span>
-                  </li>
-                  <li className="admin-inventory-listing__spec">
-                    <IconAdminEngine />
-                    <span>{formatAdminEngineCc(v)}</span>
-                  </li>
-                </ul>
-                <p className="admin-inventory-listing__asking-line">
-                  Asking price {formatSalePrice(itemPrice(v))}
-                </p>
-                <p className="admin-inventory-listing__disclaimer">Includes on road costs</p>
-                <div
-                  className="admin-inventory-listing__actions"
-                  onClick={(e) => e.stopPropagation()}
-                  onKeyDown={(e) => e.stopPropagation()}
-                >
-                  <Link
-                    to={`/admin/cars/${encodeURIComponent(cardCarId)}/edit`}
-                    state={{ fromDetail: v }}
-                    className="fleet-categories__btn admin-inventory-listing__action-btn admin-inventory-listing__btn-update"
-                  >
-                    Update
-                  </Link>
-                  <button
-                    type="button"
-                    className="fleet-categories__btn admin-inventory-listing__btn-delete"
-                    disabled={deletingCarId === cardCarId}
-                    onClick={() => handleDeleteCard(v)}
-                  >
-                    {deletingCarId === cardCarId ? '删除中…' : 'Delete'}
-                  </button>
-                </div>
-              </div>
-            </li>
-            )
-          })}
+        <ul className="admin-quick-look__list" aria-label="Vehicle list">
+          {sortedFiltered
+            .filter((v) => String(v.carId ?? '').trim())
+            .map((v) => {
+              const cardCarId = String(v.carId ?? '').trim()
+              return (
+                <li key={cardCarId} className="admin-quick-look__item">
+                  <div className="admin-quick-look__row">
+                    <Link
+                      className="admin-quick-look__link"
+                      to={`/admin/cars/${encodeURIComponent(cardCarId)}`}
+                      state={{ fromList: v }}
+                    >
+                      <span className="admin-quick-look__headline">{listingHeadline(v)}</span>
+                      <span className="admin-quick-look__price">{formatSalePrice(itemPrice(v))}</span>
+                    </Link>
+                    <div
+                      className="admin-quick-look__actions admin-inventory-listing__actions"
+                      onClick={(e) => e.stopPropagation()}
+                      onKeyDown={(e) => e.stopPropagation()}
+                    >
+                      <Link
+                        to={`/admin/cars/${encodeURIComponent(cardCarId)}/edit`}
+                        state={{ fromDetail: v }}
+                        className="fleet-categories__btn admin-inventory-listing__action-btn admin-inventory-listing__btn-update"
+                      >
+                        Update
+                      </Link>
+                      <button
+                        type="button"
+                        className="fleet-categories__btn admin-inventory-listing__btn-delete"
+                        disabled={deletingCarId === cardCarId}
+                        onClick={() => handleDeleteCard(v)}
+                      >
+                        {deletingCarId === cardCarId ? '删除中…' : 'Delete'}
+                      </button>
+                    </div>
+                  </div>
+                </li>
+              )
+            })}
         </ul>
 
-        {!loading && filtered.length === 0 && inventoryItems.length === 0 ? (
-          <p className="sale-empty">暂无车辆数据，请点击「刷新列表」或检查 API / CORS。</p>
+        {!loading && filtered.length === 0 && items.length === 0 && !error ? (
+          <p className="sale-empty">暂无车辆数据。</p>
         ) : null}
 
-        {!loading && filtered.length === 0 && inventoryItems.length > 0 ? (
+        {!loading && sortedFiltered.length === 0 && items.length > 0 ? (
           <p className="sale-empty">
             没有匹配筛选的车辆，请放宽条件或
             <button type="button" className="sale-empty__reset" onClick={handleReset}>

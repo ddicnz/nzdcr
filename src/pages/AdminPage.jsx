@@ -13,6 +13,9 @@ export default function AdminPage() {
           <Link to="/admin/cars/" className="fleet-categories__btn">
             View all cars
           </Link>
+          <Link to="/admin/cars/quick-look" className="fleet-categories__btn">
+            Quick look
+          </Link>
           <Link to="/addcar/" className="fleet-categories__btn">
             Add car
           </Link>

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import InventorySortBar from '../components/InventorySortBar'
 import PageHeroBanner from '../components/PageHeroBanner'
 import SaleListingCardMedia from '../components/SaleListingCardMedia'
 import BranchContactModal from '../components/BranchContactModal'
@@ -22,6 +23,7 @@ import {
   saleListingHeadline,
   saleModelOptionsFromInventory,
 } from '../data/dynamoSaleCars'
+import { sortInventoryList } from '../data/adminInventoryFilters'
 import {
   formatSaleOdometer,
   formatSalePrice,
@@ -117,6 +119,7 @@ export default function CarsForSalePage() {
   const [filters, setFilters] = useState(initialFilters)
   const [openPicker, setOpenPicker] = useState(null)
   const [page, setPage] = useState(1)
+  const [sortBy, setSortBy] = useState('default')
   const [contactBranchKey, setContactBranchKey] = useState(null)
 
   const loadInventory = useCallback(async () => {
@@ -156,16 +159,18 @@ export default function CarsForSalePage() {
     [inventoryItems, filters],
   )
 
+  const sortedFiltered = useMemo(() => sortInventoryList(filtered, sortBy), [filtered, sortBy])
+
   const filterKey = useMemo(() => JSON.stringify(filters), [filters])
   useEffect(() => {
     setPage(1)
-  }, [filterKey])
+  }, [filterKey, sortBy])
 
-  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+  const totalPages = Math.max(1, Math.ceil(sortedFiltered.length / PAGE_SIZE))
   const safePage = Math.min(page, totalPages)
   const pageSlice = useMemo(
-    () => filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE),
-    [filtered, safePage],
+    () => sortedFiltered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE),
+    [sortedFiltered, safePage],
   )
 
   const setField = (key) => (e) => {
@@ -361,11 +366,13 @@ export default function CarsForSalePage() {
                 Reset all
               </button>
               <p className="sale-search__hint" role="status">
-                Showing <strong>{filtered.length}</strong> of {inventoryItems.length} vehicles — filters apply instantly.
+                Filters apply instantly. Total in stock: <strong>{inventoryItems.length}</strong>.
                 {inventoryLoading ? ' Loading inventory…' : null}
               </p>
             </div>
           </section>
+
+          <InventorySortBar count={filtered.length} sortBy={sortBy} onSortChange={setSortBy} />
 
           {inventoryError ? (
             <p className="addcar-page__alert addcar-page__alert--error" role="alert">
@@ -470,7 +477,7 @@ export default function CarsForSalePage() {
             <p className="sale-empty">No published vehicles in stock right now. Please check back later.</p>
           ) : null}
 
-          {totalPages > 1 && filtered.length > 0 ? (
+          {totalPages > 1 && sortedFiltered.length > 0 ? (
             <nav className="sale-pagination" aria-label="Page navigation">
               <button
                 type="button"
@@ -507,7 +514,7 @@ export default function CarsForSalePage() {
             </nav>
           ) : null}
 
-          {filtered.length > 0 ? (
+          {sortedFiltered.length > 0 ? (
             <div className="sale-back-to-top-wrap">
               <button type="button" className="sale-back-to-top" onClick={scrollToTop}>
                 Back to top

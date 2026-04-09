@@ -7,6 +7,7 @@ import AdminPage from './pages/AdminPage'
 import AdminCarDetailPage from './pages/AdminCarDetailPage'
 import AdminEditCarPage from './pages/AdminEditCarPage'
 import AdminInventoryPage from './pages/AdminInventoryPage'
+import AdminQuickLookPage from './pages/AdminQuickLookPage'
 import AddCarPage from './pages/AddCarPage'
 import TermsOfTradePage from './pages/TermsOfTradePage'
 import PrivacyLegalPoliciesPage from './pages/PrivacyLegalPoliciesPage'
@@ -80,6 +81,7 @@ export default function App() {
         <Route path="payment-terms" element={<PaymentTermsPage />} />
         <Route path="privacy-legal-policies" element={<PrivacyLegalPoliciesPage />} />
         <Route path="terms-of-trade" element={<TermsOfTradePage />} />
+        <Route path="admin/cars/quick-look" element={<AdminQuickLookPage />} />
         <Route path="admin/cars/:carId/edit" element={<AdminEditCarPage />} />
         <Route path="admin/cars/:carId" element={<AdminCarDetailPage />} />
         <Route path="admin/cars" element={<AdminInventoryPage />} />
