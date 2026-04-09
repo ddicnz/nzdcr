@@ -2922,7 +2922,10 @@ img {
 }
 
 .addcar-form__actions--paired > .fleet-categories__btn,
-.addcar-form__actions--paired > a.fleet-categories__btn {
+.addcar-form__actions--paired > a.fleet-categories__btn,
+.addcar-form__actions--paired > .sale-btn,
+.addcar-form__actions--paired > a.sale-btn,
+.addcar-form__actions--paired > button.sale-btn {
   flex: 1 1 0;
   min-width: 0;
   justify-content: center;
@@ -2930,7 +2933,8 @@ img {
   box-sizing: border-box;
 }
 
-.addcar-form__actions .fleet-categories__btn:disabled {
+.addcar-form__actions .fleet-categories__btn:disabled,
+.addcar-form__actions .sale-btn:disabled {
   opacity: 0.65;
   cursor: not-allowed;
 }
@@ -3586,9 +3590,39 @@ img {
   min-width: 88px;
 }
 
+.admin-quick-look__title-block {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 10px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
 .admin-quick-look__headline {
   font-size: 15px;
   line-height: 1.35;
+}
+
+.admin-quick-look__status-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.admin-quick-look__status-pill--published {
+  color: #fff;
+  background: var(--header-orange);
+}
+
+.admin-quick-look__status-pill--sold {
+  color: #fff;
+  background: #555;
 }
 
 .admin-quick-look__price {

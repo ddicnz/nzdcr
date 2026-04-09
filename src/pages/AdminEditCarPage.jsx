@@ -30,7 +30,7 @@ function valuesEqual(a, b) {
   return false
 }
 
-/** 与当前表单同一套归一化，用于和提交值对比（只传 diff 给 updateInfo） */
+/** Same normalization as the form; compared on submit so only changed fields go in updateInfo. */
 function baselinePayloadFromItem(item) {
   const f = itemToForm(item)
   if (!f) return null
@@ -126,7 +126,7 @@ export default function AdminEditCarPage() {
     if (!id) {
       setSourceItem(null)
       setForm(null)
-      setLoadError('缺少 carId')
+      setLoadError('Missing carId')
       setLoading(false)
       return
     }
@@ -148,7 +148,7 @@ export default function AdminEditCarPage() {
         if (!cancelled) applyItem(next)
       } catch (e) {
         if (!cancelled) {
-          setLoadError(e instanceof Error ? e.message : '加载失败')
+          setLoadError(e instanceof Error ? e.message : 'Failed to load')
         }
       } finally {
         if (!cancelled) setLoading(false)
@@ -177,19 +177,19 @@ export default function AdminEditCarPage() {
   }, [updateDialog])
 
   const validate = () => {
-    if (!form) return '表单未就绪'
+    if (!form) return 'Form is not ready'
     const y = Number(form.year)
-    if (!form.make.trim()) return '请填写 Make'
-    if (!form.model.trim()) return '请填写 Model'
-    if (!form.year || !Number.isFinite(y) || y < 1980 || y > new Date().getFullYear() + 1) return '请填写有效 Year'
-    if (!form.title.trim()) return '请填写 Title'
+    if (!form.make.trim()) return 'Please enter Make'
+    if (!form.model.trim()) return 'Please enter Model'
+    if (!form.year || !Number.isFinite(y) || y < 1980 || y > new Date().getFullYear() + 1) return 'Please enter a valid Year'
+    if (!form.title.trim()) return 'Please enter Title'
     const price = Number(form.price)
-    if (!form.price || !Number.isFinite(price) || price <= 0) return '请填写有效 Price'
-    if (!form.odometer.trim()) return '请填写 Odometer'
+    if (!form.price || !Number.isFinite(price) || price <= 0) return 'Please enter a valid Price'
+    if (!form.odometer.trim()) return 'Please enter Odometer'
     const odo = Number(String(form.odometer).replace(/km$/i, '').replace(/,/g, ''))
-    if (!Number.isFinite(odo) || odo < 0) return 'Odometer 应为数字（公里）'
+    if (!Number.isFinite(odo) || odo < 0) return 'Odometer must be a number (km)'
     const cc = Number(String(form.engineCc).replace(/cc$/i, '').replace(/,/g, ''))
-    if (!form.engineCc || !Number.isFinite(cc) || cc <= 0) return '请填写有效 Engine CC'
+    if (!form.engineCc || !Number.isFinite(cc) || cc <= 0) return 'Please enter a valid engine size (cc)'
     return null
   }
 
@@ -199,7 +199,7 @@ export default function AdminEditCarPage() {
       setUpdateDialog({
         ok: false,
         title: 'Update failed',
-        detail: '数据未加载完成，请刷新页面后重试。',
+        detail: 'Vehicle data is not ready. Refresh the page and try again.',
       })
       return
     }
@@ -208,7 +208,7 @@ export default function AdminEditCarPage() {
       setUpdateDialog({
         ok: false,
         title: 'Update failed',
-        detail: '尚未配置更新接口（UPDATE_CAR_API）。',
+        detail: 'Update API is not configured (UPDATE_CAR_API).',
       })
       return
     }
@@ -232,7 +232,7 @@ export default function AdminEditCarPage() {
       setUpdateDialog({
         ok: false,
         title: 'Update failed',
-        detail: '无法构建保存基准，请返回详情重新进入编辑页。',
+        detail: 'Could not build a save baseline. Open this page again from the vehicle detail view.',
       })
       setSubmitting(false)
       return
@@ -299,7 +299,7 @@ export default function AdminEditCarPage() {
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok) {
-        throw new Error(data.message || data.error || `更新失败：${res.status}`)
+        throw new Error(data.message || data.error || `Update failed: ${res.status}`)
       }
       clearAdminCarDetailCache(carId)
       if (data.item && typeof data.item === 'object') {
@@ -310,14 +310,14 @@ export default function AdminEditCarPage() {
         title: 'Updated successfully',
         detail:
           Object.keys(payload).length <= 1
-            ? '未检测到字段改动；服务端仍可能已刷新 updatedAt。'
-            : '车辆信息已保存。',
+            ? 'No field changes detected; the server may still have refreshed updatedAt.'
+            : 'Vehicle details were saved.',
       })
     } catch (ex) {
       setUpdateDialog({
         ok: false,
         title: 'Update failed',
-        detail: ex instanceof Error ? ex.message : '更新失败',
+        detail: ex instanceof Error ? ex.message : 'Update failed',
       })
     } finally {
       setSubmitting(false)
@@ -335,15 +335,15 @@ export default function AdminEditCarPage() {
           <span aria-hidden> / </span>
           <Link to="/admin/cars">All cars</Link>
           <span aria-hidden> / </span>
-          <Link to={backTo}>详情</Link>
+          <Link to={backTo}>Detail</Link>
           <span aria-hidden> / </span>
           <span>Edit</span>
         </nav>
 
         <h1 className="addcar-page__title">Edit vehicle</h1>
         <p className="addcar-page__hint">
-          <strong>carId</strong>（只读）：<code>{carIdLabel}</code>。保存时只提交<strong>有改动的字段</strong>到{' '}
-          <code>updateInfo</code>，其余由 Lambda 与 Dynamo 现有数据合并；本页暂不修改图片。
+          <strong>carId</strong> (read-only): <code>{carIdLabel}</code>. On save, only <strong>changed fields</strong> are sent
+          in <code>updateInfo</code>; Lambda merges the rest with existing data in Dynamo. This page does not edit images yet.
         </p>
 
         {loadError ? (
@@ -352,12 +352,12 @@ export default function AdminEditCarPage() {
           </p>
         ) : null}
 
-        {loading && !form ? <p className="sale-empty">加载中…</p> : null}
+        {loading && !form ? <p className="sale-empty">Loading…</p> : null}
 
         {form ? (
           <form className="addcar-form" onSubmit={handleSubmit} noValidate>
             <div className="addcar-form__section">
-              <h2 className="addcar-form__heading">基本信息</h2>
+              <h2 className="addcar-form__heading">Vehicle details</h2>
               <div className="addcar-form__grid">
                 <label className="sale-field">
                   <span className="sale-field__label">Title</span>
@@ -546,15 +546,15 @@ export default function AdminEditCarPage() {
                 className="fleet-categories__btn admin-inventory-listing__btn-update"
                 disabled={submitting}
               >
-                {submitting ? '保存中…' : 'Update'}
+                {submitting ? 'Saving…' : 'Update'}
               </button>
               <Link to={backTo} className="fleet-categories__btn admin-form-cancel-link">
-                取消
+                Cancel
               </Link>
             </div>
           </form>
         ) : !loading ? (
-          <p className="sale-empty">无法加载车辆数据</p>
+          <p className="sale-empty">Could not load vehicle data</p>
         ) : null}
 
         {updateDialog ? (

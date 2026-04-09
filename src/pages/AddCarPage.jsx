@@ -45,11 +45,11 @@ function validatePickedFiles(fileList) {
   const out = []
   for (const file of list) {
     if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-      return { error: `不支持的类型：${file.name}（请用 JPEG / PNG / WebP / GIF）` }
+      return { error: `Unsupported type: ${file.name} (use JPEG, PNG, WebP, or GIF)` }
     }
     if (file.size > MAX_IMAGE_BYTES) {
       return {
-        error: `文件过大：${file.name}（单张最大 ${MAX_IMAGE_MB} MB）`,
+        error: `File too large: ${file.name} (max ${MAX_IMAGE_MB} MB per file)`,
         oversize: true,
       }
     }
@@ -85,7 +85,7 @@ export default function AddCarPage() {
     const { files: valid, error, oversize } = validatePickedFiles(e.target.files)
     if (error) {
       if (oversize) {
-        window.alert(`图片大小不能超过 ${MAX_IMAGE_MB} MB，请重新选择。`)
+        window.alert(`Each image must be at most ${MAX_IMAGE_MB} MB. Please choose again.`)
       }
       setError(error)
       e.target.value = ''
@@ -94,7 +94,7 @@ export default function AddCarPage() {
     setCoverFiles((prev) => {
       const next = [...prev, ...valid]
       if (next.length > 3) {
-        setError('封面需正好 3 张，当前会超过 3 张，请先移除再添加')
+        setError('Exactly 3 cover images required. Remove files before adding more.')
         return prev
       }
       return next
@@ -108,7 +108,7 @@ export default function AddCarPage() {
     const { files: valid, error, oversize } = validatePickedFiles(e.target.files)
     if (error) {
       if (oversize) {
-        window.alert(`图片大小不能超过 ${MAX_IMAGE_MB} MB，请重新选择。`)
+        window.alert(`Each image must be at most ${MAX_IMAGE_MB} MB. Please choose again.`)
       }
       setError(error)
       e.target.value = ''
@@ -128,19 +128,19 @@ export default function AddCarPage() {
 
   const validate = () => {
     const y = Number(form.year)
-    if (!form.make.trim()) return '请填写 Make'
-    if (!form.model.trim()) return '请填写 Model'
-    if (!form.year || !Number.isFinite(y) || y < 1980 || y > new Date().getFullYear() + 1) return '请填写有效 Year'
-    if (!form.title.trim()) return '请填写 Title'
+    if (!form.make.trim()) return 'Please enter Make'
+    if (!form.model.trim()) return 'Please enter Model'
+    if (!form.year || !Number.isFinite(y) || y < 1980 || y > new Date().getFullYear() + 1) return 'Please enter a valid Year'
+    if (!form.title.trim()) return 'Please enter Title'
     const price = Number(form.price)
-    if (!form.price || !Number.isFinite(price) || price <= 0) return '请填写有效 Price'
-    if (!form.odometer.trim()) return '请填写 Odometer'
+    if (!form.price || !Number.isFinite(price) || price <= 0) return 'Please enter a valid Price'
+    if (!form.odometer.trim()) return 'Please enter Odometer'
     const odo = Number(String(form.odometer).replace(/km$/i, '').replace(/,/g, ''))
-    if (!Number.isFinite(odo) || odo < 0) return 'Odometer 应为数字（公里）'
+    if (!Number.isFinite(odo) || odo < 0) return 'Odometer must be a number (km)'
     const cc = Number(String(form.engineCc).replace(/cc$/i, '').replace(/,/g, ''))
-    if (!form.engineCc || !Number.isFinite(cc) || cc <= 0) return '请填写有效 Engine CC'
+    if (!form.engineCc || !Number.isFinite(cc) || cc <= 0) return 'Please enter a valid engine size (cc)'
 
-    if (coverFiles.length !== 3) return '封面图必须上传 3 张（请用「选择封面图」添加）'
+    if (coverFiles.length !== 3) return 'You must upload 3 cover images (use “Choose cover images”).'
 
     return null
   }
@@ -181,12 +181,12 @@ export default function AddCarPage() {
       })
       const data = await res.json().catch(() => ({}))
       if (!res.ok) {
-        throw new Error(data.message || data.error || `get_upload_url 失败：${res.status}`)
+        throw new Error(data.message || data.error || `get_upload_url failed: ${res.status}`)
       }
       const uploadUrl = data.uploadUrl
       const fileUrl = data.fileUrl
       if (!uploadUrl || !fileUrl) {
-        throw new Error('get_upload_url 响应缺少 uploadUrl / fileUrl')
+        throw new Error('get_upload_url response missing uploadUrl / fileUrl')
       }
       const putRes = await fetch(uploadUrl, {
         method: 'PUT',
@@ -194,7 +194,7 @@ export default function AddCarPage() {
         headers: { 'Content-Type': file.type },
       })
       if (!putRes.ok) {
-        throw new Error(`上传 S3 失败：${file.name}（${putRes.status}）`)
+        throw new Error(`S3 upload failed: ${file.name} (${putRes.status})`)
       }
       return fileUrl
     }
@@ -239,7 +239,7 @@ export default function AddCarPage() {
       })
       const addData = await addRes.json().catch(() => ({}))
       if (!addRes.ok) {
-        throw new Error(addData.message || addData.error || `addcar 失败：${addRes.status}`)
+        throw new Error(addData.message || addData.error || `addcar failed: ${addRes.status}`)
       }
 
       setSuccessCarId(carId)
@@ -247,7 +247,7 @@ export default function AddCarPage() {
       setCoverFiles([])
       setGalleryFiles([])
     } catch (ex) {
-      setError(ex instanceof Error ? ex.message : '提交失败')
+      setError(ex instanceof Error ? ex.message : 'Submit failed')
     } finally {
       setSubmitting(false)
     }
@@ -264,11 +264,12 @@ export default function AddCarPage() {
 
         <h1 className="addcar-page__title">Add vehicle</h1>
         <p className="addcar-page__hint">
-          提交时会按 Make / Model / Year 与时间戳生成 <strong>carId</strong>
+          On submit, <strong>carId</strong> is generated from Make / Model / Year plus a timestamp.
         </p>
         <p className="addcar-page__carid-preview">
-          carId 格式：<code>
-            {previewCarIdPrefix ? `${previewCarIdPrefix}-YYYYMMDDHHMMSS` : '—（请填写 Make、Model、Year）'}
+          carId format:{' '}
+          <code>
+            {previewCarIdPrefix ? `${previewCarIdPrefix}-YYYYMMDDHHMMSS` : '— (enter Make, Model, Year)'}
           </code>
           <span className="addcar-page__hint-inline"></span>
         </p>
@@ -280,7 +281,7 @@ export default function AddCarPage() {
         ) : null}
         <form className="addcar-form" onSubmit={handleSubmit} noValidate>
           <div className="addcar-form__section">
-            <h2 className="addcar-form__heading">基本信息</h2>
+            <h2 className="addcar-form__heading">Vehicle details</h2>
             <div className="addcar-form__grid">
               <label className="sale-field">
                 <span className="sale-field__label">Title</span>
@@ -464,32 +465,31 @@ export default function AddCarPage() {
           </div>
 
           <div className="addcar-form__section">
-            <h2 className="addcar-form__heading">图片</h2>
+            <h2 className="addcar-form__heading">Images</h2>
             <p className="addcar-page__hint">
-              单张最大{' '}
-              <strong>{MAX_IMAGE_MB} MB</strong>；JPEG / PNG / WebP / GIF。
+              Max <strong>{MAX_IMAGE_MB} MB</strong> per file. JPEG, PNG, WebP, or GIF.
             </p>
             <div className="addcar-form__upload-block">
-              <h3 className="addcar-form__subheading">封面图（必须 3 张）</h3>
+              <h3 className="addcar-form__subheading">Cover images (3 required)</h3>
               <p className="addcar-page__hint addcar-form__upload-hint">
-                上传时 <code>imageIndex</code> 为 1、2、3 → Lambda 生成 <code>cover.*</code>、<code>2.*</code>、<code>3.*</code>
+        
               </p>
               <label className="addcar-form__file-btn">
-                <span className="fleet-categories__btn addcar-form__file-trigger">选择封面图</span>
+                <span className="fleet-categories__btn addcar-form__file-trigger">Choose cover images</span>
                 <input type="file" accept={ALLOWED_IMAGE_TYPES.join(',')} multiple onChange={onCoverFilesSelected} hidden />
               </label>
               <p className="addcar-form__count">
-                已选 <strong>{coverFiles.length}</strong> / 3
+                Selected <strong>{coverFiles.length}</strong> / 3
               </p>
               {coverFiles.length > 0 ? (
                 <ul className="addcar-form__file-list">
                   {coverFiles.map((f, i) => (
                     <li key={`cover-${f.name}-${i}`}>
-                      <span className="addcar-form__file-badge">封面 {i + 1}</span>
+                      <span className="addcar-form__file-badge">Cover {i + 1}</span>
                       <span>{f.name}</span>
                       <span className="addcar-form__file-meta">{(f.size / 1024).toFixed(0)} KB</span>
                       <button type="button" className="addcar-form__remove" onClick={() => removeCoverFile(i)}>
-                        移除
+                        Remove
                       </button>
                     </li>
                   ))}
@@ -497,13 +497,12 @@ export default function AddCarPage() {
               ) : null}
             </div>
             <div className="addcar-form__upload-block">
-              <h3 className="addcar-form__subheading">其他图片（图库，可选多张）</h3>
+              <h3 className="addcar-form__subheading">Gallery images (optional)</h3>
               <p className="addcar-page__hint addcar-form__upload-hint">
-                与 get_upload_url 约定：全局 <code>imageIndex</code> 从 <strong>{ADMIN_GALLERY_IMAGE_INDEX_START}</strong> 起（1–3 已用于封面 →{' '}
-                <code>cover.png</code>、<code>2.*</code>、<code>3.*</code>）。可不选图库。
+                
               </p>
               <label className="addcar-form__file-btn">
-                <span className="fleet-categories__btn addcar-form__file-trigger">选择图库图片</span>
+                <span className="fleet-categories__btn addcar-form__file-trigger">Choose gallery images</span>
                 <input type="file" accept={ALLOWED_IMAGE_TYPES.join(',')} multiple onChange={onGalleryFilesSelected} hidden />
               </label>
               {galleryFiles.length > 0 ? (
@@ -514,7 +513,7 @@ export default function AddCarPage() {
                       <span>{f.name}</span>
                       <span className="addcar-form__file-meta">{(f.size / 1024).toFixed(0)} KB</span>
                       <button type="button" className="addcar-form__remove" onClick={() => removeGalleryFile(i)}>
-                        移除
+                        Remove
                       </button>
                     </li>
                   ))}
@@ -523,29 +522,29 @@ export default function AddCarPage() {
             </div>
           </div>
 
-          <div className="addcar-form__actions">
-            <button type="submit" className="fleet-categories__btn" disabled={submitting}>
-              {submitting ? '提交中…' : 'Submit'}
+          <div className="addcar-form__actions addcar-form__actions--paired">
+            <button type="submit" className="sale-btn sale-btn--primary" disabled={submitting}>
+              {submitting ? 'Submitting…' : 'Submit'}
             </button>
             <Link to="/admin/" className="sale-btn sale-btn--ghost">
-              取消
+              Cancel
             </Link>
           </div>
         </form>
 
         <SuccessCenterModal
           open={!!successCarId}
-          title="提交成功"
+          title="Submitted successfully"
           onClose={() => setSuccessCarId(null)}
-          buttonLabel="确定"
+          buttonLabel="OK"
         >
-          <p className="addcar-success-modal__lead">车辆已成功提交并写入库存。</p>
+          <p className="addcar-success-modal__lead">The vehicle was submitted and saved to inventory.</p>
           <p className="addcar-success-modal__carid">
-            <span className="addcar-page__hint-inline">carId：</span>
+            <span className="addcar-page__hint-inline">carId: </span>
             <code>{successCarId}</code>
           </p>
           <p className="addcar-page__hint addcar-success-modal__foot">
-            可在 <Link to="/admin/cars/">Admin → View all cars</Link> 中查看或继续添加车辆。
+            View it under <Link to="/admin/cars/">Admin → View all cars</Link>, or add another vehicle.
           </p>
         </SuccessCenterModal>
       </div>

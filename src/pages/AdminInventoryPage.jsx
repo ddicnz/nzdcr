@@ -186,19 +186,13 @@ export default function AdminInventoryPage() {
           <span>All cars</span>
         </nav>
 
-        <p className="sale-page__intro">
-          数据来自 DynamoDB（<code>getadmincars</code>），加载后缓存在本页内存中；可筛选 <strong>published</strong> 与{' '}
-          <strong>sold</strong>。头图为 <code>coverImages</code> 三联拼图；<strong>点击整条卡片</strong>进入详情（
-          <code>getcardetail</code>）。
-        </p>
-
         <div className="admin-inventory-page__toolbar">
           <button type="button" className="fleet-categories__btn" onClick={loadInventory} disabled={loading}>
-            {loading ? '加载中…' : '刷新列表'}
+            {loading ? 'Loading…' : 'Refresh list'}
           </button>
           {loadedAt ? (
             <span className="admin-inventory-page__loaded">
-              已缓存 <strong>{inventoryItems.length}</strong> 条 · 上次加载{' '}
+              Cached <strong>{inventoryItems.length}</strong> vehicles · Last loaded{' '}
               {loadedAt.toLocaleString('en-NZ')}
             </span>
           ) : null}
@@ -453,7 +447,7 @@ export default function AdminInventoryPage() {
         </ul>
 
         {!loading && filtered.length === 0 && inventoryItems.length === 0 ? (
-          <p className="sale-empty">暂无车辆数据，请点击「刷新列表」或检查 API / CORS。</p>
+          <p className="sale-empty">No vehicle data — click &quot;Refresh list&quot; or check API / CORS.</p>
         ) : null}
 
         {!loading && filtered.length === 0 && inventoryItems.length > 0 ? (

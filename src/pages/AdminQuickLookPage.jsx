@@ -44,6 +44,13 @@ function listingHeadline(v) {
   return parts.length ? parts.join(' ') : String(v.title ?? '').trim() || '—'
 }
 
+function quickLookInventoryStatus(v) {
+  const raw = String(v.status ?? '').trim().toLowerCase()
+  const opt = STATUS_OPTIONS.find((o) => o.value === raw)
+  const value = opt?.value ?? 'published'
+  return { value, label: opt?.label ?? 'Published' }
+}
+
 export default function AdminQuickLookPage() {
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
@@ -154,11 +161,11 @@ export default function AdminQuickLookPage() {
 
         <div className="admin-inventory-page__toolbar">
           <button type="button" className="fleet-categories__btn" onClick={load} disabled={loading}>
-            {loading ? '加载中…' : '刷新列表'}
+            {loading ? 'Loading…' : 'Refresh list'}
           </button>
           {loadedAt ? (
             <span className="admin-inventory-page__loaded">
-              <strong>{items.length}</strong> 条 · 上次加载 {loadedAt.toLocaleString('en-NZ')}
+              <strong>{items.length}</strong> vehicles · Last loaded {loadedAt.toLocaleString('en-NZ')}
             </span>
           ) : null}
         </div>
@@ -331,6 +338,7 @@ export default function AdminQuickLookPage() {
             .filter((v) => String(v.carId ?? '').trim())
             .map((v) => {
               const cardCarId = String(v.carId ?? '').trim()
+              const invStatus = quickLookInventoryStatus(v)
               return (
                 <li key={cardCarId} className="admin-quick-look__item">
                   <div className="admin-quick-look__row">
@@ -339,7 +347,14 @@ export default function AdminQuickLookPage() {
                       to={`/admin/cars/${encodeURIComponent(cardCarId)}`}
                       state={{ fromList: v }}
                     >
-                      <span className="admin-quick-look__headline">{listingHeadline(v)}</span>
+                      <span className="admin-quick-look__title-block">
+                        <span className="admin-quick-look__headline">{listingHeadline(v)}</span>
+                        <span
+                          className={`admin-quick-look__status-pill admin-quick-look__status-pill--${invStatus.value}`}
+                        >
+                          {invStatus.label}
+                        </span>
+                      </span>
                       <span className="admin-quick-look__price">{formatSalePrice(itemPrice(v))}</span>
                     </Link>
                     <div
