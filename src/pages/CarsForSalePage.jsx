@@ -407,7 +407,9 @@ export default function CarsForSalePage() {
                   </div>
                   <div className="admin-inventory-listing__body">
                     <p className="admin-inventory-listing__listed">{formatSaleListedLine(v)}</p>
-                    <h3 className="admin-inventory-listing__title">{saleListingHeadline(v)}</h3>
+                    <h3 className="admin-inventory-listing__title">
+                      {String(v.title ?? '').trim() || saleListingHeadline(v)}
+                    </h3>
                     <ul className="admin-inventory-listing__specs">
                       <li className="admin-inventory-listing__spec">
                         <IconAdminPin />
