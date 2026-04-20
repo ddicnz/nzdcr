@@ -36,8 +36,14 @@ export function itemKm(v) {
 export function itemPrice(v) {
   const p = v.price
   if (typeof p === 'number' && Number.isFinite(p)) return p
-  const n = Number(String(p).replace(/,/g, ''))
+  const n = Number(String(p ?? '').replace(/[^\d.-]/g, ''))
   return Number.isFinite(n) ? n : 0
+}
+
+function createdAtTs(v) {
+  const d = new Date(v?.createdAt ?? '')
+  const t = d.getTime()
+  return Number.isFinite(t) ? t : 0
 }
 
 export function itemYear(v) {
@@ -152,10 +158,18 @@ export function sortInventoryList(arr, sortBy) {
   const out = [...arr]
   switch (sortBy) {
     case 'price-asc':
-      out.sort((a, b) => itemPrice(a) - itemPrice(b))
+      out.sort((a, b) => {
+        const diff = itemPrice(a) - itemPrice(b)
+        if (diff !== 0) return diff
+        return createdAtTs(b) - createdAtTs(a)
+      })
       break
     case 'price-desc':
-      out.sort((a, b) => itemPrice(b) - itemPrice(a))
+      out.sort((a, b) => {
+        const diff = itemPrice(b) - itemPrice(a)
+        if (diff !== 0) return diff
+        return createdAtTs(b) - createdAtTs(a)
+      })
       break
     case 'km-asc':
       out.sort((a, b) => sortKeyKm(a) - sortKeyKm(b))

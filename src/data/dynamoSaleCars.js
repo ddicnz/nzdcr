@@ -23,7 +23,7 @@ function itemKm(v) {
 function itemPrice(v) {
   const p = v.price
   if (typeof p === 'number' && Number.isFinite(p)) return p
-  const n = Number(String(p).replace(/,/g, ''))
+  const n = Number(String(p ?? '').replace(/[^\d.-]/g, ''))
   return Number.isFinite(n) ? n : 0
 }
 

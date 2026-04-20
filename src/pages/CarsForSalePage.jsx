@@ -161,10 +161,15 @@ export default function CarsForSalePage() {
 
   const sortedFiltered = useMemo(() => sortInventoryList(filtered, sortBy), [filtered, sortBy])
 
+  const handleSortChange = useCallback((nextSort) => {
+    setSortBy(nextSort)
+    setPage(1)
+  }, [])
+
   const filterKey = useMemo(() => JSON.stringify(filters), [filters])
   useEffect(() => {
     setPage(1)
-  }, [filterKey, sortBy])
+  }, [filterKey])
 
   const totalPages = Math.max(1, Math.ceil(sortedFiltered.length / PAGE_SIZE))
   const safePage = Math.min(page, totalPages)
@@ -372,7 +377,7 @@ export default function CarsForSalePage() {
             </div>
           </section>
 
-          <InventorySortBar count={filtered.length} sortBy={sortBy} onSortChange={setSortBy} />
+          <InventorySortBar count={filtered.length} sortBy={sortBy} onSortChange={handleSortChange} />
 
           {inventoryError ? (
             <p className="addcar-page__alert addcar-page__alert--error" role="alert">
@@ -386,11 +391,12 @@ export default function CarsForSalePage() {
           <ul className="sale-results admin-inventory-page__results">
             {pageSlice.map((v) => {
               const slug = String(v.slug || '').trim()
+              const cardCarId = String(v.carId || '').trim()
               const mailSubject = encodeURIComponent(`Cars for sale: ${v.title || slug}`)
               const mailHref = `mailto:booking@nzdcr.co.nz?subject=${mailSubject}`
               return (
                 <li
-                  key={slug}
+                  key={cardCarId || slug}
                   className="admin-inventory-listing admin-inventory-listing--clickable"
                   role="button"
                   tabIndex={0}
