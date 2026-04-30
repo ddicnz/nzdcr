@@ -415,19 +415,6 @@ export default function AdminEditCarPage() {
                   />
                 </label>
                 <label className="sale-field">
-                  <span className="sale-field__label">Price (NZD)</span>
-                  <input
-                    className="sale-field__input"
-                    type="number"
-                    min={1}
-                    step={1}
-                    value={form.price}
-                    onChange={setField('price')}
-                    placeholder="28990"
-                    required
-                  />
-                </label>
-                <label className="sale-field">
                   <span className="sale-field__label">Odometer (km)</span>
                   <input
                     className="sale-field__input"
@@ -522,6 +509,19 @@ export default function AdminEditCarPage() {
                       </option>
                     ))}
                   </select>
+                </label>
+                <label className="sale-field addcar-form__field-full">
+                  <span className="sale-field__label">Price (NZD)</span>
+                  <input
+                    className="sale-field__input"
+                    type="number"
+                    min={1}
+                    step={1}
+                    value={form.price}
+                    onChange={setField('price')}
+                    placeholder="28990"
+                    required
+                  />
                 </label>
               </div>
             </div>
