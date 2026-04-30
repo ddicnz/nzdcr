@@ -49,7 +49,7 @@ function toggleInList(list, value) {
 function vehicleMatches(f, v) {
   const kw = f.keyword.trim().toLowerCase()
   if (kw) {
-    const blob = `${v.title ?? ''} ${v.make ?? ''} ${v.model ?? ''} ${v.slug ?? ''}`
+    const blob = `${v.title ?? ''} ${v.make ?? ''} ${v.model ?? ''} ${v.slug ?? ''} ${v.plateNumber ?? ''}`
       .toLowerCase()
     if (!blob.includes(kw)) return false
   }
@@ -242,7 +242,7 @@ export default function CarsForSalePage() {
                 <input
                   type="search"
                   className="sale-field__input"
-                  placeholder="Make, model, or keyword…"
+                  placeholder="Title, make, model, plate, keyword…"
                   value={filters.keyword}
                   onChange={setField('keyword')}
                   autoComplete="off"

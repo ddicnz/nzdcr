@@ -213,7 +213,7 @@ export default function AdminInventoryPage() {
               <input
                 type="search"
                 className="sale-field__input"
-                placeholder="Title, make, model, carId…"
+                placeholder="Title, make, model, carId, plate…"
                 value={filters.keyword}
                 onChange={setField('keyword')}
                 autoComplete="off"

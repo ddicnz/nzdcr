@@ -44,6 +44,14 @@ function listingHeadline(v) {
   return parts.length ? parts.join(' ') : String(v.title ?? '').trim() || '—'
 }
 
+/** Same as headline, plus plate when present (Quick Look rows often share year/make/model). */
+function listingTitleLine(v) {
+  const head = listingHeadline(v)
+  const plate = String(v.plateNumber ?? '').trim()
+  if (!plate) return head
+  return `${head} · ${plate}`
+}
+
 function quickLookInventoryStatus(v) {
   const raw = String(v.status ?? '').trim().toLowerCase()
   const opt = STATUS_OPTIONS.find((o) => o.value === raw)
@@ -185,7 +193,7 @@ export default function AdminQuickLookPage() {
               <input
                 type="search"
                 className="sale-field__input"
-                placeholder="Title, make, model, carId…"
+                placeholder="Title, make, model, carId, plate…"
                 value={filters.keyword}
                 onChange={setField('keyword')}
                 autoComplete="off"
@@ -348,7 +356,7 @@ export default function AdminQuickLookPage() {
                       state={{ fromList: v }}
                     >
                       <span className="admin-quick-look__title-block">
-                        <span className="admin-quick-look__headline">{listingHeadline(v)}</span>
+                        <span className="admin-quick-look__headline">{listingTitleLine(v)}</span>
                         <span
                           className={`admin-quick-look__status-pill admin-quick-look__status-pill--${invStatus.value}`}
                         >
@@ -400,7 +408,7 @@ export default function AdminQuickLookPage() {
 
         <DeleteConfirmModal
           open={!!deletePending}
-          vehicleLabel={deletePending ? listingHeadline(deletePending) : ''}
+          vehicleLabel={deletePending ? listingTitleLine(deletePending) : ''}
           onCancel={() => setDeletePending(null)}
           onConfirm={handleDeleteConfirm}
           isDeleting={
